@@ -1,0 +1,23 @@
+{
+  "name": "aip-assignment-3",
+  "version": "1.0.0",
+  "description": "AIP Assignment 3",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jarrodwatts/AIP-assignment-3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jarrodwatts/AIP-assignment-3/issues"
+  },
+  "homepage": "https://github.com/jarrodwatts/AIP-assignment-3#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
