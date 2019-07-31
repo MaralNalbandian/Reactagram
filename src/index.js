@@ -1,8 +1,10 @@
-const express = require('express');
-const app = express();
+import React from 'react'
+import { render } from 'react-dom';
 
-app.get('/', (req, res) => {
-  res.send('Homepage! Hello world.');
-});
+//Import CSS
+import "./css/style.css"
 
-app.listen(3000, () => console.log('Listening on port 3000...'));
+//Import Router
+import Router from "./components/Router"
+
+render(<Router />, document.querySelector('#main'))
