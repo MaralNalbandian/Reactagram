@@ -36,9 +36,8 @@ h1 {
 
 .grid-photo {
     width: calc(100% + 4rem);
-    margin-left: -2rem;
-    margin-top: -2rem;
-    max-width: none;
+    max-width: 250px;
+    max-height: 250px;
 }
 
 .grid-user-wrapper {

@@ -14,6 +14,14 @@ const posts = {
     post4: {
         username: "Jacob",
         imageLink: "https://sortitoutsi.net/uploads/images/9jzTBe28haB4X7cW0DNCPj9hcjBuKB4I.png",
+    },
+    post5: {
+      username: "Jamal",
+      imageLink: "http://www.esa.int/var/esa/storage/images/esa_multimedia/images/2017/03/brindisi_italy/16854131-3-eng-GB/Brindisi_Italy.jpg",
+    },
+    post6: {
+      username: "Jack",
+      imageLink: "http://deepblueimages.com/dbi/wp-content/gallery/island-images/057.jpg",
     }
 }
 
