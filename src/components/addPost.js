@@ -9,7 +9,7 @@ class AddPost extends React.Component {
     event.preventDefault();
     const post = {
       username: this.usernameRef.current.value,
-      image: this.imageRef.current.value
+      imageLink: this.imageRef.current.value
     };
     this.props.addPost(post);
     // refresh the form
