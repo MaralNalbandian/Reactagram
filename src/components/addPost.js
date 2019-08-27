@@ -17,16 +17,21 @@ class AddPost extends React.Component {
   };
   render() {
     return (
-      <form className="post-edit" onSubmit={this.createPost}>
-        <input name="username" ref={this.usernameRef} type="text" placeholder="Username" />
-        <input
-          name="image"
-          ref={this.imageRef}
-          type="text"
-          placeholder="Image"
-        />
-        <button type="submit">+ Add Post</button>
-      </form>
+      <div className="add-post">
+        <form className="add-post-form" onSubmit={this.createPost}>
+          <h2>Add Post</h2>
+          <div className='input'>
+            <input name="username" ref={this.usernameRef} type="text" placeholder="Username" />
+            <input
+              name="image"
+              ref={this.imageRef}
+              type="text"
+              placeholder="Image"
+            />
+            <button type="submit">+ Add Post</button>
+          </div>
+        </form>
+      </div>
     );
   }
 }
