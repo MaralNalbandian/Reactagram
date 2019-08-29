@@ -1,0 +1,16 @@
+const jwt = require("jsonwebtoken");
+
+//Middleware function
+//Checks if user has the token
+module.exports = function(req, res, next) {
+  const token = req.header("auth-token"); //Checks if has token
+  if (!token) return res.status(401).send("Access Denied");
+
+  try {
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    req.user = verified;
+    next();
+  } catch (err) {
+    res.status(400).send("Invalid Token");
+  }
+};
