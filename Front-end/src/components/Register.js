@@ -7,14 +7,7 @@ import Login from "./Login";
 import Nav from "./Nav";
 
 export class Register extends Component {
-  continue = e => {
-    e.preventDefault();
-    this.props.nextStep();
-  };
-
   render() {
-    const { values, handleChange } = this.props;
-
     return (
       <MuiThemeProvider>
         <React.Fragment>

@@ -5,17 +5,59 @@ import RaisedButton from "material-ui/RaisedButton";
 import Nav from "./Nav";
 import { Link } from "react-router-dom";
 
+import { getFromStoarge, setInStrorage } from "../utils/storage";
+import { ImageGradient } from "material-ui/svg-icons";
+
 export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      password: ""
+      // username: "",
+      // password: ""
+      isLoading: true,
+      token: "", //token means they're signed in
+      signUpError: "",
+      signInError: ""
     };
-
-    this.login = this.login.bind(this);
-    this.onChange = this.onChange.bind(this);
   }
+  getUser() {
+    fetch("http://localhost:3000/api/auth")
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({ posts: responseJson });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  componentWillMount() {
+    this.getUser();
+  }
+  // componentDidMount() {
+  //   const token = getFromStorage("the_main_app");
+  //   if (token) {
+  //     //Verify token
+  //     fetch("http://localhost:3000/api/auth")
+  //       .then(res => res.json())
+  //       .then(json => {
+  //         if (json.success) {
+  //           this.setState({
+  //             token,
+  //             isLoading: false
+  //           });
+  //         } else {
+  //           this.setState({
+  //             isLoading: false
+  //           });
+  //         }
+  //       });
+  //   } else {
+  //     this.setState({
+  //       isLoading: false
+  //     });
+  //   }
+  // }
 
   login() {
     console.log("Login function");
@@ -26,7 +68,19 @@ export class Login extends Component {
     console.log(this.state);
   }
 
+  addUser = () => {};
+
   render() {
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
     return (
       <MuiThemeProvider>
         <React.Fragment>
