@@ -5,7 +5,6 @@ import RaisedButton from "material-ui/RaisedButton";
 import Nav from "./Nav";
 import { Link } from "react-router-dom";
 
-import { getFromStoarge, setInStrorage } from "../utils/storage";
 import { ImageGradient } from "material-ui/svg-icons";
 
 export class Login extends Component {
@@ -20,20 +19,20 @@ export class Login extends Component {
       signInError: ""
     };
   }
-  getUser() {
-    fetch("http://localhost:3000/api/auth")
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({ posts: responseJson });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
+  // getUser() {
+  //   fetch("http://localhost:3000/api/auth")
+  //     .then(response => response.json())
+  //     .then(responseJson => {
+  //       this.setState({ posts: responseJson });
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //     });
+  // }
 
-  componentWillMount() {
-    this.getUser();
-  }
+  // componentWillMount() {
+  //   this.getUser();
+  // }
   // componentDidMount() {
   //   const token = getFromStorage("the_main_app");
   //   if (token) {
@@ -71,15 +70,15 @@ export class Login extends Component {
   addUser = () => {};
 
   render() {
-    const { isLoading } = this.state;
+    // const { isLoading } = this.state;
 
-    if (isLoading) {
-      return (
-        <div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
+    // if (isLoading) {
+    //   return (
+    //     <div>
+    //       <p>Loading...</p>
+    //     </div>
+    //   );
+    // }
 
     return (
       <MuiThemeProvider>
