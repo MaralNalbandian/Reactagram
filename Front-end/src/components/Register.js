@@ -7,6 +7,41 @@ import Login from "./Login";
 import Nav from "./Nav";
 
 export class Register extends Component {
+  fnameRef = React.createRef();
+  lnameRef = React.createRef();
+  passRef = React.createRef();
+  emailRef = React.createRef();
+
+  state = {};
+
+  checkUser = event => {
+    event.preventDefault();
+
+    fetch("http://localhost:80/api/user/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: this.fnameRef.current.value,
+        lastname: this.lnameRef.current.value,
+        email: this.emailRef.current.value,
+        password: this.passRef.current.value
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson);
+        this.setState({ name: responseJson });
+        this.setState({ lastname: responseJson });
+        this.setState({ email: responseJson });
+        this.setState({ password: responseJson });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
   render() {
     return (
       <MuiThemeProvider>
@@ -15,6 +50,7 @@ export class Register extends Component {
           <TextField
             hintText="Enter Your First Name"
             floatingLabelText="First Name"
+            ref={this.fnameRef}
             // onChange={handleChange("firstName")}
             // defaultValue={values.firstName}
           />
@@ -22,6 +58,7 @@ export class Register extends Component {
           <TextField
             hintText="Enter Your Last Name"
             floatingLabelText="Last Name"
+            ref={this.lnameRef}
             // onChange={handleChange("lastName")}
             // defaultValue={values.lastName}
           />
@@ -29,6 +66,7 @@ export class Register extends Component {
           <TextField
             hintText="Enter Password"
             floatingLabelText="Password"
+            ref={this.passRef}
             onChange={this.onChange}
             // onChange={handleChange("password")}
             // defaultValue={values.password}
@@ -37,6 +75,7 @@ export class Register extends Component {
           <TextField
             hintText="Enter Your Email"
             floatingLabelText="Email"
+            ref={this.emailRef}
             // onChange={handleChange("email")}
             // defaultValue={values.email}
           />
@@ -45,7 +84,7 @@ export class Register extends Component {
             label="Register"
             primary={true}
             style={navstyles.button}
-            onClick={this.continue}
+            onClick={this.checkUser}
           />
         </React.Fragment>
       </MuiThemeProvider>
