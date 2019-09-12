@@ -8,6 +8,9 @@ connectDB();
 
 app.use(express.json({ extended: false }));
 
+//Bodyparser
+app.use(express.urlencoded({ extended: false }));
+
 //Enable CORS
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

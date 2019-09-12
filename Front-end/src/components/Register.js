@@ -6,7 +6,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import Login from "./Login";
 import Nav from "./Nav";
 
-export class Register extends Component {
+export class Register extends React.Component {
   fnameRef = React.createRef();
   lnameRef = React.createRef();
   passRef = React.createRef();
@@ -44,50 +44,50 @@ export class Register extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <React.Fragment>
-          <Nav />
-          <TextField
-            hintText="Enter Your First Name"
-            floatingLabelText="First Name"
-            ref={this.fnameRef}
-            // onChange={handleChange("firstName")}
-            // defaultValue={values.firstName}
-          />
-          <br />
-          <TextField
-            hintText="Enter Your Last Name"
-            floatingLabelText="Last Name"
-            ref={this.lnameRef}
-            // onChange={handleChange("lastName")}
-            // defaultValue={values.lastName}
-          />
-          <br />
-          <TextField
-            hintText="Enter Password"
-            floatingLabelText="Password"
-            ref={this.passRef}
-            onChange={this.onChange}
-            // onChange={handleChange("password")}
-            // defaultValue={values.password}
-          />
-          <br />
-          <TextField
-            hintText="Enter Your Email"
-            floatingLabelText="Email"
-            ref={this.emailRef}
-            // onChange={handleChange("email")}
-            // defaultValue={values.email}
-          />
-          <br />
-          <RaisedButton
-            label="Register"
-            primary={true}
-            style={navstyles.button}
-            onClick={this.checkUser}
-          />
-        </React.Fragment>
-      </MuiThemeProvider>
+      // <MuiThemeProvider>
+      <React.Fragment>
+        <Nav />
+        {/* <TextField
+          hintText="Enter Your First Name"
+          floatingLabelText="First Name"
+          ref={this.fnameRef}
+          // onChange={handleChange("firstName")}
+          // defaultValue={values.firstName}
+        />
+        <br />
+        <TextField
+          hintText="Enter Your Last Name"
+          floatingLabelText="Last Name"
+          ref={this.lnameRef}
+          // onChange={handleChange("lastName")}
+          // defaultValue={values.lastName}
+        />
+        <br />
+        <TextField
+          hintText="Enter Password"
+          floatingLabelText="Password"
+          ref={this.passRef}
+          onChange={this.onChange}
+          // onChange={handleChange("password")}
+          // defaultValue={values.password}
+        />
+        <br />
+        <TextField
+          hintText="Enter Your Email"
+          floatingLabelText="Email"
+          ref={this.emailRef}
+          // onChange={handleChange("email")}
+          // defaultValue={values.email}
+        />
+        <br />
+        <RaisedButton
+          label="Register"
+          primary={true}
+          style={navstyles.button}
+          onClick={this.checkUser}
+        /> */}
+      </React.Fragment>
+      // </MuiThemeProvider>
     );
   }
 }

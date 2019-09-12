@@ -39,11 +39,20 @@ export class Login extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <React.Fragment>
-          <Nav />
-          <div className="input">
-            <form className="check" onSubmit={this.checkUser}>
+      // <MuiThemeProvider>
+      <React.Fragment>
+        <Nav />
+        <div className="input">
+          <form className="checkFunction" onSubmit={this.checkUser}>
+            <div>Email:</div>
+            <input name="textbox" ref={this.emailRef} type="text"></input>
+            <p>
+              <div>Password:</div>
+              <input name="textbox" ref={this.passRef} type="password"></input>
+            </p>
+            <button type="submit">Login</button>
+          </form>
+          {/* <form className="check" onSubmit={this.checkUser}>
               <TextField
                 hintText="Enter Your Email"
                 floatingLabelText="Email"
@@ -69,10 +78,10 @@ export class Login extends React.Component {
               <Link style={navStyle} to="/register">
                 <h4>Sign up</h4>
               </Link>
-            </form>
-          </div>
-        </React.Fragment>
-      </MuiThemeProvider>
+            </form> */}
+        </div>
+      </React.Fragment>
+      // {/* </MuiThemeProvider> */}
     );
   }
 }
