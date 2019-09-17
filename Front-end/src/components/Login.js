@@ -3,7 +3,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import Nav from "./Nav";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
 import { ImageGradient } from "material-ui/svg-icons";
 
@@ -16,25 +16,14 @@ export class Login extends React.Component {
   checkUser = event => {
     event.preventDefault();
 
-    fetch("http://localhost:80/api/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
+    axios("http://localhost:80/api/user/login", {
+      method: "post",
+      data: {
         email: this.emailRef.current.value,
         password: this.passRef.current.value
-      })
+      }
     })
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-        this.setState({ email: responseJson });
-        this.setState({ password: responseJson });
-      })
-      .catch(error => {
-        console.error(error);
-      });
+      .then(response => console.log(response.data))
   };
 
   render() {
@@ -46,10 +35,8 @@ export class Login extends React.Component {
           <form className="checkFunction" onSubmit={this.checkUser}>
             <div>Email:</div>
             <input name="textbox" ref={this.emailRef} type="text"></input>
-            <p>
-              <div>Password:</div>
-              <input name="textbox" ref={this.passRef} type="password"></input>
-            </p>
+            <div>Password:</div>
+            <input name="textbox" ref={this.passRef} type="password"></input>
             <button type="submit">Login</button>
           </form>
           {/* <form className="check" onSubmit={this.checkUser}>

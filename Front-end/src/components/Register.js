@@ -5,6 +5,7 @@ import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import Login from "./Login";
 import Nav from "./Nav";
+import axios from 'axios';
 
 export class Register extends React.Component {
   fnameRef = React.createRef();
@@ -17,25 +18,21 @@ export class Register extends React.Component {
   checkUser = event => {
     event.preventDefault();
 
-    fetch("http://localhost:80/api/user/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
+    axios("http://localhost:80/api/user/register", {
+      method: "post",
+      body: {
         name: this.fnameRef.current.value,
         lastname: this.lnameRef.current.value,
         email: this.emailRef.current.value,
         password: this.passRef.current.value
-      })
+      }
     })
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-        this.setState({ name: responseJson });
-        this.setState({ lastname: responseJson });
-        this.setState({ email: responseJson });
-        this.setState({ password: responseJson });
+    .then(response => {
+        console.log(response)
+        this.setState({ name: response.data.name });
+        this.setState({ lastname: response.data.lastname });
+        this.setState({ email: response.data.email });
+        this.setState({ password: response.data.password });
       })
       .catch(error => {
         console.error(error);
