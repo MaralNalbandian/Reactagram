@@ -32,13 +32,29 @@ export class Login extends React.Component {
       <React.Fragment>
         <Nav />
 
-        {/* <div className="input"> */}
-        <form className="check" onSubmit={this.checkUser}>
-          <div>Email:</div>
-          <input name="textbox" ref={this.emailRef} type="text"></input>
-          <div>Password:</div>
-          <input name="textbox" ref={this.passRef} type="password"></input>
-          <button type="submit">Login</button>
+        <form className="login-box" onSubmit={this.checkUser}>
+          <h1>Login</h1>
+          <div className="textbox">
+            <input
+              name="textbox"
+              ref={this.emailRef}
+              type="text"
+              placeholder="Email"
+            ></input>
+          </div>
+
+          <div className="textbox">
+            <input
+              name="textbox"
+              ref={this.passRef}
+              type="password"
+              placeholder="Password"
+            ></input>
+          </div>
+
+          {/* <button type="submit">Sign in</button>  */}
+          <input class="btn" type="submit" value="Sign in"></input>
+
           <h4>Not Registered?</h4>
           <Link style={navStyle} to="/register">
             <h4>Sign up</h4>
@@ -70,6 +86,7 @@ export class Login extends React.Component {
       //           <h4>Sign up</h4>
       //         </Link> */}
         </form>
+
         {/* </div> */}
       </React.Fragment>
       // </MuiThemeProvider>

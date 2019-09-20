@@ -45,14 +45,35 @@ export class Register extends React.Component {
       <React.Fragment>
         <Nav />
         <div className="input">
-          <form className="check" onSubmit={this.checkUser}>
-            <div>Name:</div>
-            <input name="name" ref={this.nameRef} type="text"></input>
-            <div>Email:</div>
-            <input name="email" ref={this.emailRef} type="text"></input>
-            <div>Password:</div>
-            <input name="password" ref={this.passRef} type="password"></input>
-            <button type="submit">Register</button>
+          <form className="login-box" onSubmit={this.checkUser}>
+            <h1>Register</h1>
+            <div className="textbox">
+              <input
+                name="name"
+                ref={this.nameRef}
+                type="text"
+                placeholder="Name"
+              ></input>
+            </div>
+
+            <div className="textbox">
+              <input
+                name="email"
+                ref={this.emailRef}
+                type="text"
+                placeholder="Email"
+              ></input>
+            </div>
+            <div className="textbox">
+              <input
+                name="password"
+                ref={this.passRef}
+                type="password"
+                placeholder="Password"
+              ></input>
+            </div>
+
+            <input class="btn" type="submit" value="Register"></input>
           </form>
         </div>
         {/* <TextField
