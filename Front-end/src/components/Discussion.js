@@ -5,7 +5,11 @@ function Discussion() {
   return (
     <div>
       <Nav />
-      <h1>Discussion Page</h1>
+      <div className="input">
+        <form>
+          <h1>Discussion Page</h1>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,28 +1,74 @@
 html {
   font-size: 62.5%;
+  background: url(C:\Users\Maral\Documents\JS\AIP-assignment-3\Front-end\src\css\image.jpg);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
 }
+
+.navContainer {
+  border: 10px solid white;
+  position: absolute;
+}
+.check {
+  /* border: 1px solid black; */
+  position: absolute;
+  margin-top: -5px;
+  margin-left: -100px;
+  top: 50%;
+  left: 50%;
+}
+div {
+  color: white;
+}
+
 nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
   min-height: 10vh;
-  background: grey;
+  background: none;
   color: white;
   font-size: 2rem;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans", serif;
   font-weight: bold;
+  font-style: italic;
+  position: relative;
+
+  margin-top: -0px;
+  margin-left: -40px;
+}
+ul li {
+  list-style-type: none;
+  display: inline-block;
+  color: white;
+  padding: 5px 20px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  margin-top: 5px;
+
+  transition: 0.6s;
+}
+
+ul li:hover {
+  background-color: white;
+  color: grey;
+}
+ul li.active {
+  background-color: white;
+  color: #000;
 }
 
 .nav-links {
   width: 50%;
   display: flex;
   justify-content: space-around;
-  align-items: center;
   list-style: none;
   font-size: 2rem;
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
 }
+
 h1 {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;

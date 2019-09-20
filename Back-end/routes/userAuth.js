@@ -3,7 +3,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { registerValidation, loginValidation } = require("../validation");
-const config = require('config');
+const config = require("config");
 
 //REGISTER
 router.post("/register", async (req, res) => {
@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
   if (!validPass) return res.status(400).send("Invalid password");
 
   //Create and assign a token
-  const token = jwt.sign({ _id: user._id }, config.get('TOKEN_SECRET'));
+  const token = jwt.sign({ _id: user._id }, config.get("TOKEN_SECRET"));
   //res.header("auth-token", token).send(token); //can make multiple requests by using the token to s specific logged in user (cannot post unless user logged in)
 
   res.json("Logged in!");

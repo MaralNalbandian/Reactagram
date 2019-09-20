@@ -5,11 +5,11 @@ import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
 import Login from "./Login";
 import Nav from "./Nav";
-import axios from 'axios';
+import axios from "axios";
+import { HardwarePhonelinkOff } from "material-ui/svg-icons";
 
 export class Register extends React.Component {
-  fnameRef = React.createRef();
-  lnameRef = React.createRef();
+  nameRef = React.createRef();
   passRef = React.createRef();
   emailRef = React.createRef();
 
@@ -27,10 +27,10 @@ export class Register extends React.Component {
         password: this.passRef.current.value
       }
     })
-    .then(response => {
-        console.log(response)
+      .then(response => {
+        console.log(response);
         this.setState({ name: response.data.name });
-        this.setState({ lastname: response.data.lastname });
+        // this.setState({ lastname: response.data.lastname });
         this.setState({ email: response.data.email });
         this.setState({ password: response.data.password });
       })
@@ -44,6 +44,17 @@ export class Register extends React.Component {
       // <MuiThemeProvider>
       <React.Fragment>
         <Nav />
+        <div className="input">
+          <form className="check" onSubmit={this.checkUser}>
+            <div>Name:</div>
+            <input name="name" ref={this.nameRef} type="text"></input>
+            <div>Email:</div>
+            <input name="email" ref={this.emailRef} type="text"></input>
+            <div>Password:</div>
+            <input name="password" ref={this.passRef} type="password"></input>
+            <button type="submit">Register</button>
+          </form>
+        </div>
         {/* <TextField
           hintText="Enter Your First Name"
           floatingLabelText="First Name"
@@ -89,7 +100,7 @@ export class Register extends React.Component {
   }
 }
 const navStyle = {
-  color: "white"
+  color: "red"
 };
 const navstyles = {
   button: {
