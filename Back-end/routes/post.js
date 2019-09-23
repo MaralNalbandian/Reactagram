@@ -71,8 +71,9 @@ router.post('/like', async (req,res) => {
         if(post) {
             try {
                 await Post.updateOne(
-                   { "postId" : req.body.postId },
-                   { $set: { "likes" : post.likes + 1 } }
+                    //                           Ensures that the number of likes has not been updated since the "find"
+                    { "postId" : req.body.postId, "likes": post.likes },
+                    { $set: { "likes" : post.likes + 1 } }
                 );
                 res.json('Liked!')
             } catch (error) {

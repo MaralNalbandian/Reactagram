@@ -12,7 +12,6 @@ class Post extends React.Component {
     }
 
     render() {
-        console.log(this.props.details)
         return (
             <div onClick={this.goToDetailed} className="post">
                 <div className="grid-element">
