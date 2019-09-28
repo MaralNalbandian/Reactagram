@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, Button, Text } from 'react-bootstrap';
 
 class Post extends React.Component {
     goToDetailed = event => {
@@ -7,6 +8,7 @@ class Post extends React.Component {
     }
 
     render() {
+        console.log("props:", this.props)
         console.log(this.props.details)
         return (
             <div onClick={this.goToDetailed} className="post">

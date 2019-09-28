@@ -15,6 +15,8 @@ class AddPost extends React.Component {
     // refresh the form
     event.currentTarget.reset();
   };
+
+  
   render() {
     return (
       <div className="add-post">
