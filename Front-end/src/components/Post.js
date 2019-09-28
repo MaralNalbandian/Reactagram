@@ -6,8 +6,12 @@ class Post extends React.Component {
         this.props.history.push(`/view/${this.props.index}`)
     }
 
+    like = event => {
+        event.preventDefault();
+        
+    }
+
     render() {
-        console.log(this.props.details)
         return (
             <div onClick={this.goToDetailed} className="post">
                 <div className="grid-element">
@@ -17,6 +21,7 @@ class Post extends React.Component {
                     <div className="grid-user-wrapper">
                         <div className="grid-user">{this.props.details.username}</div>
                     </div>
+                    <button className="likeButton" >Like</button>
                 </div>
             </div>
         )
