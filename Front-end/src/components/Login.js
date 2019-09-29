@@ -32,7 +32,7 @@ export class Login extends React.Component {
       <React.Fragment>
         <Nav />
 
-        <form className="login-box" onSubmit={this.checkUser}>
+        <form className="login-box" onSubmit={this.checkUser} method="POST">
           <h1>Login</h1>
           <div className="textbox">
             <input
