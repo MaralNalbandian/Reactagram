@@ -67,13 +67,11 @@ router.post("/register", async (req, res, next) => {
         });
       }
 
-      const hashPassword = bcrypt.hash(req.body.password, bcrypt.genSalt(10)); //Hash password with salt
       //Save the user
       const newUser = new User();
 
       newUser.name = name;
       newUser.email = email;
-      // newUser.password = newUser.hashPassword;
       newUser.password = newUser.generateHash(password);
 
       newUser.save((err, user) => {

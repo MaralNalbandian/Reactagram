@@ -252,59 +252,62 @@ export class Register extends React.Component {
 
     if (!token) {
       return (
-        <div>
+        <React.Fragment>
+          <Nav />
           <div>
-            {signInError ? <p>{signInError}</p> : null}
-            <p>Sign In</p>
-            <label>Email:</label>
+            <div>
+              {signInError ? <p>{signInError}</p> : null}
+              <p>Sign In</p>
+              <label>Email:</label>
+              <br />
+              <input
+                type="email"
+                placeholder="Email"
+                value={signInEmail}
+                onChange={this.onTextboxChangeSignInEmail}
+              />
+              <br />
+              <input
+                type="password"
+                placeholder="Password"
+                value={signInPassword}
+                onChange={this.onTextboxChangeSignInPassword}
+              />
+              <br />
+              <button onClick={this.onSignIn}>Sign In</button>
+            </div>
             <br />
-            <input
-              type="email"
-              placeholder="Email"
-              value={signInEmail}
-              onChange={this.onTextboxChangeSignInEmail}
-            />
             <br />
-            <input
-              type="password"
-              placeholder="Password"
-              value={signInPassword}
-              onChange={this.onTextboxChangeSignInPassword}
-            />
             <br />
-            <button onClick={this.onSignIn}>Sign In</button>
+            <br />
+            <div>
+              {signUpError ? <p>{signUpError}</p> : null}
+              <p>Sign Up</p>
+              <input
+                type="text"
+                placeholder="Name"
+                value={signUpName}
+                onChange={this.onTextboxChangeSignUpName}
+              />
+              <br />
+              <input
+                type="email"
+                placeholder="Email"
+                value={signUpEmail}
+                onChange={this.onTextboxChangeSignUpEmail}
+              />
+              <br />
+              <input
+                type="password"
+                placeholder="Password"
+                value={signUpPassword}
+                onChange={this.onTextboxChangeSignUpPassword}
+              />
+              <br />
+              <button onClick={this.onSignUp}>Sign Up</button>
+            </div>
           </div>
-          <br />
-          <br />
-          <br />
-          <br />
-          <div>
-            {signUpError ? <p>{signUpError}</p> : null}
-            <p>Sign Up</p>
-            <input
-              type="text"
-              placeholder="Name"
-              value={signUpName}
-              onChange={this.onTextboxChangeSignUpName}
-            />
-            <br />
-            <input
-              type="email"
-              placeholder="Email"
-              value={signUpEmail}
-              onChange={this.onTextboxChangeSignUpEmail}
-            />
-            <br />
-            <input
-              type="password"
-              placeholder="Password"
-              value={signUpPassword}
-              onChange={this.onTextboxChangeSignUpPassword}
-            />
-            <br />
-            <button onClick={this.onSignUp}>Sign Up</button>
-          </div>
-        </div>
+        </React.Fragment>
       );
     }
 
