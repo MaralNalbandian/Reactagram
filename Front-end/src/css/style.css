@@ -97,3 +97,13 @@ h2 {
     margin-left: 20rem;
     max-width: none;
 }
+
+#userImage {
+    width:30px;
+    height:30px;
+}
+
+#Leaderboard {
+    width:50px;
+    height:50px;
+}
