@@ -44,7 +44,7 @@ class Home extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Menu/>
+                {/* <Menu/> */}
                 <div className="home">
                     {/* Loads posts once they are fetched from the API */}
                     {this.state.posts &&
