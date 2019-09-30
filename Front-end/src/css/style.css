@@ -2,7 +2,7 @@
 
 html {
   font-size: 62.5%;
-  background: url(C:\Users\Maral\Documents\JS\AIP-assignment-3\Front-end\src\css\image.jpg);
+  background: url('./image.jpg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
