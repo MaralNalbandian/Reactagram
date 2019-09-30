@@ -43,7 +43,7 @@ router.post("/register", async (req, res, next) => {
     });
   }
 
-  // email = email.toLowerCase();
+  email = email.toLowerCase();
 
   //Steps:
   //1. Verify email doesn't exist
@@ -146,7 +146,7 @@ router.post("/login", (req, res, next) => {
     });
   }
 
-  // email = email.toLowerCase();
+  email = email.toLowerCase();
 
   User.find(
     {
