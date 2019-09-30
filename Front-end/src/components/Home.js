@@ -2,12 +2,13 @@ import React from 'react';
 
 import Post from './Post';
 import AddPost from './addPost';
-import Menu from './Menu';
+import Pages from './Pages';
 
 class Home extends React.Component {  
     constructor() {
         super()
-        this.state ={}
+        this.state ={
+        }
     }
 
     addPost = post => {
@@ -27,10 +28,32 @@ class Home extends React.Component {
     };
 
     getPosts() {
-        fetch('http://localhost:80/api/post/all')
+        fetch("http://localhost:80/api/post/count")
         .then((response) => response.json())
         .then((responseJson) => {
-            this.setState({ posts : responseJson })
+            console.log(responseJson)
+            //TODO: Make more efficient
+            var count = 1;
+            var pages = [];
+            while (count <= (responseJson/9)+1){
+                console.log(count)
+                pages.push(count)
+                count = count + 1
+            }
+            this.setState({ 
+                pages: pages
+            })
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+
+        fetch(`http://localhost:80/api/post/page/${this.props.match.params.page}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({ 
+                posts: responseJson, 
+            })
         })
         .catch((error) => {
         console.error(error);
@@ -44,21 +67,27 @@ class Home extends React.Component {
     render() {
         return (
             <React.Fragment>
-                {/* <Menu/> */}
                 <div className="home">
                     {/* Loads posts once they are fetched from the API */}
-                    {this.state.posts &&
-                    <div className="photo-grid">
-                        {Object.keys(this.state.posts).map(key => (
-                            <Post
-                                key={key}
-                                index={this.state.posts[key].postId}
-                                details={this.state.posts[key]}
-                                {...this.props}
+                    {this.state.posts && this.state.pages &&
+                        <div className="photo-grid">
+                            {Object.keys(this.state.posts).slice(0,9).map(key => (
+                                <Post
+                                    key={key}
+                                    index={this.state.posts[key].postId}
+                                    details={this.state.posts[key]}
+                                    {...this.props}
+                                />
+                            ))}
+
+                            <Pages 
+                                pages= {this.state.pages}
+                                currentPage= {this.props.match.params.page}
+                                lastPage= {this.state.pages[this.state.pages.length-1]}
                             />
-                        ))}
-                    </div>
+                        </div>
                     }
+
                     <AddPost addPost={this.addPost}/>
                 </div>
             </React.Fragment>
