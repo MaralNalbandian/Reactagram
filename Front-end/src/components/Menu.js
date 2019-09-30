@@ -1,13 +1,9 @@
 import React from 'react';
 
 import {
-    Collapse,
     Navbar,
-    NavbarToggler,
     NavbarBrand,
     Nav,
-    NavItem,
-    NavLink,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -21,7 +17,8 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
+                {/* https://reactstrap.github.io/components/navbar/ */}
                 <Navbar color="light" light expand="md">
                     <NavbarBrand href="/"><img id="Leaderboard" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Topeka-leaderboard.svg/480px-Topeka-leaderboard.svg.png" alt="Leaderboard"></img></NavbarBrand>
                     <Nav className="ml-auto" navbar><h1>Reactagram</h1></Nav>
@@ -41,7 +38,7 @@ class Menu extends React.Component {
                         </UncontrolledDropdown>
                     </Nav>
                 </Navbar>
-            </div>
+            </>
         )
     }
 }
