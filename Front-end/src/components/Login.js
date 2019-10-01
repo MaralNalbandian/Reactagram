@@ -161,54 +161,129 @@ export class Login extends React.Component {
       isLoading,
       token,
       signInError,
+      signUpError,
       signInEmail,
-      signInPassword
+      signInPassword,
+      signUpName,
+      signUpEmail,
+      signUpPassword
     } = this.state;
+
+    if (isLoading) {
+      return (
+        <div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
     if (!token) {
       return (
-        // <MuiThemeProvider>
         <React.Fragment>
           <Nav />
-          {/* onSubmit={this.checkUser} */}
-          <form className="login-box" method="POST">
-            {signInError ? <p>{signInError}</p> : null}
-            <h1>Login</h1>
-            <div className="textbox">
+          <div>
+            <div>
+              {signInError ? <p>{signInError}</p> : null}
+              <p>Sign In</p>
+              <label>Email:</label>
+              <br />
               <input
-                name="textbox"
-                ref={this.emailRef}
-                type="text"
+                type="email"
                 placeholder="Email"
                 value={signInEmail}
                 onChange={this.onTextboxChangeSignInEmail}
-              ></input>
-            </div>
-
-            <div className="textbox">
+              />
+              <br />
               <input
-                name="textbox"
-                ref={this.passRef}
                 type="password"
                 placeholder="Password"
                 value={signInPassword}
                 onChange={this.onTextboxChangeSignInPassword}
-              ></input>
+              />
+              <br />
+              <button onClick={this.onSignIn}>Sign In</button>
             </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div>
+              {signUpError ? <p>{signUpError}</p> : null}
+              <p>Sign Up</p>
+              <input
+                type="text"
+                placeholder="Name"
+                value={signUpName}
+                onChange={this.onTextboxChangeSignUpName}
+              />
+              <br />
+              <input
+                type="email"
+                placeholder="Email"
+                value={signUpEmail}
+                onChange={this.onTextboxChangeSignUpEmail}
+              />
+              <br />
+              <input
+                type="password"
+                placeholder="Password"
+                value={signUpPassword}
+                onChange={this.onTextboxChangeSignUpPassword}
+              />
+              <br />
+              <button onClick={this.onSignUp}>Sign Up</button>
+            </div>
+          </div>
+        </React.Fragment>
+      );
+    }
 
-            {/* <button onClick={this.onSignIn} type="submit">Sign in</button>  */}
-            <input
-              onClick={this.onSignIn}
-              class="btn"
-              type="submit"
-              value="Sign n"
-            ></input>
+    // if (!token) {
+    //   return (
+    //     // <MuiThemeProvider>
+    //     <React.Fragment>
+    //       <Nav />
+    //       {/* onSubmit={this.checkUser} */}
+    //       <form className="login-box" method="POST">
+    //         {signInError ? <p>{signInError}</p> : null}
+    //         <h1>Login</h1>
+    //         <div className="textbox">
+    //           <input
+    //             name="textbox"
+    //             ref={this.emailRef}
+    //             type="text"
+    //             placeholder="Email"
+    //             value={signInEmail}
+    //             onChange={this.onTextboxChangeSignInEmail}
+    //           ></input>
+    //         </div>
 
-            <h4>Not Registered?</h4>
-            <Link style={navStyle} to="/register">
-              <h4>Sign up</h4>
-            </Link>
+    //         <div className="textbox">
+    //           <input
+    //             name="textbox"
+    //             ref={this.passRef}
+    //             type="password"
+    //             placeholder="Password"
+    //             value={signInPassword}
+    //             onChange={this.onTextboxChangeSignInPassword}
+    //           ></input>
+    //         </div>
 
-            {/* //        <TextField
+    //         {/* <button onClick={this.onSignIn} type="submit">Sign in</button>  */}
+    //         <input
+    //           onClick={this.onSignIn}
+    //           class="btn"
+    //           type="submit"
+    //           value="Sign n"
+    //         ></input>
+
+    //         <h4>Not Registered?</h4>
+    //         <Link style={navStyle} to="/register">
+    //           <h4>Sign up</h4>
+    //         </Link>
+
+    {
+      /* //        <TextField
       //           hintText="Enter Your Email"
       //           floatingLabelText="Email"
       //           // onChange={this.onChange}
@@ -232,14 +307,15 @@ export class Login extends React.Component {
       //         <h4>Not Registered?</h4>
       //         <Link style={navStyle} to="/register">
       //           <h4>Sign up</h4>
-      //         </Link> */}
-          </form>
-
-          {/* </div> */}
-        </React.Fragment>
-        // </MuiThemeProvider>
-      );
+      //         </Link> */
     }
+    //       </form>
+
+    //       {/* </div> */}
+    //     </React.Fragment>
+    //     // </MuiThemeProvider>
+    //   );
+    // }
     return (
       // <MuiThemeProvider>
       <React.Fragment>
