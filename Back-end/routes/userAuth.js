@@ -189,7 +189,9 @@ router.post("/login", (req, res, next) => {
         return res.send({
           success: true,
           message: "Valid sign in",
-          token: userSession.userId
+          // token: userSession.userId,
+          userId: userSession.userId,
+          token: doc._id
         });
       });
 
