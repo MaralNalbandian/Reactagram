@@ -32,6 +32,39 @@ class PostDetailed extends React.Component {
 
             function updateReacts() {
 
+                // // LOGIC FLOW:
+                // // IF LOGGED IN:
+
+                // if (user.loggedIn) {
+
+                // //check if user has reacted to this post already
+                // if (this logged in user's id is found in any of the react objects id fields) {
+                //compare this.state.reactType with found reaction object's reaction field
+                //if they're the same:
+                //remove this object from state
+                //post state to db
+
+                //if they're different: 
+                //CHANGE this reaction field in state to this.state.reactType
+                //post state to db
+
+
+                // }
+
+                // // if they dont have a reaction yet
+                //use existing code to add the reaction
+                // else {
+
+                // }
+
+                // else {
+                // // user is not loggedin 
+                //pop up toast message saying that only logged in users can use this functionality
+                //}
+
+
+
+
                 var tempReact = {
                     username: this.state.post.username, //this is wrong but temporary while maral implements login
                     reaction: this.state.reaction
@@ -57,7 +90,13 @@ class PostDetailed extends React.Component {
         )
     }
 
+    handleReply() {
+
+    }
+
+
     renderPost() {
+        console.log("state:", this.state)
         console.log("replies: ", this.state.post.replies)
         return (
 
@@ -113,11 +152,13 @@ class PostDetailed extends React.Component {
                     {/* aim to map out each reply into a card */}
                     {this.state.post.replies.map(
                         reply => <Card style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={reply.imageLink} />
+                            <Card.Img variant="top" src={reply.imageLink}
+                                href="jeff" />
                             <Card.Body>
                                 <Card.Title>Reply by {reply.username}</Card.Title>
                                 <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle>
-                                <Button variant="primary">Reply</Button>
+                                {/* have to go to the actual post to reply to it. Reply is not directly avaialble from the comments. */}
+                                <Card.Link href={"/view/" + reply.postId}>Card Link</Card.Link>
                             </Card.Body>
                         </Card>
                     )}
