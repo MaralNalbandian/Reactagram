@@ -2,7 +2,7 @@ import React from "react";
 
 import Post from "./Post";
 import AddPost from "./addPost";
-import Nav from "./Nav";
+import Menu from "./Menu";
 
 import axios from "axios";
 
@@ -40,24 +40,25 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div className="home">
-        <Nav />
-        <h1>Home</h1>
-        {/* Loads posts once they are fetched from the API */}
-        {this.state.posts && (
-          <div className="photo-grid">
-            {Object.keys(this.state.posts).map(key => (
-              <Post
-                key={key}
-                index={this.state.posts[key].postId}
-                details={this.state.posts[key]}
-                {...this.props}
-              />
-            ))}
-          </div>
-        )}
-        <AddPost addPost={this.addPost} />
-      </div>
+      <React.Fragment>
+        {/* <Menu/> */}
+        <div className="home">
+          {/* Loads posts once they are fetched from the API */}
+          {this.state.posts && (
+            <div className="photo-grid">
+              {Object.keys(this.state.posts).map(key => (
+                <Post
+                  key={key}
+                  index={this.state.posts[key].postId}
+                  details={this.state.posts[key]}
+                  {...this.props}
+                />
+              ))}
+            </div>
+          )}
+          <AddPost addPost={this.addPost} />
+        </div>
+      </React.Fragment>
     );
   }
 }

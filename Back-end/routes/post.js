@@ -62,4 +62,31 @@ router.get('/all', async (req,res) => {
     }
 });
 
+// POST /api/post/like
+// Like a post
+router.post('/like', async (req,res) => {
+    try{
+        const post = await Post.findOne({ postId: req.body.postId })
+        console.log(post)
+        if(post) {
+            try {
+                await Post.updateOne(
+                    //                           Ensures that the number of likes has not been updated since the "find"
+                    { "postId" : req.body.postId, "likes": post.likes },
+                    { $set: { "likes" : post.likes + 1 } }
+                );
+                res.json('Liked!')
+            } catch (error) {
+                res.status(500).json(error)
+            }
+        } else {
+            res.status(404).json('No post found');
+        }
+
+    } catch(err){
+        console.error(err);
+        res.status(500).json('Server error')
+    }
+});
+
 module.exports = router;

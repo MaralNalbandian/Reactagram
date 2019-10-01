@@ -1,13 +1,5 @@
-import React, { Component } from "react";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
-import Nav from "./Nav";
+import React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-
-import { ImageGradient } from "material-ui/svg-icons";
-
 import { getFromStorage, setInStorage } from "../utils/storage";
 
 export class Login extends React.Component {
@@ -180,7 +172,6 @@ export class Login extends React.Component {
     if (!token) {
       return (
         <React.Fragment>
-          <Nav />
           <div>
             <div>
               {signInError ? <p>{signInError}</p> : null}
@@ -319,7 +310,6 @@ export class Login extends React.Component {
     return (
       // <MuiThemeProvider>
       <React.Fragment>
-        <Nav />
         <div>
           <p>Account</p>
           <button onClick={this.logout}>Logout</button>

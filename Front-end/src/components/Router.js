@@ -5,23 +5,21 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import PostDetailed from "./PostDetailed";
 import NotFound from "./NotFound";
-import Register from "./Register";
 import Login from "./Login";
-import Discussion from "./Discussion";
-import Leaderboard from "./Leaderboard";
+import Menu from "./Menu";
 
 const Router = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/view/:postId" component={PostDetailed} />
-      {/* <Route component={NotFound} /> */}
-      <Route exact path="/register" component={Register} />
-      <Route exact path="/login" component={Login} />
-      <Route exact path="/discussion" component={Discussion} />
-      <Route exact path="/leaderboard" component={Leaderboard} />
-    </Switch>
-  </BrowserRouter>
+  <>
+    <Menu />
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/view/:postId" component={PostDetailed} />
+        <Route exact path="/login" component={Login} />
+        <Route component={NotFound} />
+      </Switch>
+    </BrowserRouter>
+  </>
 );
 
 export default Router;
