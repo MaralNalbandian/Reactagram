@@ -200,7 +200,7 @@ export class Login extends React.Component {
               onClick={this.onSignIn}
               class="btn"
               type="submit"
-              value="Sign in"
+              value="Sign n"
             ></input>
 
             <h4>Not Registered?</h4>

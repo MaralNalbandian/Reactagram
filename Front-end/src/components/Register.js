@@ -242,13 +242,13 @@ export class Register extends React.Component {
       signUpPassword
     } = this.state;
 
-    // if (isLoading) {
-    //   return (
-    //     <div>
-    //       <p>Loading...</p>
-    //     </div>
-    //   );
-    // }
+    if (isLoading) {
+      return (
+        <div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
 
     if (!token) {
       return (
