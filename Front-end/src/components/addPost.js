@@ -11,38 +11,53 @@ const config = {
 class AddPost extends React.Component {
   constructor() {
     super()
-    this.state ={}
+    this.state ={
+      imageLink: ""
+    }
   }
 
   usernameRef = React.createRef();
-  imageRef = React.createRef();
 
   createPost = event => {
     // 1.  stop the form from submitting
     event.preventDefault();
+    
+    this.setState({user: this.usernameRef.current.value})
 
-    if (this.state.imageLink !== "" && this.usernameRef.current.value !== ""){
-      const post = {
-        username: this.usernameRef.current.value,
-        imageLink: this.state.imageLink,
-        likes: 0
-      };
-      this.props.addPost(post);
-    }
-    else {
-      console.log('Error!')
-    }
-    // refresh the form
-    event.currentTarget.reset();
-    this.setState({imageLink: ""})
+    ReactS3.uploadFile(this.state.file, config)
+      .then((data) => {
+        console.log(data.location)
+        //Replace ALL ' ' with '+': https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
+        var location = data.location.replace(/ /g,"+")
+        console.log(location)
+        this.setState({imageLink: location})
+
+        if (this.state.imageLink !== "" && this.state.user !== ""){
+          const post = {
+            username: this.state.user,
+            imageLink: this.state.imageLink,
+            likes: 0
+          };
+          this.props.addPost(post);
+        }
+        else {
+          console.log('Error!')
+        }
+      })
+      .catch((error) => console.log(error))
+
+      // refresh the form
+      event.currentTarget.reset();
+      this.setState({imageLink: ""})
   };
 
   upload = e => {
-    ReactS3.uploadFile(e.target.files[0], config)
-    .then((data) => {
-      this.setState({imageLink: data.location})
-    })
-    .catch((error) => console.log(error))
+    //https://stackoverflow.com/questions/21720390/how-to-change-name-of-file-in-javascript-from-input-file
+    //Creates unique filename for upload to s3
+    var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/*'); 
+    var newFile = new File([blob], `image${Date.now()}.${e.target.files[0].name.split(".")[1]}`, {type: 'image/*'});
+
+    this.setState({file: newFile})
   }
 
   render() {
@@ -58,7 +73,9 @@ class AddPost extends React.Component {
               accept="image/*"
               required
             />
-            <button type="submit">+ Add Post</button>
+            {/* {this.state.imageLink !== "" && */}
+              <button type="submit">+ Add Post</button>
+            {/* } */}
           </div>
         </form>
       </div>

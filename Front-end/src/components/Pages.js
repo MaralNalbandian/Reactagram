@@ -13,7 +13,7 @@ class Pages extends React.Component {
             previous = `/${Number(this.props.currentPage)-1}`
         }
         return (
-            <Pagination aria-label="Page navigation example">
+            <Pagination className="Pages" aria-label="Page navigation example">
                 <PaginationItem>
                     <PaginationLink first href="/1" />
                 </PaginationItem>
@@ -23,6 +23,7 @@ class Pages extends React.Component {
 
                 {Object.keys(this.props.pages).map(key => (
                     <Page 
+                        key={key}
                         page= {Number(key)+1}
                         currentPage = {Number(this.props.currentPage)}
                     />

@@ -31,12 +31,10 @@ class Home extends React.Component {
         fetch("http://localhost:80/api/post/count")
         .then((response) => response.json())
         .then((responseJson) => {
-            console.log(responseJson)
             //TODO: Make more efficient
             var count = 1;
             var pages = [];
             while (count <= (responseJson/9)+1){
-                console.log(count)
                 pages.push(count)
                 count = count + 1
             }
@@ -70,22 +68,23 @@ class Home extends React.Component {
                 <div className="home">
                     {/* Loads posts once they are fetched from the API */}
                     {this.state.posts && this.state.pages &&
-                        <div className="photo-grid">
-                            {Object.keys(this.state.posts).slice(0,9).map(key => (
-                                <Post
-                                    key={key}
-                                    index={this.state.posts[key].postId}
-                                    details={this.state.posts[key]}
-                                    {...this.props}
-                                />
-                            ))}
-
+                        <React.Fragment>
+                            <div className="photo-grid">
+                                {Object.keys(this.state.posts).slice(0,9).map(key => (
+                                    <Post
+                                        key={key}
+                                        index={this.state.posts[key].postId}
+                                        details={this.state.posts[key]}
+                                        {...this.props}
+                                    />
+                                ))}
+                            </div>
                             <Pages 
                                 pages= {this.state.pages}
                                 currentPage= {this.props.match.params.page}
                                 lastPage= {this.state.pages[this.state.pages.length-1]}
                             />
-                        </div>
+                        </React.Fragment>
                     }
 
                     <AddPost addPost={this.addPost}/>
