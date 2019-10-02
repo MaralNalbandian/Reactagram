@@ -1,12 +1,14 @@
 import React from 'react';
-import Post from './Post'
+import Post from './Post';
+
+import axios from 'axios';
 
 class PostDetailed extends React.Component {
     getPost() {
-        fetch(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({ post : responseJson })
+        axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
+            .then((response) => {
+                this.setState({ post : response.data })
+                console.log(response)
             })
             .catch((error) => {
             console.error(error);
