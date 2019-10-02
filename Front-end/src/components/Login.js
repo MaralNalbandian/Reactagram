@@ -83,13 +83,17 @@ export class Login extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token });
+          setInStorage("the_main_app", {
+            token: json.token,
+            userIdtoken: json.userIdtoken
+          });
           this.setState({
             signInError: json.message,
             isLoading: false,
             signInEmail: "",
             signInPassword: "",
-            token: json.token
+            token: json.token,
+            userIdtoken: json.userIdtoken
           });
         } else
           this.setState({
