@@ -56,6 +56,7 @@ class Home extends React.Component {
               ))}
             </div>
           )}
+          <h2>Add Post</h2>
           <AddPost addPost={this.addPost} />
         </div>
       </React.Fragment>
