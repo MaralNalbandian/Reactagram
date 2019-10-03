@@ -7,13 +7,13 @@ const Post = require('../models/post')
 // Create post
 router.post('/add', async (req, res) => {
     const postId = req.body.postId;
-    const username = req.body.username;
+    const userId = req.body.userId;
     const imageLink = req.body.imageLink;
 
     try {
         post = new Post({
             postId,
-            username,
+            userId,
             imageLink,
             date: new Date(),
             reacts: [],
@@ -59,6 +59,41 @@ router.get('/all', async (req, res) => {
             res.status(404).json('No posts found');
         }
     } catch (err) {
+        console.error(err);
+        res.status(500).json('Server error');
+    }
+});
+
+// GET /api/post/page/:page
+// Get posts on a certain page
+router.get('/page/:page', async (req,res) => {
+    try {
+        const startRange = (req.params.page - 1) * 9;
+        const posts = await Post.find({}).skip(startRange).limit(9)
+
+        if(posts) {
+            return res.json(posts)
+        } else {
+            res.status(404).json('No posts found');
+        }
+    } catch(err) {
+        console.error(err);
+        res.status(500).json('Server error');
+    }
+});
+
+// GET /api/post/all
+// Get all posts
+router.get('/count', async (req,res) => {
+    try {
+        const amount = await Post.find({}).countDocuments()
+
+        if(amount) {
+            return res.json(amount)
+        } else {
+            res.status(404).json('No amount found');
+        }
+    } catch(err) {
         console.error(err);
         res.status(500).json('Server error');
     }
