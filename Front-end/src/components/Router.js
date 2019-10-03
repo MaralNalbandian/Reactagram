@@ -15,8 +15,8 @@ const Router = () => (
             <Switch>
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/:page" component={Home}/>
-                <Redirect from="/" to="/1"/>
                 <Route exact path="/view/:postId" component={PostDetailed}/>
+                <Redirect from="/" to="/1"/>
                 <Route component={NotFound}/>
             </Switch>
         </BrowserRouter>
