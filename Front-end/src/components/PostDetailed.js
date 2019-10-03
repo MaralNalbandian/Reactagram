@@ -1,41 +1,379 @@
 import React from 'react';
 import Post from './Post';
+import AddPost from './addPost';
+import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
 
 import axios from 'axios';
 
 class PostDetailed extends React.Component {
+
+    constructor(props) {
+        super(props)
+    }
+
     getPost() {
         axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
-                this.setState({ post : response.data })
+                this.setState({ post: response.data })
                 console.log(response)
             })
             .catch((error) => {
-            console.error(error);
+                console.error(error);
             });
     }
-    
-    componentWillMount() {
-        this.getPost();
+
+    state = {
+        reactionCounts: {
+            like: 0,
+            love: 0,
+            laugh: 0,
+            sad: 0,
+            angry: 0,
+        }
     }
 
-    state = {}
+    componentWillMount() {
+        this.getPost();
+        console.log(this.state)
+        //console.log("getStorageToken: ", localStorage.getItem("the_main_app"))
+        //if user is logged in :
+        if (localStorage.getItem("the_main_app") != undefined) {
+            this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
+            this.setState({ userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken })
+        }
+        else {
+            console.log("user is not logged in")
+            this.setState({ token: undefined })
+            this.setState({ userIdtoken: undefined })
+        }
+        this.setState({ reactCountsCanUseState: false })
+    }
+
+    getReactionCounts(type) {
+        console.log("getReactionCounts", type)
+        var sum = 0;
+        for (var i = 0; i < this.state.post.reacts.length; i++) {
+            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            if (this.state.post.reacts[i].reaction == type) {
+                console.log("setting ", type, sum)
+                sum = sum + 1;
+            }
+        }
+        return sum;
+
+    }
+
+    setReactionCountStates() {
+        var sum = 0;
+
+        //check like
+        for (var i = 0; i < this.state.post.reacts.length; i++) {
+            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            if (this.state.post.reacts[i].reaction == "like") {
+                console.log("setting like: ", sum)
+                sum = sum + 1;
+            }
+        }
+
+        this.state.reactionCounts.like = sum;
+        this.setState(this.state)
+        console.log("completed setting like", "to: ", sum)
+
+        //check love
+        for (var i = 0; i < this.state.post.reacts.length; i++) {
+            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            if (this.state.post.reacts[i].reaction == "love") {
+                console.log("setting love: ", sum)
+                sum = sum + 1;
+            }
+        }
+
+        this.state.reactionCounts.love = sum;
+        this.setState(this.state)
+        console.log("completed setting love", "to: ", sum)
+
+        //check laugh
+        for (var i = 0; i < this.state.post.reacts.length; i++) {
+            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            if (this.state.post.reacts[i].reaction == "laugh") {
+                console.log("setting laugh: ", sum)
+                sum = sum + 1;
+            }
+        }
+
+        this.state.reactionCounts.laugh = sum;
+        this.setState(this.state)
+        console.log("completed setting laugh", "to: ", sum)
+
+        //check sad
+        for (var i = 0; i < this.state.post.reacts.length; i++) {
+            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            if (this.state.post.reacts[i].reaction == "sad") {
+                console.log("setting sad: ", sum)
+                sum = sum + 1;
+            }
+        }
+
+        this.state.reactionCounts.sad = sum;
+        this.setState(this.state)
+        console.log("completed setting sad", "to: ", sum)
+
+
+        //check angry
+        for (var i = 0; i < this.state.post.reacts.length; i++) {
+            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            if (this.state.post.reacts[i].reaction == "angry") {
+                console.log("setting angry: ", sum)
+                sum = sum + 1;
+            }
+        }
+
+        this.state.reactionCounts.angry = sum;
+        this.setState(this.state)
+        console.log("completed setting angry", "to: ", sum)
+
+    }
+
+    handleReact(reactType) {
+        console.log("reactype", reactType)
+
+        this.setState({
+            reaction: reactType
+        },
+
+            function updateReacts() {
+                let operationComplete = false;
+
+                //if logged in..
+                if (this.state.userIdtoken != undefined) {
+                    //if user is logged in
+
+                    //check if user has reacted to this post already.
+                    for (var i = 0; i < this.state.post.reacts.length; i++) {
+                        if (this.state.post.reacts[i].userId == this.state.userIdtoken) {
+                            console.log("user has reacted already");
+
+                            //now check if the user's reaction is the same
+                            //in this case REMOVE their reaction
+                            console.log("this.state.reactType: ", this.state.reaction)
+                            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+                            if (this.state.reaction == this.state.post.reacts[i].reaction) {
+
+                                console.log("the REACTION IS THE SAME AS EXISTING")
+                                //REMOVE this object from the array
+                                console.log("this.state.post.reacts[i].userId:", this.state.post.reacts[i].userId);
+                                console.log("this.state.userIdtoken:", this.state.userIdtoken)
+
+                                console.log("compare: ", this.state.userIdtoken == this.state.post.reacts[i].userId);
+
+                                console.log("before: ", this.state.post.reacts)
+                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdtoken);
+                                //need to post this to db after
+                                console.log("after: ", newArray)
+
+                                this.state.post.reacts = newArray;
+                                operationComplete = true;
+                            }
+                            else {
+                                //if their reaction is different
+                                this.state.post.reacts[i].reaction = this.state.reaction;
+                                operationComplete = true;
+                            }
+
+                        }
+                    }
+                    //now we've finished looping, if an operation has not been performed
+                    //this means they don't have areaction already, so..
+                    if (operationComplete != true) {
+                        //user is making a new reaction
+                        var tempReact = {
+                            userId: this.state.userIdtoken,
+                            reaction: this.state.reaction
+                        }
+
+                        console.log("tempReact", tempReact);
+
+                        //push it into the post object in state
+                        this.state.post.reacts.push(tempReact)
+                        console.log(this.state.post)
+                    }
+
+                    //this runs no matter what since we're just manipulating state except if not logged in
+                    //POST state to database
+                    fetch('http://localhost:80/api/post/react', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(this.state.post)
+                    })
+                        .then(() => this.setReactionCountStates())
+                        .catch((error) => console.log(error))
+                }
+
+                else {
+
+                    //if user is not logged in yet pop up a  toast
+                    window.alert("You need to be logged in to react to posts!");
+
+                }
+
+            }
+
+        )
+    }
+
+    addPost = post => {
+        // 1. Add our new post using the API
+        axios("http://localhost:80/api/post/add", {
+            method: "post",
+            data: {
+                postId: `post${Date.now()}`,
+                username: post.username,
+                imageLink: post.imageLink
+            }
+            //2. Also Update the replies of this post
+        })
+            .then(
+                () => this.updateReplies()
+                    .then(
+                        // 3. Retrieve all the posts using the API
+                        () => this.getPosts()
+                    )
+            );
+    };
+
+    updateReplies() {
+        //manipulate state's replies by appending a new "post reply" object...
+        var tempReply = {
+            postId: `post${Date.now()}`,
+            userId: this.state.userIdtoken,
+            //imageLink: post.imageLink,
+        }
+
+        this.state.post.replies.push(tempReply)
+        console.log(this.state.post)
+
+        fetch('http://localhost:80/api/post/react', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.state.post)
+        })
+            .then(() => console.log("success"))
+            .catch((error) => console.log(error))
+
+    };
+
 
     render() {
+        //get total amounts of reactions
+        //this.getReactionCounts();
+
+        console.log("token: ", this.state.token);
+        console.log("userIdtoken: ", this.state.userIdtoken);
+        console.log("STATE: ", this.state)
         const id = this.props.match.params.postId;
-        if (this.state.post){
+        if (this.state.post) {
+            // { this.getReactionCounts("like") }
             return (
-                <div className="photo-grid">
-                    <Post
-                        key={id}
-                        index={id}
-                        details={this.state.post}
-                        {...this.props}
-                    />
+                <div className="photo-grid" >
+
+                    {/* // Begin Post Section */}
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                        <Row>
+                            <Col xs={8}>
+                                <Card style={{
+                                    display: 'flex', justifyContent: 'center', alignItems: 'center', width: 400,
+
+                                }}
+                                    key={id}>
+                                    <Card.Title>Post by {this.state.post.username}</Card.Title>
+                                    <Card.Subtitle className="mb-2 text-muted">At {this.state.post.date}</Card.Subtitle>
+                                    <Card.Img variant="bottom" src={this.state.post.imageLink} />
+
+                                    <Card.Body>
+                                        <Row>
+                                            <Col>
+                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("like")}>👍</Button>
+                                                <h5 className="pull-right">
+                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.like : this.getReactionCounts("like")}
+                                                </h5>
+
+                                            </Col>
+                                            <Col>
+                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("love")}>😍</Button>
+                                                <h5 className="pull-right">
+                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.love : this.getReactionCounts("love")}
+                                                </h5>
+                                            </Col>
+                                            <Col>
+                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("laugh")}>😂</Button>
+                                                <h5 className="pull-right">
+                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.laugh : this.getReactionCounts("laugh")}
+                                                </h5>
+                                            </Col>
+                                            <Col>
+                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("sad")}>😢</Button>
+                                                <h5 className="pull-right">
+                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.sad : this.getReactionCounts("sad")}
+                                                </h5>
+                                            </Col>
+                                            <Col>
+                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("angry")}>😡</Button>
+                                                <h5 className="pull-right">
+                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.angry : this.getReactionCounts("angry")}
+                                                </h5>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+
+                                    <Card.Body>
+                                        {/* Reply Form Goes Here */}
+                                        <h2>Add Reply</h2>
+                                        {/* <AddPost addPost={this.addPost} /> */}
+                                    </Card.Body>
+                                </Card>
+
+                            </Col>
+                        </Row>
+
+                    </Container>
+
+                    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+                        {/* begin replies */}
+
+                        <Row id="replies" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}>
+                            <Col xs={8} >
+
+                                {this.state.post.replies.map(
+                                    reply =>
+                                        <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}
+                                            key={reply.postId}>
+
+                                            <Card style={{
+                                                display: 'flex', justifyContent: 'center', alignItems: 'center', width: 500,
+                                            }} >
+                                                <Card.Img variant="top" src={reply.imageLink}
+                                                    href="jeff" />
+                                                <Card.Body>
+                                                    <Card.Title>Reply by {reply.username}</Card.Title>
+                                                    <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle>
+                                                    {/* have to go to the actual post to reply to it. Reply is not directly avaialble from the comments. */}
+                                                    <Card.Link href={"/view/" + reply.postId}>View this Post</Card.Link>
+                                                </Card.Body>
+                                            </Card>
+
+                                        </Row>
+                                )}
+                            </Col>
+                        </Row>
+                    </Container>
                 </div>
             )
         }
-        else{
+        else {
             return (
                 <div>Post not found</div>
             )

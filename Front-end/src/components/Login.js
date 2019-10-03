@@ -44,11 +44,11 @@ export class Login extends React.Component {
               });
             }
           });
-      }; 
-      } else {
-        this.setState({
-          isLoading: false
-        });
+      };
+    } else {
+      this.setState({
+        isLoading: false
+      });
     }
   }
 
@@ -104,6 +104,7 @@ export class Login extends React.Component {
   }
 
   logout() {
+    localStorage.clear();
     this.setState({
       isLoading: true
     });
