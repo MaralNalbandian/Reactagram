@@ -19,7 +19,7 @@ class Post extends React.Component {
                         <img className="grid-photo" src={this.props.details.imageLink} alt="Post"></img>
                     </div>
                     <div className="grid-user-wrapper">
-                        <div className="grid-user">{this.props.details.username}</div>
+                        <div className="grid-user">{this.props.details.userId}</div>
                     </div>
                     <button className="likeButton" >Like</button>
                 </div>

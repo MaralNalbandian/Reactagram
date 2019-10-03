@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import Post from './Post';
 import AddPost from './addPost';
@@ -10,6 +10,23 @@ class Home extends React.Component {
         this.state ={
         }
     }
+
+    addPost = post => {
+        console.log(post.userId)
+        // 1. Add our new post using the API
+        fetch('http://localhost:80/api/post/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "postId": `post${Date.now()}`,
+                "userId": post.userId,
+                "imageLink": post.imageLink
+            })
+        // 2. Retrieve all the posts using the API
+        }).then( () => this.getPosts())
+    };
 
     getPosts() {
         fetch("http://localhost:80/api/post/count")
@@ -39,14 +56,15 @@ class Home extends React.Component {
         })
         .catch((error) => {
         console.error(error);
-      });
-  }
+        });
+    }
 
-  componentWillMount() {
-    this.getPosts();
-  }
+    componentWillMount() {
+        this.getPosts()
+    }
 
     render() {
+        console.log(this.state.posts)
         return (
             <React.Fragment>
                 <div className="home">

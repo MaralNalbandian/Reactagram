@@ -11,6 +11,7 @@ const config = {
 class AddPost extends React.Component {
   constructor() {
     super()
+
     this.state ={
       imageLink: ""
     }
@@ -21,8 +22,6 @@ class AddPost extends React.Component {
   createPost = event => {
     // 1.  stop the form from submitting
     event.preventDefault();
-    
-    this.setState({user: this.usernameRef.current.value})
 
     ReactS3.uploadFile(this.state.file, config)
       .then((data) => {
@@ -32,12 +31,12 @@ class AddPost extends React.Component {
         console.log(location)
         this.setState({imageLink: location})
 
-        if (this.state.imageLink !== "" && this.state.user !== ""){
+        if (this.state.imageLink !== "" && JSON.parse(localStorage.getItem("the_main_app")).userIdtoken){
           const post = {
-            username: this.state.user,
-            imageLink: this.state.imageLink,
-            likes: 0
+            userId: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
+            imageLink: this.state.imageLink
           };
+          console.log(post)
           this.props.addPost(post);
         }
         else {
@@ -61,25 +60,33 @@ class AddPost extends React.Component {
   }
 
   render() {
-    return (
-      <div className="add-post">
-        <form className="add-post-form" onSubmit={this.createPost}>
-          <h2>Add Post</h2>
-          <div className='input'>
-            <input name="username" ref={this.usernameRef} type="text" placeholder="Username" required/>
-            <input 
-              type="file"
-              onChange={this.upload}
-              accept="image/*"
-              required
-            />
-            {/* {this.state.imageLink !== "" && */}
-              <button type="submit">+ Add Post</button>
-            {/* } */}
-          </div>
-        </form>
-      </div>
-    );
+    //Renders the add post component if the user is logged in
+    if (JSON.parse(localStorage.getItem("the_main_app"))){
+      return (
+        <div className="add-post">
+          <form className="add-post-form" onSubmit={this.createPost}>
+            <h2>Add Post</h2>
+            <div className='input'>
+              <input 
+                type="file"
+                onChange={this.upload}
+                accept="image/*"
+                required
+              />
+              {/* {this.state.imageLink !== "" && */}
+                <button type="submit">+ Add Post</button>
+              {/* } */}
+            </div>
+          </form>
+        </div>
+      );
+    } else {
+      return (
+        <div className="add-post">
+          <h2>Please login to make a post</h2>
+        </div>
+      )
+    }
   }
 }
 

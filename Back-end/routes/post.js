@@ -7,15 +7,17 @@ const Post = require('../models/post')
 // Create post
 router.post('/add', async (req,res) => {
     const postId = req.body.postId;
-    const username = req.body.username;
+    const userId = req.body.userId;
     const imageLink = req.body.imageLink;
 
     try{
         post = new Post({
             postId,
-            username,
+            userId,
             imageLink,
-            date: new Date()
+            date: new Date(),
+            react: [],
+            replies: []
         });
 
         await post.save();
