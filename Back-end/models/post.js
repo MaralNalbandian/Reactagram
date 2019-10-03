@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema({
     imageLink: String,
     date: { type: String, default: Date.now },
     reacts: [{ userId: String, reaction: String }],
+    numOfReacts: Number,
     replies: [{ userId: String, reply: String }]
 })
 
