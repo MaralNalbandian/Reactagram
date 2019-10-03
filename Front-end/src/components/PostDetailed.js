@@ -1,6 +1,7 @@
 import React from 'react';
 import Post from './Post';
 import AddPost from './addPost';
+import Reactions from './Reactions'
 import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
 
 import axios from 'axios';
@@ -297,39 +298,9 @@ class PostDetailed extends React.Component {
                                     <Card.Img variant="bottom" src={this.state.post.imageLink} />
 
                                     <Card.Body>
-                                        <Row>
-                                            <Col>
-                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("like")}>👍</Button>
-                                                <h5 className="pull-right">
-                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.like : this.getReactionCounts("like")}
-                                                </h5>
-
-                                            </Col>
-                                            <Col>
-                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("love")}>😍</Button>
-                                                <h5 className="pull-right">
-                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.love : this.getReactionCounts("love")}
-                                                </h5>
-                                            </Col>
-                                            <Col>
-                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("laugh")}>😂</Button>
-                                                <h5 className="pull-right">
-                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.laugh : this.getReactionCounts("laugh")}
-                                                </h5>
-                                            </Col>
-                                            <Col>
-                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("sad")}>😢</Button>
-                                                <h5 className="pull-right">
-                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.sad : this.getReactionCounts("sad")}
-                                                </h5>
-                                            </Col>
-                                            <Col>
-                                                <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("angry")}>😡</Button>
-                                                <h5 className="pull-right">
-                                                    {this.state.reactCountsCanUseState ? this.state.reactionCounts.angry : this.getReactionCounts("angry")}
-                                                </h5>
-                                            </Col>
-                                        </Row>
+                                    <div className="detailed-reactions">
+                                        <Reactions state={this.state}/>
+                                    </div>
                                     </Card.Body>
 
                                     <Card.Body>

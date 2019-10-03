@@ -76,7 +76,7 @@ class Home extends React.Component {
                                     <Post
                                         key={key}
                                         index={this.state.posts[key].postId}
-                                        details={this.state.posts[key]}
+                                        post={this.state.posts[key]}
                                         {...this.props}
                                     />
                                 ))}
