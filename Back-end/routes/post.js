@@ -9,7 +9,6 @@ router.post('/add', async (req, res) => {
     const postId = req.body.postId;
     const username = req.body.username;
     const imageLink = req.body.imageLink;
-    const reacts = req.body.reacts;
 
     try {
         post = new Post({
@@ -17,7 +16,8 @@ router.post('/add', async (req, res) => {
             username,
             imageLink,
             date: new Date(),
-            reacts
+            reacts: [],
+            replies: []
         });
 
         await post.save();
@@ -64,8 +64,7 @@ router.get('/all', async (req, res) => {
     }
 });
 
-
-// POST /api/post/like
+// POST /api/post/react
 // React to a post
 router.post('/react', async (req, res) => {
     try {
@@ -87,8 +86,37 @@ router.post('/react', async (req, res) => {
             } catch (error) {
                 res.status(500).json(error)
             }
-        } 
-        
+        }
+
+        else {
+            res.status(404).json('No post found');
+        }
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('Server error')
+    }
+});
+
+// POST /api/post/delete
+// React to a post
+router.delete('/delete', async (req, res) => {
+    try {
+        const post = await Post.findOne({ postId: req.body.postId })
+
+        if (post) { //if post exists based on id
+            try {
+
+                post.remove();
+
+                await post.save();
+
+                res.json('Reacted!')
+            } catch (error) {
+                res.status(500).json(error)
+            }
+        }
+
         else {
             res.status(404).json('No post found');
         }
