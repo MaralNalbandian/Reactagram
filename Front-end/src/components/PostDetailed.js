@@ -172,6 +172,7 @@ class PostDetailed extends React.Component {
                                 console.log("after: ", newArray)
 
                                 this.state.post.reacts = newArray;
+                                this.state.post.numOfReacts = this.state.post.numOfReacts - 1;
                                 operationComplete = true;
                             }
                             else {
@@ -195,6 +196,8 @@ class PostDetailed extends React.Component {
 
                         //push it into the post object in state
                         this.state.post.reacts.push(tempReact)
+                        this.state.post.numOfReacts = this.state.post.numOfReacts + 1;
+                        console.log('HIIIIIIIIIIIIIIIIIII')
                         console.log(this.state.post)
                     }
 

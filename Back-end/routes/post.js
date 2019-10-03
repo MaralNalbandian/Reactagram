@@ -17,6 +17,7 @@ router.post('/add', async (req, res) => {
             imageLink,
             date: new Date(),
             reacts: [],
+            numOfReacts: 0,
             replies: []
         });
 
@@ -69,7 +70,7 @@ router.get('/all', async (req, res) => {
 router.get('/page/:page', async (req,res) => {
     try {
         const startRange = (req.params.page - 1) * 9;
-        const posts = await Post.find({}).skip(startRange).limit(9)
+        const posts = await Post.find({}).sort({numOfReacts : -1}).skip(startRange).limit(9)
 
         if(posts) {
             return res.json(posts)
@@ -114,6 +115,7 @@ router.post('/react', async (req, res) => {
                 // );
 
                 post.reacts = req.body.reacts;
+                post.numOfReacts = req.body.numOfReacts;
 
                 await post.save();
 
