@@ -109,13 +109,10 @@ router.post('/react', async (req, res) => {
         if (post) { //if post exists based on id
             try {
 
-                // await Post.updateOne( 
-                //     { "postId": req.body.postId, "reacts": post.reacts },
-                //     { $set: { "reacts": req.body.reacts } }
-                // );
                 post.reacts = req.body.reacts;
                 post.numOfReacts = req.body.numOfReacts;
-
+                post.replies = req.body.replies;
+                
                 await post.save();
 
                 res.json('Reacted!')
@@ -133,6 +130,37 @@ router.post('/react', async (req, res) => {
         res.status(500).json('Server error')
     }
 });
+
+
+// POST /api/post/reply
+// React to a post
+router.post('/reply', async (req, res) => {
+    try {
+        const post = await Post.findOne({ postId: req.body.postId })
+
+        if (post) { //if post exists based on id
+            try {
+
+                post.replies = req.body.replies;
+
+                await post.save();
+
+                res.json('Replied!')
+            } catch (error) {
+                res.status(500).json(error)
+            }
+        }
+
+        else {
+            res.status(404).json('No post found');
+        }
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('Server error')
+    }
+});
+
 
 // POST /api/post/delete
 // React to a post

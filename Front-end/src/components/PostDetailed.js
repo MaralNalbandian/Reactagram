@@ -12,7 +12,7 @@ class PostDetailed extends React.Component {
     }
 
     getPost() {
-        axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
+        return axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
                 this.setState({ post: response.data })
                 console.log(response)
@@ -29,33 +29,48 @@ class PostDetailed extends React.Component {
             laugh: 0,
             sad: 0,
             angry: 0,
-        }
+        },
+        replyObjects: [],
     }
 
     componentWillMount() {
-        this.getPost();
-        console.log(this.state)
+        this.getPost()
+            .then(() => this.getReplyObjects());
+
+
+        //console.log("state after getPost", this.state)
+
         //console.log("getStorageToken: ", localStorage.getItem("the_main_app"))
         //if user is logged in :
+
         if (localStorage.getItem("the_main_app") != undefined) {
             this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
             this.setState({ userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken })
         }
+
         else {
             console.log("user is not logged in")
             this.setState({ token: undefined })
             this.setState({ userIdtoken: undefined })
+
         }
+
         this.setState({ reactCountsCanUseState: false })
     }
+
+    // componentDidMount() {
+    //     console.log("state before getreplyobjects: ", this.state)
+    //     this.getReplyObjects();
+    //     console.log("state after getreplyobjects: ", this.state)
+    // }
 
     getReactionCounts(type) {
         console.log("getReactionCounts", type)
         var sum = 0;
         for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
             if (this.state.post.reacts[i].reaction == type) {
-                console.log("setting ", type, sum)
+                // console.log("setting ", type, sum)
                 sum = sum + 1;
             }
         }
@@ -68,7 +83,7 @@ class PostDetailed extends React.Component {
 
         //check like
         for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
             if (this.state.post.reacts[i].reaction == "like") {
                 console.log("setting like: ", sum)
                 sum = sum + 1;
@@ -77,11 +92,11 @@ class PostDetailed extends React.Component {
 
         this.state.reactionCounts.like = sum;
         this.setState(this.state)
-        console.log("completed setting like", "to: ", sum)
+        // console.log("completed setting like", "to: ", sum)
 
         //check love
         for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
             if (this.state.post.reacts[i].reaction == "love") {
                 console.log("setting love: ", sum)
                 sum = sum + 1;
@@ -90,11 +105,11 @@ class PostDetailed extends React.Component {
 
         this.state.reactionCounts.love = sum;
         this.setState(this.state)
-        console.log("completed setting love", "to: ", sum)
+        // console.log("completed setting love", "to: ", sum)
 
         //check laugh
         for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
             if (this.state.post.reacts[i].reaction == "laugh") {
                 console.log("setting laugh: ", sum)
                 sum = sum + 1;
@@ -103,34 +118,34 @@ class PostDetailed extends React.Component {
 
         this.state.reactionCounts.laugh = sum;
         this.setState(this.state)
-        console.log("completed setting laugh", "to: ", sum)
+        // console.log("completed setting laugh", "to: ", sum)
 
         //check sad
         for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
             if (this.state.post.reacts[i].reaction == "sad") {
-                console.log("setting sad: ", sum)
+                // console.log("setting sad: ", sum)
                 sum = sum + 1;
             }
         }
 
         this.state.reactionCounts.sad = sum;
         this.setState(this.state)
-        console.log("completed setting sad", "to: ", sum)
+        // console.log("completed setting sad", "to: ", sum)
 
 
         //check angry
         for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
             if (this.state.post.reacts[i].reaction == "angry") {
-                console.log("setting angry: ", sum)
+                // console.log("setting angry: ", sum)
                 sum = sum + 1;
             }
         }
 
         this.state.reactionCounts.angry = sum;
-        this.setState(this.state)
-        console.log("completed setting angry", "to: ", sum)
+        this.setState(this.state);
+        // console.log("completed setting angry", "to: ", sum)
 
     }
 
@@ -155,21 +170,21 @@ class PostDetailed extends React.Component {
 
                             //now check if the user's reaction is the same
                             //in this case REMOVE their reaction
-                            console.log("this.state.reactType: ", this.state.reaction)
-                            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
+                            // console.log("this.state.reactType: ", this.state.reaction)
+                            // console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
                             if (this.state.reaction == this.state.post.reacts[i].reaction) {
 
-                                console.log("the REACTION IS THE SAME AS EXISTING")
+                                // console.log("the REACTION IS THE SAME AS EXISTING")
                                 //REMOVE this object from the array
-                                console.log("this.state.post.reacts[i].userId:", this.state.post.reacts[i].userId);
-                                console.log("this.state.userIdtoken:", this.state.userIdtoken)
+                                // console.log("this.state.post.reacts[i].userId:", this.state.post.reacts[i].userId);
+                                // console.log("this.state.userIdtoken:", this.state.userIdtoken)
 
-                                console.log("compare: ", this.state.userIdtoken == this.state.post.reacts[i].userId);
+                                // console.log("compare: ", this.state.userIdtoken == this.state.post.reacts[i].userId);
 
-                                console.log("before: ", this.state.post.reacts)
+                                // console.log("before: ", this.state.post.reacts)
                                 var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdtoken);
                                 //need to post this to db after
-                                console.log("after: ", newArray)
+                                // console.log("after: ", newArray)
 
                                 this.state.post.reacts = newArray;
                                 this.state.post.numOfReacts = this.state.post.numOfReacts - 1;
@@ -184,7 +199,7 @@ class PostDetailed extends React.Component {
                         }
                     }
                     //now we've finished looping, if an operation has not been performed
-                    //this means they don't have areaction already, so..
+                    //this means they don't have a reaction already, so..
                     if (operationComplete != true) {
                         //user is making a new reaction
                         var tempReact = {
@@ -227,35 +242,38 @@ class PostDetailed extends React.Component {
     }
 
     addPost = post => {
+        var dateNow = Date.now();
         // 1. Add our new post using the API
-        axios("http://localhost:80/api/post/add", {
-            method: "post",
-            data: {
-                postId: `post${Date.now()}`,
-                username: post.username,
-                imageLink: post.imageLink
-            }
-            //2. Also Update the replies of this post
-        })
-            .then(
-                () => this.updateReplies()
-                    .then(
-                        // 3. Retrieve all the posts using the API
-                        () => this.getPosts()
-                    )
-            );
+        try {
+            axios("http://localhost:80/api/post/add", {
+                method: "post",
+                data: {
+                    postId: `post${dateNow}`,
+                    username: post.username,
+                    imageLink: post.imageLink
+                }
+                //2. Also Update the replies of this post
+            });
+        }
+        catch (error) {
+            console.log("im a degenerate")
+        }
+        // .then(
+        // () => 
+        this.updateReplies(dateNow);
+        // .then(
+        // 3. Retrieve all the posts using the API
+        // () => this.getPosts()
+        // )
+        // );
     };
 
-    updateReplies() {
-        //manipulate state's replies by appending a new "post reply" object...
-        var tempReply = {
-            postId: `post${Date.now()}`,
-            userId: this.state.userIdtoken,
-            //imageLink: post.imageLink,
-        }
+    updateReplies(dateId) {
 
-        this.state.post.replies.push(tempReply)
-        console.log(this.state.post)
+        //push postId to replies array
+        console.log("before arra: state.post.replies", this.state.post.replies)
+        this.state.post.replies.push(`post${dateId}`)
+        console.log("after arra: state.post.replies", this.state.post.replies)
 
         fetch('http://localhost:80/api/post/react', {
             method: 'POST',
@@ -264,7 +282,10 @@ class PostDetailed extends React.Component {
             },
             body: JSON.stringify(this.state.post)
         })
-            .then(() => console.log("success"))
+            .then(() => {
+                this.setState((this.state), () => this.getReplyObjects());
+
+            })
             .catch((error) => console.log(error))
 
     };
@@ -286,8 +307,6 @@ class PostDetailed extends React.Component {
         })
             .then(() => window.alert("Post Succesfully Deleted"))
             .catch((error) => console.log(error))
-
-        console.log("attempting to delete document")
 
         this.setState(this.state); //refresh state 
 
@@ -360,20 +379,56 @@ class PostDetailed extends React.Component {
 
     }
 
+    getReplyObjects() {
+        console.log("GETREPLYOBJECTS CALLED")
+
+        //make a fetch call for each postId in this.post.replies
+        //debugger;
+        console.log("replyes langth: ", this.state.post.replies.length)
+        console.log("replies before promise: ", this.state.post.replies)
+
+        //debugger;
+
+        //set state now
+
+        //loop a fetch request
+        for (var i = 0; i < this.state.post.replies.length; i++) {
+            //var getLink = 'http://localhost:80/api/post/get/$' + this.state.post.replies
+            axios.get(`http://localhost:80/api/post/get/${this.state.post.replies[i]}`)
+                .then((response) => {
+                    //this.setState({ post: response.data })
+                    this.state.replyObjects.push(response.data)
+                    console.log(response.data)
+                    console.log("replyObjects: ", this.state.replyObjects)
+                    this.setState(this.state) //refresh state
+                    console.log(this.state)
+                    this.getPost();
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+        
+
+    }
+
     render() {
         //get total amounts of reactions
         //this.getReactionCounts();
-
         console.log("token: ", this.state.token);
         console.log("userIdtoken: ", this.state.userIdtoken);
         console.log("STATE: ", this.state)
         const id = this.props.match.params.postId;
+
+        //get replies into an array of objects in state called "replyObjects"
+
         if (this.state.post) {
             // { this.getReactionCounts("like") }
             return (
 
                 <Container>
                     {this.renderButtons()}
+                    {/* {this.getReplyObjects()} */}
 
                     <div className="photo-grid" >
 
@@ -435,8 +490,8 @@ class PostDetailed extends React.Component {
 
                                         <Card.Body>
                                             {/* Reply Form Goes Here */}
-                                            <h2>Add Reply</h2>
-                                            {/* <AddPost addPost={this.addPost} /> */}
+                                            {/* <h2>Add Reply</h2> */}
+                                            <AddPost addPost={this.addPost} />
                                         </Card.Body>
                                     </Card>
 
@@ -446,12 +501,15 @@ class PostDetailed extends React.Component {
                         </Container>
 
                         <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+
+
                             {/* begin replies */}
 
                             <Row id="replies" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}>
                                 <Col xs={8} >
+                                    {console.log("cuntcuntcunt", this.state.replyObjects)}
 
-                                    {this.state.post.replies.map(
+                                    {this.state.replyObjects.map(
                                         reply =>
                                             <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}
                                                 key={reply.postId}>
@@ -470,6 +528,7 @@ class PostDetailed extends React.Component {
                                                 </Card>
                                             </Row>
                                     )}
+
                                 </Col>
                             </Row>
                         </Container>

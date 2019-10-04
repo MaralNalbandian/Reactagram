@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
     date: { type: String, default: Date.now },
     reacts: [{ userId: String, reaction: String }],
     numOfReacts: Number,
-    replies: [{ userId: String, reply: String }]
+    replies: [String]
 })
 
 module.exports = mongoose.model('Post', postSchema)
