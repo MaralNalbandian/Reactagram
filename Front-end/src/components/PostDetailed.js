@@ -225,6 +225,9 @@ class PostDetailed extends React.Component {
 
     addPost = post => {
         // 1. Add our new post using the API
+
+        //store variable of date.now so it doesnt change throughout the function
+
         axios("http://localhost:80/api/post/add", {
             method: "post",
             data: {
@@ -426,7 +429,7 @@ class PostDetailed extends React.Component {
                                                         {this.state.reactCountsCanUseState ? this.state.reactionCounts.angry : this.getReactionCounts("angry")}
                                                     </h5>
                                                 </Col>
-                                                
+
                                             </Row>
                                         </Card.Body>
 
@@ -465,7 +468,6 @@ class PostDetailed extends React.Component {
                                                         <Card.Link href={"/view/" + reply.postId}>View this Post</Card.Link>
                                                     </Card.Body>
                                                 </Card>
-
                                             </Row>
                                     )}
                                 </Col>
