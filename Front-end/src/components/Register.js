@@ -345,7 +345,9 @@ export class Register extends React.Component {
               placeholder="Password"
             ></input>
           </div>
+
           <input class="btn" type="submit" value="Register"></input>
+
           <h4>Have an account?</h4>
           <Link style={navStyle} to="/login">
             <h4>Login</h4>

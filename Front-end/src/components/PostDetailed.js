@@ -172,6 +172,7 @@ class PostDetailed extends React.Component {
                                 console.log("after: ", newArray)
 
                                 this.state.post.reacts = newArray;
+                                this.state.post.numOfReacts = this.state.post.numOfReacts - 1;
                                 operationComplete = true;
                             }
                             else {
@@ -195,6 +196,8 @@ class PostDetailed extends React.Component {
 
                         //push it into the post object in state
                         this.state.post.reacts.push(tempReact)
+                        this.state.post.numOfReacts = this.state.post.numOfReacts + 1;
+                        console.log('HIIIIIIIIIIIIIIIIIII')
                         console.log(this.state.post)
                     }
 
@@ -225,9 +228,6 @@ class PostDetailed extends React.Component {
 
     addPost = post => {
         // 1. Add our new post using the API
-
-        //store variable of date.now so it doesnt change throughout the function
-
         axios("http://localhost:80/api/post/add", {
             method: "post",
             data: {

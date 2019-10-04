@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import React from 'react'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 //Import Components
 import Home from "./Home";
@@ -9,17 +9,18 @@ import Login from "./Login";
 import Menu from "./Menu";
 
 const Router = () => (
-  <>
-    <Menu />
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/view/:postId" component={PostDetailed} />
-        <Route exact path="/login" component={Login} />
-        <Route component={NotFound} />
-      </Switch>
-    </BrowserRouter>
-  </>
+    <>
+        <Menu/>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/:page" component={Home}/>
+                <Route exact path="/view/:postId" component={PostDetailed}/>
+                <Redirect from="/" to="/1"/>
+                <Route component={NotFound}/>
+            </Switch>
+        </BrowserRouter>
+    </>
 );
 
 export default Router;
