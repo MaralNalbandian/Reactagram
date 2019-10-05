@@ -28,15 +28,17 @@ class Post extends React.Component {
 
     render() {
         return (
-            <div onClick={this.goToDetailed} className="post">
+            <div className="post">
                 <div className="grid-element">
-                    <div className="grid-photo-wrapper">
+                    <div onClick={this.goToDetailed} className="grid-photo-wrapper">
                         <img className="grid-photo" src={this.props.post.imageLink} alt="Post"></img>
                     </div>
                     <div className="grid-user-wrapper">
                         <div className="grid-user">{this.props.post.userId}</div>
                     </div>
-                    <Reactions state={this.state}/>
+                    <div className="home-reactions">
+                        <Reactions state={this.state}/>
+                    </div>
                 </div>
             </div>
         )

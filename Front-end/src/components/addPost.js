@@ -25,10 +25,8 @@ class AddPost extends React.Component {
 
     ReactS3.uploadFile(this.state.file, config)
       .then((data) => {
-        console.log(data.location)
         //Replace ALL ' ' with '+': https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
         var location = data.location.replace(/ /g,"+")
-        console.log(location)
         this.setState({imageLink: location})
 
         if (this.state.imageLink !== "" && JSON.parse(localStorage.getItem("the_main_app")).userIdtoken){
@@ -36,14 +34,13 @@ class AddPost extends React.Component {
             userId: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
             imageLink: this.state.imageLink
           };
-          console.log(post)
           this.props.addPost(post);
         }
         else {
-          console.log('Error!')
+          console.error('User not logged in ')
         }
       })
-      .catch((error) => console.log(error))
+      .catch((error) => console.error(error))
 
       // refresh the form
       event.currentTarget.reset();

@@ -3,81 +3,73 @@ import React from 'react';
 import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
 
 class Reactions extends React.Component {
+    state = {
+        reactionCounts: {
+            like: 0,
+            love: 0,
+            laugh: 0,
+            sad: 0,
+            angry: 0,
+        }
+    }
+
     setReactionCountStates() {
         var sum = 0;
 
         //check like
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
             if (this.props.state.post.reacts[i].reaction == "like") {
-                console.log("setting like: ", sum)
                 sum = sum + 1;
             }
         }
 
-        this.props.state.reactionCounts.like = sum;
-        console.log("completed setting like", "to: ", sum)
+        this.state.reactionCounts.like = sum;
 
         //check love
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
             if (this.props.state.post.reacts[i].reaction == "love") {
-                console.log("setting love: ", sum)
                 sum = sum + 1;
             }
         }
 
-        this.props.state.reactionCounts.love = sum;
-        console.log("completed setting love", "to: ", sum)
+        this.state.reactionCounts.love = sum;
 
         //check laugh
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
             if (this.props.state.post.reacts[i].reaction == "laugh") {
-                console.log("setting laugh: ", sum)
                 sum = sum + 1;
             }
         }
 
-        this.props.state.reactionCounts.laugh = sum;
-        console.log("completed setting laugh", "to: ", sum)
+        this.state.reactionCounts.laugh = sum;
 
         //check sad
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
             if (this.props.state.post.reacts[i].reaction == "sad") {
-                console.log("setting sad: ", sum)
                 sum = sum + 1;
             }
         }
 
-        this.props.state.reactionCounts.sad = sum;
+        this.state.reactionCounts.sad = sum;
         this.setState(this.props.state)
-        console.log("completed setting sad", "to: ", sum)
 
 
         //check angry
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
             if (this.props.state.post.reacts[i].reaction == "angry") {
-                console.log("setting angry: ", sum)
                 sum = sum + 1;
             }
         }
 
-        this.props.state.reactionCounts.angry = sum;
+        this.state.reactionCounts.angry = sum;
         this.setState(this.props.state)
-        console.log("completed setting angry", "to: ", sum)
 
     }
     
     getReactionCounts(type) {
-        console.log("getReactionCounts", type)
         var sum = 0;
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
             if (this.props.state.post.reacts[i].reaction == type) {
-                console.log("setting ", type, sum)
                 sum = sum + 1;
             }
         }
@@ -85,7 +77,6 @@ class Reactions extends React.Component {
     }
 
     handleReact(reactType) {
-        console.log("reactype", reactType)
 
         this.setState({
             reaction: reactType
@@ -101,25 +92,13 @@ class Reactions extends React.Component {
                     //check if user has reacted to this post already.
                     for (var i = 0; i < this.props.state.post.reacts.length; i++) {
                         if (this.props.state.post.reacts[i].userId == this.props.state.userIdtoken) {
-                            console.log("user has reacted already");
 
                             //now check if the user's reaction is the same
                             //in this case REMOVE their reaction
-                            console.log("this.props.state.reactType: ", this.state.reaction)
-                            console.log("this.props.state.post.reacts[i].reaction: ", this.props.state.post.reacts[i].reaction)
                             if (this.state.reaction == this.props.state.post.reacts[i].reaction) {
-
-                                console.log("the REACTION IS THE SAME AS EXISTING")
                                 //REMOVE this object from the array
-                                console.log("this.props.state.post.reacts[i].userId:", this.props.state.post.reacts[i].userId);
-                                console.log("this.props.state.userIdtoken:", this.props.state.userIdtoken)
-
-                                console.log("compare: ", this.props.state.userIdtoken == this.props.state.post.reacts[i].userId);
-
-                                console.log("before: ", this.props.state.post.reacts)
                                 var newArray = this.props.state.post.reacts.filter(object => object.userId != this.props.state.userIdtoken);
                                 //need to post this to db after
-                                console.log("after: ", newArray)
 
                                 this.props.state.post.reacts = newArray;
                                 this.props.state.post.numOfReacts = this.props.state.post.numOfReacts - 1;
@@ -142,13 +121,9 @@ class Reactions extends React.Component {
                             reaction: this.state.reaction
                         }
 
-                        console.log("tempReact", tempReact);
-
                         //push it into the post object in state
                         this.props.state.post.reacts.push(tempReact)
                         this.props.state.post.numOfReacts = this.props.state.post.numOfReacts + 1;
-                        console.log('HIIIIIIIIIIIIIIIIIII')
-                        console.log(this.props.state.post)
                     }
 
                     //this runs no matter what since we're just manipulating state except if not logged in
@@ -161,7 +136,7 @@ class Reactions extends React.Component {
                         body: JSON.stringify(this.props.state.post)
                     })
                         .then(() => this.setReactionCountStates())
-                        .catch((error) => console.log(error))
+                        .catch((error) => console.error(error))
                 }
 
                 else {
@@ -177,8 +152,6 @@ class Reactions extends React.Component {
     }
 
     render() {
-        console.log('HI')
-        console.log(this.props);
         return (
             <>
                 <Row>
@@ -196,19 +169,19 @@ class Reactions extends React.Component {
                 <Row>
                     <div className="reaction-counts">
                         <h5 className="pull-right">
-                            {this.props.state.reactCountsCanUseState ? this.props.state.reactionCounts.like : this.getReactionCounts("like")}
+                            {this.props.state.reactCountsCanUseState ? this.state.reactionCounts.angry : this.getReactionCounts("angry")}
                         </h5>
                         <h5 className="pull-right">
-                            {this.props.state.reactCountsCanUseState ? this.props.state.reactionCounts.love : this.getReactionCounts("love")}
+                            {this.props.state.reactCountsCanUseState ? this.state.reactionCounts.sad : this.getReactionCounts("sad")}
                         </h5>
                         <h5 className="pull-right">
-                            {this.props.state.reactCountsCanUseState ? this.props.state.reactionCounts.laugh : this.getReactionCounts("laugh")}
+                            {this.props.state.reactCountsCanUseState ? this.state.reactionCounts.laugh : this.getReactionCounts("laugh")}
                         </h5>
                         <h5 className="pull-right">
-                            {this.props.state.reactCountsCanUseState ? this.props.state.reactionCounts.sad : this.getReactionCounts("sad")}
+                            {this.props.state.reactCountsCanUseState ? this.state.reactionCounts.love : this.getReactionCounts("love")}
                         </h5>
                         <h5 className="pull-right">
-                            {this.props.state.reactCountsCanUseState ? this.props.state.reactionCounts.angry : this.getReactionCounts("angry")}
+                            {this.props.state.reactCountsCanUseState ? this.state.reactionCounts.like : this.getReactionCounts("like")}
                         </h5>
                     </div>
                 </Row>

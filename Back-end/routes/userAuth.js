@@ -23,7 +23,6 @@ router.post("/register", async (req, res, next) => {
   let { email } = body;
 
   if (!name) {
-    console.log(name);
 
     return res.send({
       success: false,
@@ -55,7 +54,6 @@ router.post("/register", async (req, res, next) => {
     },
     (err, previousUsers) => {
       if (err) {
-        console.log("prev problem");
         return res.send({
           success: false,
           message: "Error: Server error"
@@ -76,7 +74,6 @@ router.post("/register", async (req, res, next) => {
 
       newUser.save((err, user) => {
         if (err) {
-          console.log("hash problem");
           return res.send({
             success: false,
             message: "Error: Server error"
@@ -160,7 +157,6 @@ router.post("/login", (req, res, next) => {
         });
       }
       if (users.length != 1) {
-        console.log("thisss");
         return res.send({
           success: false,
           message: "Error: Invalid"
@@ -169,7 +165,6 @@ router.post("/login", (req, res, next) => {
 
       const user = users[0];
       if (!user.validPassword(password)) {
-        console.log("this");
         return res.send({
           success: false,
           message: "Error: Invalid"
