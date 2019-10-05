@@ -1,99 +1,148 @@
-html {
-    font-size: 62.5%;
-}
 
 h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    font-size: 5rem;
-    text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 5rem;
+  text-align: center;
 }
 
 h2 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    font-size: 3rem;
-    text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 3rem;
+  text-align: center;
 }
 
 .photo-grid {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
 }
 
 .grid-element {
-    flex-basis: calc(33.333% - 4rem);
-    flex-grow: 1;
-    flex-shrink: 0;
-    margin: 0 2rem 2rem 2rem;
-    padding: 2rem;
-    border: 1px solid lightgray;
-    background: white;
-    box-shadow: 0 0 0 5px rgba(0,0,0,0.03);
-    position: relative;
-    cursor: pointer;
+  flex-basis: calc(33.333% - 4rem);
+  flex-grow: 1;
+  flex-shrink: 0;
+  margin: 0 2rem 2rem 2rem;
+  padding: 2rem;
+  border: 1px solid lightgray;
+  background: white;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.03);
+  position: relative;
 }
 
 .grid-photo-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .grid-photo {
-    width: calc(100% + 4rem);
-    max-width: 250px;
-    max-height: 250px;
+  width: calc(100%);
+  max-width: 250px;
+  max-height: 250px;
+  cursor: pointer;
 }
 
 .grid-user-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .grid-user {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    color: rgb(0, 0, 153);
-    font-size: 1.5rem;
-    width: calc(100% + 4rem);
-    margin-left: 1rem;
-    margin-bottom: -1rem;
-    margin-top: 1rem;
-    max-width: none;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  width: calc(100% + 4rem);
+  margin-left: 1rem;
+  margin-bottom: -1rem;
+  margin-top: 1rem;
+  max-width: none;
+}
+
+.add-post {
+    margin-bottom: 4vh;
 }
 
 .add-post-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 1200px;
-    margin: 0 auto;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
 }
 
 .input {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20vh;
+  margin-left: auto;
+  margin-right: auto;
 }
-/* .add-post-form{
-    flex-basis: calc(33.333% - 4rem);
-    flex-grow: 1;
-    flex-shrink: 0;
-    margin: 0 2rem 2rem 2rem;
-    padding: 2rem;
-    border: 1px solid lightgray;
-    background: white;
-    box-shadow: 0 0 0 5px rgba(0,0,0,0.03);
-    position: relative;
-    cursor: pointer;
-} */
 
-.likeButton {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    color: rgb(0, 0, 153);
-    font-size: 1.5rem;
-    margin-left: 20rem;
-    max-width: none;
+#userImage {
+  width: 30px;
+  height: 30px;
+}
+
+#Leaderboard {
+    width:50px;
+    height:50px;
+}
+
+.Pages {
+    width: 180px;
+    margin: 0 auto;
+}
+
+.pull-right {
+    margin-right: 30px;
+}
+
+.reaction-counts {
+    margin-left: 15px;
+}
+
+.leaderboard {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.leaderboard-element {
+  margin: 0 2rem 2rem 2rem;
+  padding: 2rem;
+  background: white;
+  position: relative;
+}
+
+.leaderboard-photo-wrapper {
+  position: relative;
+}
+
+.leaderboard-photo {
+  width: calc(100%);
+  max-width: 250px;
+  max-height: 250px;
+  cursor: pointer;
+}
+
+.leaderboard-user-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-user {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.leaderboard-upload-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-upload {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
 }

@@ -1,0 +1,48 @@
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    // required: true,
+    // max: 255,
+    // min: 3
+    default: ""
+  },
+  email: {
+    type: String,
+    // required: true
+    // max: 255,
+    // min: 4
+    default: ""
+  },
+  password: {
+    type: String,
+    // required: true,
+    // max: 1024,
+    // min: 6
+    default: ""
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  },
+  uploads: {
+    type: Number,
+    default: 0
+  }
+});
+
+userSchema.methods.generateHash = function(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+userSchema.methods.validPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
+};
+
+module.exports = mongoose.model("User", userSchema);

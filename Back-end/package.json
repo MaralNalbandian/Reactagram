@@ -18,10 +18,20 @@
   },
   "homepage": "https://github.com/b-ward/URL-Shortener#readme",
   "dependencies": {
+    "@hapi/joi": "^15.1.1",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
     "config": "^3.2.2",
+    "cors": "^2.8.5",
+    "ejs": "^2.7.1",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.8",
+    "passport": "^0.4.0",
     "shortid": "^2.2.14",
     "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
   }
 }

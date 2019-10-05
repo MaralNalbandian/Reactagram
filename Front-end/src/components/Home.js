@@ -1,12 +1,14 @@
-import React from 'react';
+import React from "react";
 
 import Post from './Post';
 import AddPost from './addPost';
+import Pages from './Pages';
 
-class Home extends React.Component {  
+class Home extends React.Component {
     constructor() {
         super()
-        this.state ={}
+        this.state = {
+        }
     }
 
     addPost = post => {
@@ -18,47 +20,91 @@ class Home extends React.Component {
             },
             body: JSON.stringify({
                 "postId": `post${Date.now()}`,
-                "username": post.username,
+                "userId": post.userId,
                 "imageLink": post.imageLink
             })
         // 2. Retrieve all the posts using the API
-        }).then( () => this.getPosts())
+        }).then( () => {
+            this.incrementUploads(post.userId);
+            this.getPosts();
+        })
     };
 
-    getPosts() {
-        fetch('http://localhost:80/api/post/all')
-        .then((response) => response.json())
-        .then((responseJson) => {
-            this.setState({ posts : responseJson })
+    incrementUploads(userId) {
+        fetch('http://localhost:80/api/user/incrementUpload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": userId
+            })
         })
-        .catch((error) => {
-        console.error(error);
-        });
+    }
+
+    getPosts() {
+        fetch("http://localhost:80/api/post/count")
+            .then((response) => response.json())
+            .then((responseJson) => {
+                //TODO: Make more efficient
+                var count = 1;
+                var pages = [];
+                while (count <= (responseJson / 9) + 1) {
+                    pages.push(count)
+                    count = count + 1
+                }
+                this.setState({
+                    pages: pages
+                })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        fetch(`http://localhost:80/api/post/page/${this.props.match.params.page}`)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    posts: responseJson,
+                })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     componentWillMount() {
-        this.getPosts()
+        this.getPosts();
     }
 
     render() {
         return (
-            <div className="home">
-                <h1>Home</h1>
-                {/* Loads posts once they are fetched from the API */}
-                {this.state.posts &&
-                <div className="photo-grid">
-                    {Object.keys(this.state.posts).map(key => (
-                        <Post
-                            key={key}
-                            index={this.state.posts[key].postId}
-                            details={this.state.posts[key]}
-                            {...this.props}
-                        />
-                    ))}
+            <React.Fragment>
+                <div className="home">
+                    {/* Loads posts once they are fetched from the API */}
+                    {this.state.posts && this.state.pages &&
+                        <React.Fragment>
+                            <div className="photo-grid">
+                                {Object.keys(this.state.posts).slice(0, 9).map(key => (
+                                    <Post
+                                        key={key}
+                                        index={this.state.posts[key].postId}
+                                        post={this.state.posts[key]}
+                                        {...this.props}
+                                    />
+                                ))}
+                            </div>
+                            <Pages
+                                pages={this.state.pages}
+                                currentPage={this.props.match.params.page}
+                                lastPage={this.state.pages[this.state.pages.length - 1]}
+                            />
+                        </React.Fragment>
+                    }
+                    <h2>Add Post</h2>
+                    <AddPost addPost={this.addPost} />
                 </div>
-                }
-                <AddPost addPost={this.addPost}/>
-            </div>
+            </React.Fragment>
         )
     }
 }
