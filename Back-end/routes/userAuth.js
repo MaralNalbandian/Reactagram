@@ -272,3 +272,50 @@ router.get("/logout", async (req, res, next) => {
     }
   );
 });
+
+// POST /api/user/incrementUpload
+// Increment the upload counter
+router.post('/incrementUpload', async (req, res) => {
+  try {
+      console.log('incrementing')
+      const user = await User.findOne({ _id: req.body.userId })
+      console.log(user)
+
+      if (user) { //if post exists based on id
+          try {
+              console.log(user.uploads)
+              user.uploads = user.uploads + 1
+              console.log(user.uploads)
+              console.log(user)
+              await user.save();
+          } catch (error) {
+              res.status(500).json(error)
+          }
+      }
+
+      else {
+          res.status(404).json('No post found');
+      }
+
+  } catch (err) {
+      console.error(err);
+      res.status(500).json('Server error')
+  }
+});
+
+// GET /api/user/leaderboard
+// Get the top 3 uploaders for the leaderboard
+router.get('/leaderboard', async (req, res) => {
+  try {
+      const users = await User.find({}).sort({uploads: -1}).limit(3)
+
+      if (users) {
+          return res.json(users)
+      } else {
+          res.status(404).json('Error');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json('Server error');
+  }
+});

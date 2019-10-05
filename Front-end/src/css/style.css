@@ -108,3 +108,51 @@ h2 {
 .reaction-counts {
     margin-left: 15px;
 }
+
+.leaderboard {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.leaderboard-element {
+  margin: 0 2rem 2rem 2rem;
+  padding: 2rem;
+  background: white;
+  position: relative;
+}
+
+.leaderboard-photo-wrapper {
+  position: relative;
+}
+
+.leaderboard-photo {
+  width: calc(100%);
+  max-width: 250px;
+  max-height: 250px;
+  cursor: pointer;
+}
+
+.leaderboard-user-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-user {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.leaderboard-upload-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-upload {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
