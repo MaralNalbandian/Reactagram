@@ -278,7 +278,6 @@ export class Login extends React.Component {
     //           <h4>Sign up</h4>
     //         </Link>
 
-    {
       /* //        <TextField
       //           hintText="Enter Your Email"
       //           floatingLabelText="Email"
@@ -304,7 +303,6 @@ export class Login extends React.Component {
       //         <Link style={navStyle} to="/register">
       //           <h4>Sign up</h4>
       //         </Link> */
-    }
     //       </form>
 
     //       {/* </div> */}
@@ -324,14 +322,5 @@ export class Login extends React.Component {
     );
   }
 }
-
-const navStyle = {
-  color: "grey"
-};
-const styles = {
-  button: {
-    margin: 15
-  }
-};
 
 export default Login;
