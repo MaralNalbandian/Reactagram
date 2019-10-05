@@ -213,9 +213,7 @@ router.get("/verify", async (req, res, next) => {
   const { userIdToken } = query;
   // Verify the token is one of a kind and it's  not deleted
 
-  var userCount = User.find({_id: userIdToken}).count()
-  console.log('********************************************************************************')
-  console.log(userCount)
+  var userCount = await User.find({_id: userIdToken}).count()
   if (userCount > 0){
     res.json({result: "Success"});
   } else {

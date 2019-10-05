@@ -202,7 +202,7 @@ class PostDetailed extends React.Component {
                         body: JSON.stringify(this.state.post)
                     })
                         .then(() => this.setReactionCountStates())
-                        .catch((error) => console.log(error))
+                        .catch((error) => console.error(error))
                 }
 
                 else {
@@ -274,25 +274,16 @@ class PostDetailed extends React.Component {
                 this.setState((this.state), () => this.getReplyObjects());
 
             })
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
     };
 
 
     handleEdit = post => {
-
-        console.log("handleEdit");
-
-        //1. Just update react endpoitn to change the image link too
-        console.log(post);
-
-        //2. on submit in addPost this gets called..
-
-
-        //3. UPDATE this.state.post.imageLink with the link
+        //1. UPDATE this.state.post.imageLink with the link
         this.state.post.imageLink = post.imageLink;
 
-        //4. replicate the fetch Post  to /post/react with this.state.post as the body
+        //2. replicate the fetch Post  to /post/react with this.state.post as the body
         fetch('http://localhost:80/api/post/react', {
             method: 'POST',
             headers: {
@@ -301,7 +292,7 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => this.setReactionCountStates())
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
     }
 
     handleDelete() {
@@ -315,7 +306,7 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => window.alert("Post Succesfully Deleted"))
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
         this.setState(this.state); //refresh state 
 
@@ -339,12 +330,8 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => this.setReactionCountStates())
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
-    }
-
-    changePost() {
-        console.log("changePost");
     }
 
     renderButtons() {
@@ -451,24 +438,14 @@ class PostDetailed extends React.Component {
 
     sortByPopular() {
         //TODO: check if any replies otherwise  do nothing
-
-        console.log("popular")
-        console.log("before", this.state.replyObjects)
-
         this.state.replyObjects.sort((b, a) => parseFloat(a.reacts.length) - parseFloat(b.reacts.length));
-
         this.setState(this.state)
-        console.log("after", this.state.replyObjects)
     }
 
     sortByNew() {
         //TODO: check if any replies otherwise  do nothing
-
-        console.log("new")
-        console.log("before", this.state.replyObjects)
         this.state.replyObjects.sort((b, a) => Date.parse(a.date) - Date.parse(b.date));
         this.setState(this.state)
-        console.log("after", this.state.replyObjects)
     }
 
     render() {
@@ -484,7 +461,6 @@ class PostDetailed extends React.Component {
 
 
                 <Container>
-                    {console.log(this.state.post)}
                     {this.renderButtons()}
                     {/* {this.getReplyObjects()} */}
 

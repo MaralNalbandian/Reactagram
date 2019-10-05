@@ -42,7 +42,6 @@ class AddPost extends React.Component {
     this.setState({imageLink: location})
 
     if (this.state.imageLink !== "" && await validateUserIdToken()){
-      console.log('hi')
       const post = {
         userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
         imageLink: this.state.imageLink

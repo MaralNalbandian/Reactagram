@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
+import {Button, Row} from 'react-bootstrap';
 
 class Reactions extends React.Component {
     state = {
@@ -18,7 +18,7 @@ class Reactions extends React.Component {
 
         //check like
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            if (this.props.state.post.reacts[i].reaction == "like") {
+            if (this.props.state.post.reacts[i].reaction === "like") {
                 sum = sum + 1;
             }
         }
@@ -27,7 +27,7 @@ class Reactions extends React.Component {
 
         //check love
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            if (this.props.state.post.reacts[i].reaction == "love") {
+            if (this.props.state.post.reacts[i].reaction === "love") {
                 sum = sum + 1;
             }
         }
@@ -36,7 +36,7 @@ class Reactions extends React.Component {
 
         //check laugh
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            if (this.props.state.post.reacts[i].reaction == "laugh") {
+            if (this.props.state.post.reacts[i].reaction === "laugh") {
                 sum = sum + 1;
             }
         }
@@ -45,7 +45,7 @@ class Reactions extends React.Component {
 
         //check sad
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            if (this.props.state.post.reacts[i].reaction == "sad") {
+            if (this.props.state.post.reacts[i].reaction === "sad") {
                 sum = sum + 1;
             }
         }
@@ -56,7 +56,7 @@ class Reactions extends React.Component {
 
         //check angry
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            if (this.props.state.post.reacts[i].reaction == "angry") {
+            if (this.props.state.post.reacts[i].reaction === "angry") {
                 sum = sum + 1;
             }
         }
@@ -69,7 +69,7 @@ class Reactions extends React.Component {
     getReactionCounts(type) {
         var sum = 0;
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-            if (this.props.state.post.reacts[i].reaction == type) {
+            if (this.props.state.post.reacts[i].reaction === type) {
                 sum = sum + 1;
             }
         }
@@ -91,11 +91,11 @@ class Reactions extends React.Component {
 
                     //check if user has reacted to this post already.
                     for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-                        if (this.props.state.post.reacts[i].userId == this.props.state.userIdToken) {
+                        if (this.props.state.post.reacts[i].userId === this.props.state.userIdToken) {
 
                             //now check if the user's reaction is the same
                             //in this case REMOVE their reaction
-                            if (this.state.reaction == this.props.state.post.reacts[i].reaction) {
+                            if (this.state.reaction === this.props.state.post.reacts[i].reaction) {
                                 //REMOVE this object from the array
                                 var newArray = this.props.state.post.reacts.filter(object => object.userId != this.props.state.userIdToken);
                                 //need to post this to db after

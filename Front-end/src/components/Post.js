@@ -18,17 +18,16 @@ class Post extends React.Component {
     }
 
     async componentWillMount() {
+        //TODO: Currently takes a second or two until the user can react to a post
         this.setState({post: this.props.post})
         this.getUsername()
         if (await validateUserIdToken()){
-            this.state = {
+            this.setState({
                 reactCountsCanUseState: false,
                 userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken
-            }
+            })
         } else {
-            this.state = {
-                reactCountsCanUseState: false
-            }
+            this.setState({reactCountsCanUseState: false})
         }
     }
 

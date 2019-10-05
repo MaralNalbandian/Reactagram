@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import validateUserIdToken from './utils/validateToken'
 
-import { getFromStorage, setInStorage } from "../utils/storage";
 export class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -21,9 +20,9 @@ export class Register extends React.Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
-  componentDidMount() {
-    const token = getFromStorage("the_main_app").userIdToken;
-    if (validateUserIdToken()){
+  async componentDidMount() {
+    if (await validateUserIdToken()){
+      const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
       this.setState({
         token,
         isLoading: false
@@ -34,6 +33,11 @@ export class Register extends React.Component {
         isLoading: false
       });
     }
+  }
+
+  logout() {
+    localStorage.clear();
+    this.setState({token: ""})
   }
 
   onTextboxChangeSignUpEmail(event) {
@@ -125,8 +129,7 @@ export class Register extends React.Component {
       )
     }
 
-    if (token == "") {
-      console.log(signUpError)
+    if (token === "") {
       return (
         <React.Fragment>
           <div>

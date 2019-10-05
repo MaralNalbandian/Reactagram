@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
 
 class Leaderboard extends React.Component {
     constructor() {
@@ -19,7 +18,6 @@ class Leaderboard extends React.Component {
     }
 
     render() {
-        console.log(this.state.users)
         if (!this.state.users){
             return (
                 <p>Loading...</p>

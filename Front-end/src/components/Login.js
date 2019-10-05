@@ -1,6 +1,4 @@
 import React from "react";
-import axios from "axios";
-import { getFromStorage, setInStorage } from "../utils/storage";
 import validateUserIdToken from './utils/validateToken'
 
 export class Login extends React.Component {
@@ -25,10 +23,9 @@ export class Login extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
-  componentDidMount() {
-    const token = getFromStorage("the_main_app").userIdToken;
-    if (validateUserIdToken()){
-      console.log('YEP')
+  async componentDidMount() {
+    if (await validateUserIdToken()){
+      const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
       this.setState({
         token,
         isLoading: false
@@ -76,10 +73,10 @@ export class Login extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          setInStorage("the_main_app", {
+          localStorage.setItem("the_main_app", JSON.stringify({
             token: json.token,
             userIdToken: json.userIdToken
-          });
+          }));
           this.setState({
             signInError: json.message,
             isLoading: false,
@@ -98,35 +95,7 @@ export class Login extends React.Component {
 
   logout() {
     localStorage.clear();
-    this.setState({
-      isLoading: true
-    });
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj; //same as  // const token = obj.token;
-
-      if (token) {
-        //Verify token
-        fetch("http://localhost:80/api/user/logout?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token: "",
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
-    }
+    this.setState({token: ""})
   }
 
   emailRef = React.createRef();
@@ -149,7 +118,7 @@ export class Login extends React.Component {
       );
     }
 
-    if (token == "") {
+    if (token === "") {
       return (
         <React.Fragment>
           <div>
@@ -192,14 +161,5 @@ export class Login extends React.Component {
     );
   }
 }
-
-const navStyle = {
-  color: "grey"
-};
-const styles = {
-  button: {
-    margin: 15
-  }
-};
 
 export default Login;
