@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  uploads: {
+    type: Number,
+    default: 0
   }
 });
 
