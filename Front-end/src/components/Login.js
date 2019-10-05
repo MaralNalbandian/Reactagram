@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { getFromStorage, setInStorage } from "../utils/storage";
+import validateUserIdToken from './utils/validateToken'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -10,7 +11,8 @@ export class Login extends React.Component {
       isLoading: true,
       signInError: "",
       signInEmail: "",
-      signInPassword: ""
+      signInPassword: "",
+      token: ""
     };
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
@@ -24,27 +26,14 @@ export class Login extends React.Component {
   }
 
   componentDidMount() {
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj; //same as
-      // const token = obj.token;
-      if (token) {
-        //Verify token
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      };
+    const token = getFromStorage("the_main_app").userIdToken;
+    if (validateUserIdToken()){
+      console.log('YEP')
+      this.setState({
+        token,
+        isLoading: false
+      });
+    //If token is not valid/does not exist, redirect to the sign up page
     } else {
       this.setState({
         isLoading: false
@@ -89,7 +78,7 @@ export class Login extends React.Component {
         if (json.success) {
           setInStorage("the_main_app", {
             token: json.token,
-            userIdtoken: json.userIdtoken
+            userIdToken: json.userIdToken
           });
           this.setState({
             signInError: json.message,
@@ -97,7 +86,7 @@ export class Login extends React.Component {
             signInEmail: "",
             signInPassword: "",
             token: json.token,
-            userIdtoken: json.userIdtoken
+            userIdToken: json.userIdToken
           });
         } else
           this.setState({
@@ -143,31 +132,13 @@ export class Login extends React.Component {
   emailRef = React.createRef();
   passRef = React.createRef();
 
-  state = {};
-
-  checkUser = event => {
-    event.preventDefault();
-
-    axios("http://localhost:80/api/user/login", {
-      method: "post",
-      data: {
-        email: this.emailRef.current.value,
-        password: this.passRef.current.value
-      }
-    })
-  };
-
   render() {
     const {
       isLoading,
       token,
       signInError,
-      signUpError,
       signInEmail,
       signInPassword,
-      signUpName,
-      signUpEmail,
-      signUpPassword
     } = this.state;
 
     if (isLoading) {
@@ -178,7 +149,7 @@ export class Login extends React.Component {
       );
     }
 
-    if (!token) {
+    if (token == "") {
       return (
         <React.Fragment>
           <div>

@@ -119,8 +119,6 @@ router.post("/register", async (req, res, next) => {
   // }
 });
 
-module.exports = router;
-
 //LOGIN
 // router.post("/login", async (req, res) => {
 router.post("/login", (req, res, next) => {
@@ -185,7 +183,7 @@ router.post("/login", (req, res, next) => {
           success: true,
           message: "Valid sign in",
           // token: userSession.userId,
-          userIdtoken: userSession.userId,
+          userIdToken: userSession.userId,
           token: doc._id
           
         });
@@ -212,34 +210,17 @@ router.post("/login", (req, res, next) => {
 router.get("/verify", async (req, res, next) => {
   //Get token
   const { query } = req;
-  const { token } = query;
+  const { userIdToken } = query;
   // Verify the token is one of a kind and it's  not deleted
 
-  UserSession.find(
-    {
-      _id: token,
-      isDeleted: false
-    },
-    (err, sessions) => {
-      if (err) {
-        return res.send({
-          success: false,
-          message: "Error: Server error"
-        });
-      }
-      if (sessions.length != 1) {
-        return res.send({
-          success: false,
-          message: "Error: Invalid"
-        });
-      } else {
-        return res.send({
-          success: true,
-          message: "Good"
-        });
-      }
-    }
-  );
+  var userCount = User.find({_id: userIdToken}).count()
+  console.log('********************************************************************************')
+  console.log(userCount)
+  if (userCount > 0){
+    res.json({result: "Success"});
+  } else {
+    res.json({result: "Fail"})
+  }
 });
 
 router.get("/logout", async (req, res, next) => {
@@ -277,16 +258,11 @@ router.get("/logout", async (req, res, next) => {
 // Increment the upload counter
 router.post('/incrementUpload', async (req, res) => {
   try {
-      console.log('incrementing')
       const user = await User.findOne({ _id: req.body.userId })
-      console.log(user)
 
       if (user) { //if post exists based on id
           try {
-              console.log(user.uploads)
               user.uploads = user.uploads + 1
-              console.log(user.uploads)
-              console.log(user)
               await user.save();
           } catch (error) {
               res.status(500).json(error)
@@ -319,3 +295,21 @@ router.get('/leaderboard', async (req, res) => {
       res.status(500).json('Server error');
   }
 });
+
+// GET /api/user/username/:id
+// Get username by id
+router.get('/username/:id', async (req,res) => {
+  try {
+      const user = await User.find({_id: req.params.id});
+      if(user) {
+          return res.json(user[0].name)
+      } else {
+          res.status(404).json('No user found');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json('Server error');
+  }
+});
+
+module.exports = router;

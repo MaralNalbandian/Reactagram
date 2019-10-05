@@ -86,18 +86,18 @@ class Reactions extends React.Component {
                 let operationComplete = false;
 
                 //if logged in..
-                if (this.props.state.userIdtoken != undefined) {
+                if (this.props.state.userIdToken != undefined) {
                     //if user is logged in
 
                     //check if user has reacted to this post already.
                     for (var i = 0; i < this.props.state.post.reacts.length; i++) {
-                        if (this.props.state.post.reacts[i].userId == this.props.state.userIdtoken) {
+                        if (this.props.state.post.reacts[i].userId == this.props.state.userIdToken) {
 
                             //now check if the user's reaction is the same
                             //in this case REMOVE their reaction
                             if (this.state.reaction == this.props.state.post.reacts[i].reaction) {
                                 //REMOVE this object from the array
-                                var newArray = this.props.state.post.reacts.filter(object => object.userId != this.props.state.userIdtoken);
+                                var newArray = this.props.state.post.reacts.filter(object => object.userId != this.props.state.userIdToken);
                                 //need to post this to db after
 
                                 this.props.state.post.reacts = newArray;
@@ -117,7 +117,7 @@ class Reactions extends React.Component {
                     if (operationComplete != true) {
                         //user is making a new reaction
                         var tempReact = {
-                            userId: this.props.state.userIdtoken,
+                            userId: this.props.state.userIdToken,
                             reaction: this.state.reaction
                         }
 
