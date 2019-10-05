@@ -21,7 +21,7 @@ class Menu extends React.Component {
                 {/* https://reactstrap.github.io/components/navbar/ */}
                 <Navbar color="light" light expand="md">
                     <NavbarBrand href="/"><img id="Leaderboard" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Topeka-leaderboard.svg/480px-Topeka-leaderboard.svg.png" alt="Leaderboard"></img></NavbarBrand>
-                    <Nav className="ml-auto" navbar><h1>Reactagram</h1></Nav>
+                    <NavbarBrand href="/" className="ml-auto"><h1>Reactagram</h1></NavbarBrand>
                     <Nav className="ml-auto" navbar>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>

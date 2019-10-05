@@ -150,7 +150,7 @@ export class Login extends React.Component {
         email: this.emailRef.current.value,
         password: this.passRef.current.value
       }
-    }).then(response => console.log(response.data));
+    })
   };
 
   render() {

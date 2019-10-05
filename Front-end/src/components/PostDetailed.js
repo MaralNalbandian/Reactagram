@@ -7,224 +7,28 @@ import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
 import axios from 'axios';
 
 class PostDetailed extends React.Component {
-
-    constructor(props) {
-        super(props)
-    }
-
     getPost() {
         axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
                 this.setState({ post: response.data })
-                console.log(response)
             })
             .catch((error) => {
                 console.error(error);
             });
     }
 
-    state = {
-        reactionCounts: {
-            like: 0,
-            love: 0,
-            laugh: 0,
-            sad: 0,
-            angry: 0,
-        }
-    }
-
     componentWillMount() {
         this.getPost();
-        console.log(this.state)
-        //console.log("getStorageToken: ", localStorage.getItem("the_main_app"))
         //if user is logged in :
         if (localStorage.getItem("the_main_app") != undefined) {
             this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
             this.setState({ userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken })
         }
         else {
-            console.log("user is not logged in")
             this.setState({ token: undefined })
             this.setState({ userIdtoken: undefined })
         }
         this.setState({ reactCountsCanUseState: false })
-    }
-
-    getReactionCounts(type) {
-        console.log("getReactionCounts", type)
-        var sum = 0;
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-            if (this.state.post.reacts[i].reaction == type) {
-                console.log("setting ", type, sum)
-                sum = sum + 1;
-            }
-        }
-        return sum;
-
-    }
-
-    setReactionCountStates() {
-        var sum = 0;
-
-        //check like
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-            if (this.state.post.reacts[i].reaction == "like") {
-                console.log("setting like: ", sum)
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.like = sum;
-        this.setState(this.state)
-        console.log("completed setting like", "to: ", sum)
-
-        //check love
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-            if (this.state.post.reacts[i].reaction == "love") {
-                console.log("setting love: ", sum)
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.love = sum;
-        this.setState(this.state)
-        console.log("completed setting love", "to: ", sum)
-
-        //check laugh
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-            if (this.state.post.reacts[i].reaction == "laugh") {
-                console.log("setting laugh: ", sum)
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.laugh = sum;
-        this.setState(this.state)
-        console.log("completed setting laugh", "to: ", sum)
-
-        //check sad
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-            if (this.state.post.reacts[i].reaction == "sad") {
-                console.log("setting sad: ", sum)
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.sad = sum;
-        this.setState(this.state)
-        console.log("completed setting sad", "to: ", sum)
-
-
-        //check angry
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-            if (this.state.post.reacts[i].reaction == "angry") {
-                console.log("setting angry: ", sum)
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.angry = sum;
-        this.setState(this.state)
-        console.log("completed setting angry", "to: ", sum)
-
-    }
-
-    handleReact(reactType) {
-        console.log("reactype", reactType)
-
-        this.setState({
-            reaction: reactType
-        },
-
-            function updateReacts() {
-                let operationComplete = false;
-
-                //if logged in..
-                if (this.state.userIdtoken != undefined) {
-                    //if user is logged in
-
-                    //check if user has reacted to this post already.
-                    for (var i = 0; i < this.state.post.reacts.length; i++) {
-                        if (this.state.post.reacts[i].userId == this.state.userIdtoken) {
-                            console.log("user has reacted already");
-
-                            //now check if the user's reaction is the same
-                            //in this case REMOVE their reaction
-                            console.log("this.state.reactType: ", this.state.reaction)
-                            console.log("this.state.post.reacts[i].reaction: ", this.state.post.reacts[i].reaction)
-                            if (this.state.reaction == this.state.post.reacts[i].reaction) {
-
-                                console.log("the REACTION IS THE SAME AS EXISTING")
-                                //REMOVE this object from the array
-                                console.log("this.state.post.reacts[i].userId:", this.state.post.reacts[i].userId);
-                                console.log("this.state.userIdtoken:", this.state.userIdtoken)
-
-                                console.log("compare: ", this.state.userIdtoken == this.state.post.reacts[i].userId);
-
-                                console.log("before: ", this.state.post.reacts)
-                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdtoken);
-                                //need to post this to db after
-                                console.log("after: ", newArray)
-
-                                this.state.post.reacts = newArray;
-                                this.state.post.numOfReacts = this.state.post.numOfReacts - 1;
-                                operationComplete = true;
-                            }
-                            else {
-                                //if their reaction is different
-                                this.state.post.reacts[i].reaction = this.state.reaction;
-                                operationComplete = true;
-                            }
-
-                        }
-                    }
-                    //now we've finished looping, if an operation has not been performed
-                    //this means they don't have areaction already, so..
-                    if (operationComplete != true) {
-                        //user is making a new reaction
-                        var tempReact = {
-                            userId: this.state.userIdtoken,
-                            reaction: this.state.reaction
-                        }
-
-                        console.log("tempReact", tempReact);
-
-                        //push it into the post object in state
-                        this.state.post.reacts.push(tempReact)
-                        this.state.post.numOfReacts = this.state.post.numOfReacts + 1;
-                        console.log('HIIIIIIIIIIIIIIIIIII')
-                        console.log(this.state.post)
-                    }
-
-                    //this runs no matter what since we're just manipulating state except if not logged in
-                    //POST state to database
-                    fetch('http://localhost:80/api/post/react', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(this.state.post)
-                    })
-                        .then(() => this.setReactionCountStates())
-                        .catch((error) => console.log(error))
-                }
-
-                else {
-
-                    //if user is not logged in yet pop up a  toast
-                    window.alert("You need to be logged in to react to posts!");
-
-                }
-
-            }
-
-        )
     }
 
     addPost = post => {
@@ -256,7 +60,6 @@ class PostDetailed extends React.Component {
         }
 
         this.state.post.replies.push(tempReply)
-        console.log(this.state.post)
 
         fetch('http://localhost:80/api/post/react', {
             method: 'POST',
@@ -266,7 +69,7 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => console.log("success"))
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
     };
 
@@ -275,9 +78,6 @@ class PostDetailed extends React.Component {
         //get total amounts of reactions
         //this.getReactionCounts();
 
-        console.log("token: ", this.state.token);
-        console.log("userIdtoken: ", this.state.userIdtoken);
-        console.log("STATE: ", this.state)
         const id = this.props.match.params.postId;
         if (this.state.post) {
             // { this.getReactionCounts("like") }
