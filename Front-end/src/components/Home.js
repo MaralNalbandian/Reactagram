@@ -31,7 +31,6 @@ class Home extends React.Component {
     };
 
     incrementUploads(userId) {
-        console.log('INCREMENTING')
         fetch('http://localhost:80/api/user/incrementUpload', {
             method: 'POST',
             headers: {

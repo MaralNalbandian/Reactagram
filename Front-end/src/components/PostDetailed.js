@@ -1,5 +1,4 @@
 import React from 'react';
-import Post from './Post';
 import AddPost from './addPost';
 import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
 
@@ -236,6 +235,7 @@ class PostDetailed extends React.Component {
         }
         // .then(
         // () => 
+        this.incrementUploads(post.userId);
         this.updateReplies(dateNow);
         // .then(
         // 3. Retrieve all the posts using the API
@@ -243,6 +243,18 @@ class PostDetailed extends React.Component {
         // )
         // );
     };
+
+    incrementUploads(userId) {
+        fetch('http://localhost:80/api/user/incrementUpload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": userId
+            })
+        })
+    }
 
     updateReplies(dateId) {
 
