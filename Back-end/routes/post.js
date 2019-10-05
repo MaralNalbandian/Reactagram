@@ -112,6 +112,7 @@ router.post('/react', async (req, res) => {
                 post.reacts = req.body.reacts;
                 post.numOfReacts = req.body.numOfReacts;
                 post.replies = req.body.replies;
+                post.imageLink = req.body.imageLink;
                 
                 await post.save();
 
