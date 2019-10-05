@@ -63,6 +63,10 @@ export class Login extends React.Component {
     });
   }
 
+  onSignUp() {
+    window.location.assign("/register")
+  }
+
   onSignIn() {
     //Grab state
     const { signInEmail, signInPassword } = this.state;
@@ -199,117 +203,12 @@ export class Login extends React.Component {
               <br />
               <button onClick={this.onSignIn}>Sign In</button>
             </div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <div>
-              {signUpError ? <p>{signUpError}</p> : null}
-              <p>Sign Up</p>
-              <input
-                type="text"
-                placeholder="Name"
-                value={signUpName}
-                onChange={this.onTextboxChangeSignUpName}
-              />
-              <br />
-              <input
-                type="email"
-                placeholder="Email"
-                value={signUpEmail}
-                onChange={this.onTextboxChangeSignUpEmail}
-              />
-              <br />
-              <input
-                type="password"
-                placeholder="Password"
-                value={signUpPassword}
-                onChange={this.onTextboxChangeSignUpPassword}
-              />
-              <br />
-              <button onClick={this.onSignUp}>Sign Up</button>
-            </div>
+            <button onClick={this.onSignUp}>Sign Up</button>
           </div>
         </React.Fragment>
       );
     }
 
-    // if (!token) {
-    //   return (
-    //     // <MuiThemeProvider>
-    //     <React.Fragment>
-    //       <Nav />
-    //       {/* onSubmit={this.checkUser} */}
-    //       <form className="login-box" method="POST">
-    //         {signInError ? <p>{signInError}</p> : null}
-    //         <h1>Login</h1>
-    //         <div className="textbox">
-    //           <input
-    //             name="textbox"
-    //             ref={this.emailRef}
-    //             type="text"
-    //             placeholder="Email"
-    //             value={signInEmail}
-    //             onChange={this.onTextboxChangeSignInEmail}
-    //           ></input>
-    //         </div>
-
-    //         <div className="textbox">
-    //           <input
-    //             name="textbox"
-    //             ref={this.passRef}
-    //             type="password"
-    //             placeholder="Password"
-    //             value={signInPassword}
-    //             onChange={this.onTextboxChangeSignInPassword}
-    //           ></input>
-    //         </div>
-
-    //         {/* <button onClick={this.onSignIn} type="submit">Sign in</button>  */}
-    //         <input
-    //           onClick={this.onSignIn}
-    //           class="btn"
-    //           type="submit"
-    //           value="Sign n"
-    //         ></input>
-
-    //         <h4>Not Registered?</h4>
-    //         <Link style={navStyle} to="/register">
-    //           <h4>Sign up</h4>
-    //         </Link>
-
-      /* //        <TextField
-      //           hintText="Enter Your Email"
-      //           floatingLabelText="Email"
-      //           // onChange={this.onChange}
-      //           ref={this.emailRef}
-      //           // onChange={handleChange("email")}
-      //           // defaultValue={this.emailRef}
-      //         />
-      //         <TextField
-      //           hintText="Enter Password"
-      //           floatingLabelText="Password"
-      //           ref={this.passRef}
-      //           type="password"
-      //         />
-      //         <br />
-      //         <RaisedButton
-      //           label="Login"
-      //           primary={true}
-      //           style={styles.button}
-      //           type="submit"
-      //         />
-      //         <h4>Not Registered?</h4>
-      //         <Link style={navStyle} to="/register">
-      //           <h4>Sign up</h4>
-      //         </Link> */
-    //       </form>
-
-    //       {/* </div> */}
-    //     </React.Fragment>
-    //     // </MuiThemeProvider>
-    //   );
-    // }
     return (
       // <MuiThemeProvider>
       <React.Fragment>
@@ -322,5 +221,14 @@ export class Login extends React.Component {
     );
   }
 }
+
+const navStyle = {
+  color: "grey"
+};
+const styles = {
+  button: {
+    margin: 15
+  }
+};
 
 export default Login;

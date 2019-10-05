@@ -23,9 +23,25 @@ class Home extends React.Component {
                 "userId": post.userId,
                 "imageLink": post.imageLink
             })
-            // 2. Retrieve all the posts using the API
-        }).then(() => this.getPosts())
+        // 2. Retrieve all the posts using the API
+        }).then( () => {
+            this.incrementUploads(post.userId);
+            this.getPosts();
+        })
     };
+
+    incrementUploads(userId) {
+        console.log('INCREMENTING')
+        fetch('http://localhost:80/api/user/incrementUpload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": userId
+            })
+        })
+    }
 
     getPosts() {
         fetch("http://localhost:80/api/post/count")

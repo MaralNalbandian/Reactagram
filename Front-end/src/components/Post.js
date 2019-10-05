@@ -6,10 +6,16 @@ import Reactions from './Reactions'
 class Post extends React.Component {
     constructor(){
         super();
-        this.state = {
-            reactCountsCanUseState: false,
-            userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
-            token: JSON.parse(localStorage.getItem("the_main_app")).token
+        if (JSON.parse(localStorage.getItem("the_main_app"))){
+            this.state = {
+                reactCountsCanUseState: false,
+                userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
+                token: JSON.parse(localStorage.getItem("the_main_app")).token
+            }
+        } else {
+            this.state = {
+                reactCountsCanUseState: false
+            }
         }
     }
 
