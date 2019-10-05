@@ -1,6 +1,7 @@
 import React from 'react';
 import AddPost from './addPost';
 import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
+import validateUserIdToken from './utils/validateToken'
 
 import axios from 'axios';
 
@@ -31,20 +32,20 @@ class PostDetailed extends React.Component {
         this.handleDeleteWithPlaceholder = this.handleDeleteWithPlaceholder.bind(this);
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         this.getPost()
             .then(() => this.getReplyObjects());
 
         //if user is logged in :
 
-        if (localStorage.getItem("the_main_app") != undefined) {
+        if (await validateUserIdToken()) {
             this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
-            this.setState({ userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken })
+            this.setState({ userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken })
         }
 
         else {
             this.setState({ token: undefined })
-            this.setState({ userIdtoken: undefined })
+            this.setState({ userIdToken: undefined })
 
         }
 
@@ -143,12 +144,12 @@ class PostDetailed extends React.Component {
                 let operationComplete = false;
 
                 //if logged in..
-                if (this.state.userIdtoken != undefined) {
+                if (this.state.userIdToken != undefined) {
                     //if user is logged in
 
                     //check if user has reacted to this post already.
                     for (var i = 0; i < this.state.post.reacts.length; i++) {
-                        if (this.state.post.reacts[i].userId == this.state.userIdtoken) {
+                        if (this.state.post.reacts[i].userId == this.state.userIdToken) {
 
                             //now check if the user's reaction is the same
                             //in this case REMOVE their reaction
@@ -160,7 +161,7 @@ class PostDetailed extends React.Component {
 
 
 
-                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdtoken);
+                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdToken);
                                 //need to post this to db after
 
 
@@ -181,7 +182,7 @@ class PostDetailed extends React.Component {
                     if (operationComplete != true) {
                         //user is making a new reaction
                         var tempReact = {
-                            userId: this.state.userIdtoken,
+                            userId: this.state.userIdToken,
                             reaction: this.state.reaction
                         }
 
@@ -348,10 +349,10 @@ class PostDetailed extends React.Component {
 
     renderButtons() {
         //if logged in..
-        if (this.state.userIdtoken != undefined) {
+        if (this.state.userIdToken != undefined) {
 
             //if this is this user's post
-            if (this.state.userIdtoken == this.state.post.userId) {
+            if (this.state.userIdToken == this.state.post.userId) {
 
                 //1. Check if post has no reacts and no replies
                 if (this.state.post.replies.length == 0 && this.state.post.reacts.length == 0) {

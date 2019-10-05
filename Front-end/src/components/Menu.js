@@ -31,7 +31,7 @@ class Menu extends React.Component {
                             <DropdownItem href="/login">
                                 Login
                             </DropdownItem>
-                            <DropdownItem href="/login">
+                            <DropdownItem href="/register">
                                 Sign Up
                             </DropdownItem>
                             </DropdownMenu>

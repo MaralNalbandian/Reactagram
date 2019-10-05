@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import Login from "./Login";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import validateUserIdToken from './utils/validateToken'
 
 import { getFromStorage, setInStorage } from "../utils/storage";
 export class Register extends React.Component {
@@ -13,7 +11,8 @@ export class Register extends React.Component {
       signUpError: "",
       signUpName: "",
       signUpEmail: "",
-      signUpPassword: ""
+      signUpPassword: "",
+      token: ""
     };
     this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(this);
     this.onTextboxChangeSignUpName = this.onTextboxChangeSignUpName.bind(this);
@@ -23,31 +22,13 @@ export class Register extends React.Component {
   }
 
   componentDidMount() {
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj; //same as
-      // const token = obj.token;
-      if (token) {
-        //Verify token
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
+    const token = getFromStorage("the_main_app").userIdToken;
+    if (validateUserIdToken()){
+      this.setState({
+        token,
+        isLoading: false
+      });
+    //If token is not valid/does not exist, redirect to the sign up page
     } else {
       this.setState({
         isLoading: false
@@ -144,7 +125,7 @@ export class Register extends React.Component {
       )
     }
 
-    if (!token) {
+    if (token == "") {
       console.log(signUpError)
       return (
         <React.Fragment>

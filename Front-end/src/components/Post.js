@@ -1,36 +1,35 @@
 import React from 'react';
-import { Card, Button, Text } from 'react-bootstrap';
+import validateUserIdToken from './utils/validateToken'
 
 import Reactions from './Reactions'
 
 class Post extends React.Component {
-    constructor(){
-        super();
-        if (JSON.parse(localStorage.getItem("the_main_app"))){
+    goToDetailed = event => {
+        event.preventDefault();
+        this.props.history.push(`/view/${this.props.index}`)
+    }
+
+    getUsername(){
+        fetch(`http://localhost:80/api/user/username/${this.props.post.userId}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({username: responseJson})
+        })
+    }
+
+    async componentWillMount() {
+        this.setState({post: this.props.post})
+        this.getUsername()
+        if (await validateUserIdToken()){
             this.state = {
                 reactCountsCanUseState: false,
-                userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
-                token: JSON.parse(localStorage.getItem("the_main_app")).token
+                userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken
             }
         } else {
             this.state = {
                 reactCountsCanUseState: false
             }
         }
-    }
-
-    goToDetailed = event => {
-        event.preventDefault();
-        this.props.history.push(`/view/${this.props.index}`)
-    }
-
-    like = event => {
-        event.preventDefault();
-        
-    }
-
-    componentWillMount() {
-        this.setState({post: this.props.post})
     }
 
     render() {
@@ -41,7 +40,7 @@ class Post extends React.Component {
                         <img className="grid-photo" src={this.props.post.imageLink} alt="Post"></img>
                     </div>
                     <div className="grid-user-wrapper">
-                        <div className="grid-user">{this.props.post.userId}</div>
+                        <div className="grid-user">{this.state.username}</div>
                     </div>
                     <div className="home-reactions">
                         <Reactions state={this.state}/>
