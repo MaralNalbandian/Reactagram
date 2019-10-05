@@ -31,7 +31,6 @@ h2 {
   background: white;
   box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.03);
   position: relative;
-  cursor: pointer;
 }
 
 .grid-photo-wrapper {
@@ -42,6 +41,7 @@ h2 {
   width: calc(100%);
   max-width: 250px;
   max-height: 250px;
+  cursor: pointer;
 }
 
 .grid-user-wrapper {

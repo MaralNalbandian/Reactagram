@@ -6,16 +6,10 @@ import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, } from 're
 import axios from 'axios';
 
 class PostDetailed extends React.Component {
-
-    constructor(props) {
-        super(props)
-    }
-
     getPost() {
         return axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
                 this.setState({ post: response.data })
-                console.log(response)
             })
             .catch((error) => {
                 console.error(error);
@@ -49,7 +43,6 @@ class PostDetailed extends React.Component {
         }
 
         else {
-            console.log("user is not logged in")
             this.setState({ token: undefined })
             this.setState({ userIdtoken: undefined })
 
@@ -415,9 +408,6 @@ class PostDetailed extends React.Component {
     render() {
         //get total amounts of reactions
         //this.getReactionCounts();
-        console.log("token: ", this.state.token);
-        console.log("userIdtoken: ", this.state.userIdtoken);
-        console.log("STATE: ", this.state)
         const id = this.props.match.params.postId;
 
         //get replies into an array of objects in state called "replyObjects"

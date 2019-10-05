@@ -12,7 +12,6 @@ class Home extends React.Component {
     }
 
     addPost = post => {
-        console.log(post.userId)
         // 1. Add our new post using the API
         fetch('http://localhost:80/api/post/add', {
             method: 'POST',
@@ -64,7 +63,6 @@ class Home extends React.Component {
   }
 
     render() {
-        console.log(this.state.posts)
         return (
             <React.Fragment>
                 <div className="home">
