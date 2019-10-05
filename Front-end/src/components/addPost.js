@@ -62,7 +62,7 @@ class AddPost extends React.Component {
       return (
         <div className="add-post">
           <form className="add-post-form" onSubmit={this.createPost}>
-            <h2>Add Post</h2>
+            {/* <h2>Add Post</h2> */}
             <div className='input'>
               <input 
                 type="file"

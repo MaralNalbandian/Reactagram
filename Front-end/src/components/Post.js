@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, Button, Text } from 'react-bootstrap';
 
 import Reactions from './Reactions'
 

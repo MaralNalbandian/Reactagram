@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 import Post from './Post';
 import AddPost from './addPost';
 import Pages from './Pages';
 
-class Home extends React.Component {  
+class Home extends React.Component {
     constructor() {
         super()
-        this.state ={
+        this.state = {
         }
     }
 
@@ -45,37 +45,37 @@ class Home extends React.Component {
 
     getPosts() {
         fetch("http://localhost:80/api/post/count")
-        .then((response) => response.json())
-        .then((responseJson) => {
-            //TODO: Make more efficient
-            var count = 1;
-            var pages = [];
-            while (count <= (responseJson/9)+1){
-                pages.push(count)
-                count = count + 1
-            }
-            this.setState({ 
-                pages: pages
+            .then((response) => response.json())
+            .then((responseJson) => {
+                //TODO: Make more efficient
+                var count = 1;
+                var pages = [];
+                while (count <= (responseJson / 9) + 1) {
+                    pages.push(count)
+                    count = count + 1
+                }
+                this.setState({
+                    pages: pages
+                })
             })
-        })
-        .catch((error) => {
-        console.error(error);
-        });
+            .catch((error) => {
+                console.error(error);
+            });
 
         fetch(`http://localhost:80/api/post/page/${this.props.match.params.page}`)
-        .then((response) => response.json())
-        .then((responseJson) => {
-            this.setState({ 
-                posts: responseJson, 
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    posts: responseJson,
+                })
             })
-        })
-        .catch((error) => {
-        console.error(error);
-        });
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     componentWillMount() {
-        this.getPosts()
+        this.getPosts();
     }
 
     render() {
@@ -86,7 +86,7 @@ class Home extends React.Component {
                     {this.state.posts && this.state.pages &&
                         <React.Fragment>
                             <div className="photo-grid">
-                                {Object.keys(this.state.posts).slice(0,9).map(key => (
+                                {Object.keys(this.state.posts).slice(0, 9).map(key => (
                                     <Post
                                         key={key}
                                         index={this.state.posts[key].postId}
@@ -95,15 +95,15 @@ class Home extends React.Component {
                                     />
                                 ))}
                             </div>
-                            <Pages 
-                                pages= {this.state.pages}
-                                currentPage= {this.props.match.params.page}
-                                lastPage= {this.state.pages[this.state.pages.length-1]}
+                            <Pages
+                                pages={this.state.pages}
+                                currentPage={this.props.match.params.page}
+                                lastPage={this.state.pages[this.state.pages.length - 1]}
                             />
                         </React.Fragment>
                     }
-
-                    <AddPost addPost={this.addPost}/>
+                    <h2>Add Post</h2>
+                    <AddPost addPost={this.addPost} />
                 </div>
             </React.Fragment>
         )
