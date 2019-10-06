@@ -436,6 +436,10 @@ class PostDetailed extends React.Component {
 
     }
 
+    getUsername() {
+        console.log(this.state)
+    }
+
     sortByPopular() {
         //TODO: check if any replies otherwise  do nothing
         this.state.replyObjects.sort((b, a) => parseFloat(a.reacts.length) - parseFloat(b.reacts.length));
@@ -452,11 +456,12 @@ class PostDetailed extends React.Component {
         //get total amounts of reactions
         //this.getReactionCounts();
         const id = this.props.match.params.postId;
-
+        
         //get replies into an array of objects in state called "replyObjects"
 
         if (this.state.post) {
             // { this.getReactionCounts("like") }
+            {this.getUsername()}
             return (
 
 
@@ -569,8 +574,8 @@ class PostDetailed extends React.Component {
                                                     <Card.Img variant="top" src={reply.imageLink}
                                                         href="jeff" />
                                                     <Card.Body>
-                                                        <Card.Title>Reply by {reply.userId}</Card.Title>
-                                                        <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle>
+                                                        {/* <Card.Title>Reply by {reply.userId}</Card.Title>
+                                                        <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle> */}
                                                         {/* have to go to the actual post to reply to it. Reply is not directly avaialble from the comments. */}
                                                         <Card.Link href={"/view/" + reply.postId}>View this Post</Card.Link>
                                                     </Card.Body>
