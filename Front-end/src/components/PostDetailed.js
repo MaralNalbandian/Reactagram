@@ -478,8 +478,8 @@ class PostDetailed extends React.Component {
 
                                     }}
                                         key={id}>
-                                        <Card.Title>Post by {this.state.post.userId}</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">At {this.state.post.date}</Card.Subtitle>
+                                        {/* <Card.Title>Post by {this.state.post.userId}</Card.Title> */}
+                                        {/* <Card.Subtitle className="mb-2 text-muted">At {this.state.post.date}</Card.Subtitle> */}
                                         <Card.Img variant="bottom" src={this.state.post.imageLink} />
 
                                         <Card.Body>

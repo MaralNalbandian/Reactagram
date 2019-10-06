@@ -21,13 +21,13 @@ export class Register extends React.Component {
   }
 
   async componentDidMount() {
-    if (await validateUserIdToken()){
+    if (await validateUserIdToken()) {
       const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
       this.setState({
         token,
         isLoading: false
       });
-    //If token is not valid/does not exist, redirect to the sign up page
+      //If token is not valid/does not exist, redirect to the sign up page
     } else {
       this.setState({
         isLoading: false
@@ -37,7 +37,12 @@ export class Register extends React.Component {
 
   logout() {
     localStorage.clear();
-    this.setState({token: ""})
+    try {
+      this.setState({token: ""})
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
   onTextboxChangeSignUpEmail(event) {
@@ -92,7 +97,7 @@ export class Register extends React.Component {
       });
   }
 
-  onLogin(){
+  onLogin() {
     window.location.assign("/login")
   }
 
@@ -120,7 +125,7 @@ export class Register extends React.Component {
       );
     }
 
-    if (signUpError === "Signed up"){
+    if (signUpError === "Signed up") {
       return (
         <React.Fragment>
           <p>{signUpError}</p>
@@ -166,8 +171,8 @@ export class Register extends React.Component {
 
     return (
       <React.Fragment>
-          <p>Account</p>
-          <button onClick={this.logout}>Logout</button>
+        <p>Account</p>
+        <button onClick={this.logout}>Logout</button>
       </React.Fragment>
     );
   }
