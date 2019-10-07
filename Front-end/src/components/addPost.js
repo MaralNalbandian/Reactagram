@@ -15,13 +15,15 @@ class AddPost extends React.Component {
     super()
 
     this.state ={
-      imageLink: ""
+      imageLink: "",
+      errorMessage: ""
     }
   }
 
   usernameRef = React.createRef();
 
   createPost = event => {
+    this.setState({errorMessage: ""})
     // 1.  stop the form from submitting
     event.preventDefault();
 
@@ -42,11 +44,17 @@ class AddPost extends React.Component {
     this.setState({imageLink: location})
 
     if (this.state.imageLink !== "" && await validateUserIdToken()){
-      const post = {
-        userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
-        imageLink: this.state.imageLink
-      };
-      this.props.addPost(post);
+      var fileType = this.state.file.name.split(".")[1].toLowerCase() 
+      if (fileType=== 'png' || fileType === 'jpeg' ||fileType === 'jpg' || fileType === 'gif'){
+        const post = {
+          userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
+          imageLink: this.state.imageLink
+        };
+        this.props.addPost(post);
+      } else {
+        console.error('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
+        this.setState({errorMessage: "Error"})
+      }
     }
     else {
       console.error('User not logged in ')
@@ -67,13 +75,11 @@ class AddPost extends React.Component {
   }
 
   render() {
-    console.log(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/page`)
     //Renders the add post component if the user is logged in
     if (this.state.validUser){
       return (
         <div className="add-post">
           <form className="add-post-form" onSubmit={this.createPost}>
-            {/* <h2>Add Post</h2> */}
             <div className='input'>
               <input 
                 type="file"
@@ -81,9 +87,13 @@ class AddPost extends React.Component {
                 accept="image/*"
                 required
               />
-              {/* {this.state.imageLink !== "" && */}
-                <button type="submit">+ Add Post</button>
-              {/* } */}
+              <button type="submit">+ Add Post</button>
+              { this.state.errorMessage === "Error" &&
+              <div className="Error">
+                <p>The file you selected is invalid.</p>
+                <p>Please use a .jpg, .png or .gif file</p>
+              </div>
+            }
             </div>
           </form>
         </div>

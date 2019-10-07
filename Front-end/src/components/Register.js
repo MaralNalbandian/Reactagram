@@ -21,13 +21,13 @@ export class Register extends React.Component {
   }
 
   async componentDidMount() {
-    if (await validateUserIdToken()){
+    if (await validateUserIdToken()) {
       const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
       this.setState({
         token,
         isLoading: false
       });
-    //If token is not valid/does not exist, redirect to the sign up page
+      //If token is not valid/does not exist, redirect to the sign up page
     } else {
       this.setState({
         isLoading: false
@@ -37,23 +37,43 @@ export class Register extends React.Component {
 
   logout() {
     localStorage.clear();
-    this.setState({token: ""})
+    try {
+      this.setState({token: ""})
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
   onTextboxChangeSignUpEmail(event) {
     this.setState({
       signUpEmail: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signUpError: "Error: Email must be 250 characters or less"})
+    } else {
+      this.setState({signUpError: ""})
+    }
   }
   onTextboxChangeSignUpPassword(event) {
     this.setState({
       signUpPassword: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signUpError: "Error: Password must be 250 characters or less"})
+    } else {
+      this.setState({signUpError: ""})
+    }
   }
   onTextboxChangeSignUpName(event) {
     this.setState({
       signUpName: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signUpError: "Error: Name must be 250 characters or less"})
+    } else {
+      this.setState({signUpError: ""})
+    }
   }
 
   onSignUp() {
@@ -92,7 +112,7 @@ export class Register extends React.Component {
       });
   }
 
-  onLogin(){
+  onLogin() {
     window.location.assign("/login")
   }
 
@@ -120,7 +140,7 @@ export class Register extends React.Component {
       );
     }
 
-    if (signUpError === "Signed up"){
+    if (signUpError === "Signed up") {
       return (
         <React.Fragment>
           <p>{signUpError}</p>
@@ -166,8 +186,9 @@ export class Register extends React.Component {
 
     return (
       <React.Fragment>
-          <p>Account</p>
-          <button onClick={this.logout}>Logout</button>
+        <p>Account - go to login screen to sign out</p>
+        <button onClick={this.onLogin}>Login</button>
+        {/* <button onClick={this.logout}>Logout</button> */}
       </React.Fragment>
     );
   }
