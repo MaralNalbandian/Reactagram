@@ -122,7 +122,6 @@ h2 {
   width: calc(100%);
   max-width: 250px;
   max-height: 250px;
-  cursor: pointer;
 }
 
 .leaderboard-user-wrapper {

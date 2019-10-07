@@ -46,14 +46,14 @@ class AddPost extends React.Component {
     if (this.state.imageLink !== "" && await validateUserIdToken()){
       var fileType = this.state.file.name.split(".")[1].toLowerCase() 
       console.log(fileType)
-      if (fileType=== 'png' || fileType === 'jpg' || fileType === 'gif'){
+      if (fileType=== 'png' || fileType === 'jpeg' ||fileType === 'jpg' || fileType === 'gif'){
         const post = {
           userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
           imageLink: this.state.imageLink
         };
         this.props.addPost(post);
       } else {
-        console.log('Filetype invalid. Please use JPG, PNG or GIF files')
+        console.log('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
         this.setState({errorMessage: "Error"})
       }
     }
@@ -89,12 +89,13 @@ class AddPost extends React.Component {
                 required
               />
               <button type="submit">+ Add Post</button>
-            </div>
-            { this.state.errorMessage === "Error" &&
+              { this.state.errorMessage === "Error" &&
               <div className="Error">
-                The file you selected is invalid. Please use a .jpg, .png or .gif file
+                <p>The file you selected is invalid.</p>
+                <p>Please use a .jpg, .png or .gif file</p>
               </div>
             }
+            </div>
           </form>
         </div>
       );

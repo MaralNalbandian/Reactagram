@@ -36,6 +36,7 @@ export class Register extends React.Component {
   }
 
   logout() {
+    console.log(this.state)
     localStorage.clear();
     try {
       this.setState({token: ""})
@@ -49,16 +50,31 @@ export class Register extends React.Component {
     this.setState({
       signUpEmail: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signUpError: "Error: Email must be 250 characters or less"})
+    } else {
+      this.setState({signUpError: ""})
+    }
   }
   onTextboxChangeSignUpPassword(event) {
     this.setState({
       signUpPassword: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signUpError: "Error: Password must be 250 characters or less"})
+    } else {
+      this.setState({signUpError: ""})
+    }
   }
   onTextboxChangeSignUpName(event) {
     this.setState({
       signUpName: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signUpError: "Error: Name must be 250 characters or less"})
+    } else {
+      this.setState({signUpError: ""})
+    }
   }
 
   onSignUp() {
@@ -171,8 +187,9 @@ export class Register extends React.Component {
 
     return (
       <React.Fragment>
-        <p>Account</p>
-        <button onClick={this.logout}>Logout</button>
+        <p>Account - go to login screen to sign out</p>
+        <button onClick={this.onLogin}>Login</button>
+        {/* <button onClick={this.logout}>Logout</button> */}
       </React.Fragment>
     );
   }
