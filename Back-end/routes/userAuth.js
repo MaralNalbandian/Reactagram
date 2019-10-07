@@ -86,37 +86,6 @@ router.post("/register", async (req, res, next) => {
       });
     }
   );
-  // const { error } = Joi.validate(req.body, schema);
-  // const { error } = registerValidation(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
-
-  //Check if user already in database
-  // const emailExists = await User.findOne({ email: req.body.email });
-  // if (emailExists) return res.status(400).send("Email already exists");
-
-  //Hash passwords
-  // const salt = await bcrypt.genSalt(10); //complexity of string that gets generated is 10
-  // const hashPassword = await bcrypt.hash(req.body.password, salt); //Hash password with salt
-
-  //Create a new user
-  // const user = new User({
-  //   name: req.body.name,
-  //   email: req.body.email,
-  //   password: hashPassword
-  // });
-
-  // try {
-  //   //Save the user
-  //   const savedUser = user.save();
-  //   //Send a response
-  //   res.send({ user: user._id }); //Sends back user with just an id
-  //   res.json("Registered!");
-  //   res.render("/login");
-  // } catch (err) {
-  //   // res.redirect("/register");
-
-  //   res.status(400).send(err);
-  // }
 });
 
 module.exports = router;
@@ -189,17 +158,6 @@ router.post("/login", (req, res, next) => {
           token: doc._id
         });
       });
-
-      // const { error } = loginValidation(req.body);
-      // if (error) return res.status(400).send(error.details[0].message);
-
-      //Check if user in database (if email exists)
-      // const user = await User.findOne({ email: req.body.email });
-      // if (!user) return res.status(400).send("Email or password invalid");
-
-      //Password is correct
-      // const validPass = await bcrypt.compare(req.body.password, user.password);
-      // if (!validPass) return res.status(400).send("Invalid password");
 
       //Create and assign a token
       // const token = jwt.sign({ _id: user._id }, config.get("TOKEN_SECRET"));
