@@ -38,6 +38,7 @@ router.get('/get/:id', async (req, res) => {
         const post = await Post.findOne({ postId: req.params.id })
 
         if (post) {
+            post.replies.sort();
             return res.json(post)
         } else {
             res.status(404).json('No post found');

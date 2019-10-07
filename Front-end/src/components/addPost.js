@@ -45,7 +45,6 @@ class AddPost extends React.Component {
 
     if (this.state.imageLink !== "" && await validateUserIdToken()){
       var fileType = this.state.file.name.split(".")[1].toLowerCase() 
-      console.log(fileType)
       if (fileType=== 'png' || fileType === 'jpeg' ||fileType === 'jpg' || fileType === 'gif'){
         const post = {
           userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
@@ -53,7 +52,7 @@ class AddPost extends React.Component {
         };
         this.props.addPost(post);
       } else {
-        console.log('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
+        console.error('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
         this.setState({errorMessage: "Error"})
       }
     }

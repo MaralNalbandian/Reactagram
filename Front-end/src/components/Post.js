@@ -41,7 +41,6 @@ class Post extends React.Component {
                     <div onClick={this.goToDetailed} className="grid-photo-wrapper">
                         <img className="grid-photo" src={this.props.post.imageLink} alt="Post"></img>
                     </div>
-                    <br></br>
                     <div className="grid-user-wrapper">
                         <div className="grid-user">{this.state.username}</div>
                     </div>

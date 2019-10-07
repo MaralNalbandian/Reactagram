@@ -36,7 +36,6 @@ export class Register extends React.Component {
   }
 
   logout() {
-    console.log(this.state)
     localStorage.clear();
     try {
       this.setState({token: ""})

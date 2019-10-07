@@ -22,6 +22,10 @@ h2 {
 }
 
 .grid-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   flex-basis: calc(33.333% - 4rem);
   flex-grow: 1;
   flex-shrink: 0;
@@ -144,4 +148,8 @@ h2 {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
   font-size: 1.5rem;
+}
+
+.home-reactions {
+  align-items: center
 }

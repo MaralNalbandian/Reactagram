@@ -438,7 +438,19 @@ class PostDetailed extends React.Component {
                     .then((response) => {
                         //this.setState({ post: response.data })
                         this.state.replyObjects.push(response.data)
-                        this.state.replyObjects.sort()
+                        this.state.replyObjects.sort(function(a, b) {
+                            var nameA = a.postId.toUpperCase(); // ignore upper and lowercase
+                            var nameB = b.postId.toUpperCase(); // ignore upper and lowercase
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+                            
+                            // names must be equal
+                            return 0;
+                        });
                         this.setState(this.state) //refresh state
                         this.getPost();
                     })
@@ -471,11 +483,12 @@ class PostDetailed extends React.Component {
         //get replies into an array of objects in state called "replyObjects"
 
         if (this.state.post) {
-            console.log(this.state.replyObjects)
             if (this.props.match.params.page == 1){
                 var startNum = 0;
+                var endNum = 3
             } else {
-                var startNum = ((Number(this.props.match.params.page)-1)*3)-1;
+                var startNum = ((Number(this.props.match.params.page)-1)*3);
+                var endNum = startNum + 3;
             }
             // { this.getReactionCounts("like") }
             return (
@@ -579,7 +592,7 @@ class PostDetailed extends React.Component {
                             <Row id="replies" style={{ justifyContent: 'center', alignItems: 'center', padding: 8 }}>
                                 <Col xs={8} >
 
-                                    {this.state.replyObjects.slice(startNum, 3).map(
+                                    {this.state.replyObjects.slice(startNum, endNum).map(
                                         reply =>
                                             <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}
                                                 key={reply.postId}>
