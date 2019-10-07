@@ -10,7 +10,9 @@ export class Login extends React.Component {
       signInError: "",
       signInEmail: "",
       signInPassword: "",
-      token: ""
+      token: "",
+      emailTooLong: false,
+      passwordTooLong: false,
     };
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
@@ -42,11 +44,21 @@ export class Login extends React.Component {
     this.setState({
       signInEmail: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signInError: "Error: Email must be 250 characters or less"})
+    } else {
+      this.setState({signInError: ""})
+    }
   }
   onTextboxChangeSignInPassword(event) {
     this.setState({
       signInPassword: event.target.value
     });
+    if (event.target.value.length === 250){
+      this.setState({signInError: "Error: Password must be 250 characters or less"})
+    } else {
+      this.setState({signInError: ""})
+    }
   }
 
   onSignUp() {
@@ -131,6 +143,7 @@ export class Login extends React.Component {
                 type="email"
                 placeholder="Email"
                 value={signInEmail}
+                maxLength="250"
                 onChange={this.onTextboxChangeSignInEmail}
               />
               <br />
@@ -138,6 +151,7 @@ export class Login extends React.Component {
                 type="password"
                 placeholder="Password"
                 value={signInPassword}
+                maxLength="250"
                 onChange={this.onTextboxChangeSignInPassword}
               />
               <br />

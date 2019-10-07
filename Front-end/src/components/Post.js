@@ -13,6 +13,9 @@ class Post extends React.Component {
         fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/user/username/${this.props.post.userId}`)
         .then((response) => response.json())
         .then((responseJson) => {
+            if (responseJson.length > 20){
+                responseJson = responseJson.substring(0,20) + '...'
+            }
             this.setState({username: responseJson})
         })
     }
