@@ -21,7 +21,7 @@ class Post extends React.Component {
 
     goToDetailed = event => {
         event.preventDefault();
-        this.props.history.push(`/view/${this.props.index}`)
+        this.props.history.push(`/view/${this.props.index}/1`)
     }
 
     like = event => {
