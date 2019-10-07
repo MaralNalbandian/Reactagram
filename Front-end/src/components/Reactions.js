@@ -128,7 +128,7 @@ class Reactions extends React.Component {
 
                     //this runs no matter what since we're just manipulating state except if not logged in
                     //POST state to database
-                    fetch('http://localhost:80/api/post/react', {
+                    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

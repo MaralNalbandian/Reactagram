@@ -62,7 +62,7 @@ export class Login extends React.Component {
     });
 
     //Post request to backend
-    fetch("http://localhost:80/api/user/login", {
+    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({

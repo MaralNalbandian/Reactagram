@@ -8,7 +8,7 @@ class Leaderboard extends React.Component {
     }
 
     componentWillMount(){
-        fetch("http://localhost:80/api/user/leaderboard")
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/leaderboard")
         .then((response) => response.json())
         .then((responseJson) => {
             this.setState({ 

@@ -67,6 +67,7 @@ class AddPost extends React.Component {
   }
 
   render() {
+    console.log(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/page`)
     //Renders the add post component if the user is logged in
     if (this.state.validUser){
       return (

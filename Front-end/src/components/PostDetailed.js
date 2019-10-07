@@ -7,7 +7,7 @@ import axios from 'axios';
 
 class PostDetailed extends React.Component {
     getPost() {
-        return axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
+        return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
                 this.setState({ post: response.data })
             })
@@ -194,7 +194,7 @@ class PostDetailed extends React.Component {
 
                     //this runs no matter what since we're just manipulating state except if not logged in
                     //POST state to database
-                    fetch('http://localhost:80/api/post/react', {
+                    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ class PostDetailed extends React.Component {
         var dateNow = Date.now();
         // 1. Add our new post using the API
         try {
-            axios("http://localhost:80/api/post/add", {
+            axios(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/post/add", {
                 method: "post",
                 data: {
                     postId: `post${dateNow}`,
@@ -246,7 +246,7 @@ class PostDetailed extends React.Component {
     };
 
     incrementUploads(userId) {
-        fetch('http://localhost:80/api/user/incrementUpload', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/user/incrementUpload', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ class PostDetailed extends React.Component {
 
         this.state.post.replies.push(`post${dateId}`);
 
-        fetch('http://localhost:80/api/post/react', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ class PostDetailed extends React.Component {
         this.state.post.imageLink = post.imageLink;
 
         //2. replicate the fetch Post  to /post/react with this.state.post as the body
-        fetch('http://localhost:80/api/post/react', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -298,7 +298,7 @@ class PostDetailed extends React.Component {
     handleDelete() {
 
 
-        fetch('http://localhost:80/api/post/delete', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/delete', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -322,7 +322,7 @@ class PostDetailed extends React.Component {
         this.state.post.imageLink = "https://brendon-aip-2019.s3-ap-southeast-2.amazonaws.com/deleted.jpg";
 
         //4. replicate the fetch Post  to /post/react with this.state.post as the body
-        fetch('http://localhost:80/api/post/react', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -419,8 +419,7 @@ class PostDetailed extends React.Component {
 
             //loop a fetch request
             for (var i = 0; i < this.state.post.replies.length; i++) {
-                //var getLink = 'http://localhost:80/api/post/get/$' + this.state.post.replies
-                axios.get(`http://localhost:80/api/post/get/${this.state.post.replies[i]}`)
+                axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.state.post.replies[i]}`)
                     .then((response) => {
                         //this.setState({ post: response.data })
                         this.state.replyObjects.push(response.data)

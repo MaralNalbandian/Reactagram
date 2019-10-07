@@ -9,12 +9,12 @@ class Post extends React.Component {
         this.props.history.push(`/view/${this.props.index}`)
     }
 
-    getUsername() {
-        fetch(`http://localhost:80/api/user/username/${this.props.post.userId}`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({ username: responseJson })
-            })
+    getUsername(){
+        fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/user/username/${this.props.post.userId}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({username: responseJson})
+        })
     }
 
     async componentWillMount() {
