@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import AppBar from "material-ui/AppBar";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
-import Login from "./Login";
-import Nav from "./Nav";
+
 import axios from "axios";
-import { HardwarePhonelinkOff } from "material-ui/svg-icons";
-import { Link } from "react-router-dom";
+import Menu from "./Menu";
 
 import { getFromStorage, setInStorage } from "../utils/storage";
 export class Register extends React.Component {
+  //This code is based on a solution by "Keith, the Coder" on Youtube
+  //See https://youtu.be/s1swJLYxLAA
+
   constructor(props) {
     super(props);
 
@@ -154,13 +151,17 @@ export class Register extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token });
+          setInStorage("the_main_app", {
+            token: json.token,
+            userIdtoken: json.userIdtoken
+          });
           this.setState({
             signInError: json.message,
             isLoading: false,
             signInEmail: "",
             signInPassword: "",
-            token: json.token
+            token: json.token,
+            userIdtoken: json.userIdtoken
           });
         } else
           this.setState({
@@ -202,32 +203,19 @@ export class Register extends React.Component {
     }
   }
 
-  nameRef = React.createRef();
-  passRef = React.createRef();
-  emailRef = React.createRef();
+  // checkUser = event => {
+  //   event.preventDefault();
 
-  state = {};
+  //   axios("http://localhost:80/api/user/register", {
+  //     method: "post",
+  //     data: {
+  //       name: this.nameRef.current.value,
+  //       email: this.emailRef.current.value,
+  //       password: this.passRef.current.value
+  //     }
+  //   }).then(response => console.log(response.data));
 
-  checkUser = event => {
-    event.preventDefault();
-
-    axios("http://localhost:80/api/user/register", {
-      method: "post",
-      data: {
-        name: this.nameRef.current.value,
-        email: this.emailRef.current.value,
-        password: this.passRef.current.value
-      }
-    }).then(response => console.log(response.data));
-    // this.setState({ name: response.data.name });
-    // this.setState({ lastname: response.data.lastname });
-    // this.setState({ email: response.data.email });
-    // this.setState({ password: response.data.password });
-    // })
-    // .catch(error => {
-    //   console.error(error);
-    // });
-  };
+  // };
 
   render() {
     const {
@@ -252,10 +240,8 @@ export class Register extends React.Component {
 
     if (!token) {
       return (
-        <React.Fragment>
-          <Nav />
-          <div>
-            <div>
+        <div>
+          {/* <div>
               {signInError ? <p>{signInError}</p> : null}
               <p>Sign In</p>
               <label>Email:</label>
@@ -279,47 +265,49 @@ export class Register extends React.Component {
             <br />
             <br />
             <br />
+            <br /> */}
+          <div>
+            {signUpError ? <p>{signUpError}</p> : null}
+            <p>Sign Up</p>
+            <label>Name: </label>
             <br />
-            <div>
-              {signUpError ? <p>{signUpError}</p> : null}
-              <p>Sign Up</p>
-              <input
-                type="text"
-                placeholder="Name"
-                value={signUpName}
-                onChange={this.onTextboxChangeSignUpName}
-              />
-              <br />
-              <input
-                type="email"
-                placeholder="Email"
-                value={signUpEmail}
-                onChange={this.onTextboxChangeSignUpEmail}
-              />
-              <br />
-              <input
-                type="password"
-                placeholder="Password"
-                value={signUpPassword}
-                onChange={this.onTextboxChangeSignUpPassword}
-              />
-              <br />
-              <button onClick={this.onSignUp}>Sign Up</button>
-            </div>
+            <input
+              type="text"
+              placeholder="Name"
+              value={signUpName}
+              onChange={this.onTextboxChangeSignUpName}
+            />
+            <br />
+            <label>Email: </label>
+            <br />
+            <input
+              type="email"
+              placeholder="Email"
+              value={signUpEmail}
+              onChange={this.onTextboxChangeSignUpEmail}
+            />
+            <br />
+            <label>Password: </label>
+            <br />
+            <input
+              type="password"
+              placeholder="Password"
+              value={signUpPassword}
+              onChange={this.onTextboxChangeSignUpPassword}
+            />
+            <br />
+            <button onClick={this.onSignUp}>Sign Up</button>
           </div>
-        </React.Fragment>
+        </div>
       );
     }
 
     return (
-      // <MuiThemeProvider>
-      <React.Fragment>
-        <Nav />
-        <div>
-          <p>Account</p>
-          <button onClick={this.logout}>Logout</button>
-        </div>
-        {/* <form className="login-box" onSubmit={this.checkUser}>
+      <div>
+        <p>Already logged in!</p>
+        <button onClick={this.logout}>Logout</button>
+      </div>
+      /* <form className="login-box" onSubmit={this.checkUser}>
           <h1>Register</h1>
           <div className="textbox">
             <input
@@ -353,19 +341,11 @@ export class Register extends React.Component {
           <Link style={navStyle} to="/login">
             <h4>Login</h4>
           </Link>
-        </form> */}
-      </React.Fragment>
+        </form> */
+
       // </MuiThemeProvider>
     );
   }
 }
-const navStyle = {
-  color: "grey"
-};
-const navstyles = {
-  button: {
-    margin: 15
-  }
-};
 
 export default Register;

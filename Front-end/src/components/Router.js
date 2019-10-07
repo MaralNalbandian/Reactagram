@@ -7,6 +7,7 @@ import PostDetailed from "./PostDetailed";
 import NotFound from "./NotFound";
 import Login from "./Login";
 import Menu from "./Menu";
+import Register from "./Register";
 
 const Router = () => (
   <>
@@ -16,6 +17,7 @@ const Router = () => (
         <Route exact path="/" component={Home} />
         <Route exact path="/view/:postId" component={PostDetailed} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
         <Route component={NotFound} />
       </Switch>
     </BrowserRouter>

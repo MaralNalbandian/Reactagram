@@ -10,33 +10,30 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
-// router.get("/register", async (req, res) => {
-//   res.render("register");
-// });
+//This code is based on a solution by "Keith, the Coder" on Youtube
+//See https://youtu.be/s1swJLYxLAA
 
 //REGISTER
 router.post("/register", async (req, res, next) => {
-  //VALIDATE THE DATA BEFORE WE CREATE A USER
-
   const { body } = req;
   const { name, password } = body;
   let { email } = body;
 
   if (!name) {
-    console.log(name);
-
     return res.send({
       success: false,
       message: "Error: Name cannot be blank"
     });
   }
+
   if (!email) {
     return res.send({
       success: false,
       message: "Error: Email cannot be blank"
     });
   }
-  if (!password) {
+
+  if (!password || password < 6) {
     return res.send({
       success: false,
       message: "Error: Password cannot be blank"
@@ -160,7 +157,6 @@ router.post("/login", (req, res, next) => {
         });
       }
       if (users.length != 1) {
-        console.log("thisss");
         return res.send({
           success: false,
           message: "Error: Invalid"
@@ -169,7 +165,6 @@ router.post("/login", (req, res, next) => {
 
       const user = users[0];
       if (!user.validPassword(password)) {
-        console.log("this");
         return res.send({
           success: false,
           message: "Error: Invalid"
@@ -190,7 +185,7 @@ router.post("/login", (req, res, next) => {
           success: true,
           message: "Valid sign in",
           // token: userSession.userId,
-          userId: userSession.userId,
+          userIdtoken: userSession.userId,
           token: doc._id
         });
       });

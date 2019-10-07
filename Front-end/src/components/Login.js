@@ -1,16 +1,26 @@
 import React from "react";
 import axios from "axios";
 import { getFromStorage, setInStorage } from "../utils/storage";
-
+import Menu from "./Menu";
+import Home from "./Home";
+import reactDOM from "react-dom";
+import { domainToASCII } from "url";
 export class Login extends React.Component {
+  //This code is based on a solution by "Keith, the Coder" on Youtube
+  //See https://youtu.be/s1swJLYxLAA
+
   constructor(props) {
     super(props);
 
     this.state = {
       isLoading: true,
+      signUpError: "",
       signInError: "",
       signInEmail: "",
-      signInPassword: ""
+      signInPassword: "",
+      signUpName: "",
+      signUpEmail: "",
+      signUpPassword: ""
     };
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
@@ -18,8 +28,16 @@ export class Login extends React.Component {
     this.onTextboxChangeSignInPassword = this.onTextboxChangeSignInPassword.bind(
       this
     );
+    this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(
+      this
+    );
+    this.onTextboxChangeSignUpName = this.onTextboxChangeSignUpName.bind(this);
+    this.onTextboxChangeSignUpPassword = this.onTextboxChangeSignUpPassword.bind(
+      this
+    );
 
     this.onSignIn = this.onSignIn.bind(this);
+    this.onSignUp = this.onSignUp.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -51,7 +69,6 @@ export class Login extends React.Component {
       }
     }
   }
-
   onTextboxChangeSignInEmail(event) {
     this.setState({
       signInEmail: event.target.value
@@ -61,6 +78,57 @@ export class Login extends React.Component {
     this.setState({
       signInPassword: event.target.value
     });
+  }
+  onTextboxChangeSignUpEmail(event) {
+    this.setState({
+      signUpEmail: event.target.value
+    });
+  }
+  onTextboxChangeSignUpPassword(event) {
+    this.setState({
+      signUpPassword: event.target.value
+    });
+  }
+  onTextboxChangeSignUpName(event) {
+    this.setState({
+      signUpName: event.target.value
+    });
+  }
+
+  onSignUp() {
+    //Grab state
+    const { signUpName, signUpEmail, signUpPassword } = this.state;
+
+    this.setState({
+      isLoading: true
+    });
+
+    //Post request to backend
+    fetch("http://localhost:80/api/user/register", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        name: signUpName,
+        email: signUpEmail,
+        password: signUpPassword
+      })
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success) {
+          this.setState({
+            signUpError: json.message,
+            isLoading: false,
+            signUpEmail: "",
+            signUpName: "",
+            signUpPassword: ""
+          });
+        } else
+          this.setState({
+            signUpError: json.message,
+            isLoading: false
+          });
+      });
   }
 
   onSignIn() {
@@ -83,13 +151,17 @@ export class Login extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          setInStorage("the_main_app", { token: json.token });
+          setInStorage("the_main_app", {
+            token: json.token,
+            userIdtoken: json.userIdtoken
+          });
           this.setState({
             signInError: json.message,
             isLoading: false,
             signInEmail: "",
             signInPassword: "",
-            token: json.token
+            token: json.token,
+            userIdtoken: json.userIdtoken
           });
         } else
           this.setState({
@@ -131,22 +203,17 @@ export class Login extends React.Component {
     }
   }
 
-  emailRef = React.createRef();
-  passRef = React.createRef();
+  // checkUser = event => {
+  //   event.preventDefault();
 
-  state = {};
-
-  checkUser = event => {
-    event.preventDefault();
-
-    axios("http://localhost:80/api/user/login", {
-      method: "post",
-      data: {
-        email: this.emailRef.current.value,
-        password: this.passRef.current.value
-      }
-    }).then(response => console.log(response.data));
-  };
+  //   axios("http://localhost:80/api/user/login", {
+  //     method: "post",
+  //     data: {
+  //       email: this.emailRef.current.value,
+  //       password: this.passRef.current.value
+  //     }
+  //   }).then(response => console.log(response.data));
+  // };
 
   render() {
     const {
@@ -171,34 +238,36 @@ export class Login extends React.Component {
 
     if (!token) {
       return (
-        <React.Fragment>
+        <div>
           <div>
-            <div>
-              {signInError ? <p>{signInError}</p> : null}
-              <p>Sign In</p>
-              <label>Email:</label>
-              <br />
-              <input
-                type="email"
-                placeholder="Email"
-                value={signInEmail}
-                onChange={this.onTextboxChangeSignInEmail}
-              />
-              <br />
-              <input
-                type="password"
-                placeholder="Password"
-                value={signInPassword}
-                onChange={this.onTextboxChangeSignInPassword}
-              />
-              <br />
-              <button onClick={this.onSignIn}>Sign In</button>
-            </div>
+            {signInError ? <p>{signInError}</p> : null}
+            <p>Sign In</p>
+            <label>Email:</label>
             <br />
+            <input
+              type="email"
+              placeholder="Email"
+              value={signInEmail}
+              onChange={this.onTextboxChangeSignInEmail}
+            />
+
             <br />
+            <label>Password:</label>
             <br />
+            <input
+              type="password"
+              placeholder="Password"
+              value={signInPassword}
+              onChange={this.onTextboxChangeSignInPassword}
+            />
             <br />
-            <div>
+            <button onClick={this.onSignIn}>Sign In</button>
+          </div>
+          <br />
+          <br />
+          <br />
+          <br />
+          {/* <div>
               {signUpError ? <p>{signUpError}</p> : null}
               <p>Sign Up</p>
               <input
@@ -223,110 +292,19 @@ export class Login extends React.Component {
               />
               <br />
               <button onClick={this.onSignUp}>Sign Up</button>
-            </div>
-          </div>
-        </React.Fragment>
+            </div> */}
+        </div>
       );
     }
 
-    // if (!token) {
-    //   return (
-    //     // <MuiThemeProvider>
-    //     <React.Fragment>
-    //       <Nav />
-    //       {/* onSubmit={this.checkUser} */}
-    //       <form className="login-box" method="POST">
-    //         {signInError ? <p>{signInError}</p> : null}
-    //         <h1>Login</h1>
-    //         <div className="textbox">
-    //           <input
-    //             name="textbox"
-    //             ref={this.emailRef}
-    //             type="text"
-    //             placeholder="Email"
-    //             value={signInEmail}
-    //             onChange={this.onTextboxChangeSignInEmail}
-    //           ></input>
-    //         </div>
-
-    //         <div className="textbox">
-    //           <input
-    //             name="textbox"
-    //             ref={this.passRef}
-    //             type="password"
-    //             placeholder="Password"
-    //             value={signInPassword}
-    //             onChange={this.onTextboxChangeSignInPassword}
-    //           ></input>
-    //         </div>
-
-    //         {/* <button onClick={this.onSignIn} type="submit">Sign in</button>  */}
-    //         <input
-    //           onClick={this.onSignIn}
-    //           class="btn"
-    //           type="submit"
-    //           value="Sign n"
-    //         ></input>
-
-    //         <h4>Not Registered?</h4>
-    //         <Link style={navStyle} to="/register">
-    //           <h4>Sign up</h4>
-    //         </Link>
-
-    {
-      /* //        <TextField
-      //           hintText="Enter Your Email"
-      //           floatingLabelText="Email"
-      //           // onChange={this.onChange}
-      //           ref={this.emailRef}
-      //           // onChange={handleChange("email")}
-      //           // defaultValue={this.emailRef}
-      //         />
-      //         <TextField
-      //           hintText="Enter Password"
-      //           floatingLabelText="Password"
-      //           ref={this.passRef}
-      //           type="password"
-      //         />
-      //         <br />
-      //         <RaisedButton
-      //           label="Login"
-      //           primary={true}
-      //           style={styles.button}
-      //           type="submit"
-      //         />
-      //         <h4>Not Registered?</h4>
-      //         <Link style={navStyle} to="/register">
-      //           <h4>Sign up</h4>
-      //         </Link> */
-    }
-    //       </form>
-
-    //       {/* </div> */}
-    //     </React.Fragment>
-    //     // </MuiThemeProvider>
-    //   );
-    // }
     return (
-      // <MuiThemeProvider>
-      <React.Fragment>
-        <div>
-          <p>Account</p>
-          <button onClick={this.logout}>Logout</button>
-        </div>
-      </React.Fragment>
-      // </MuiThemeProvider>
+      <div>
+        <Home />
+        <p>You're logged in!</p>
+        <button onClick={this.logout}>Logout</button>
+      </div>
     );
   }
 }
-
-const navStyle = {
-  color: "grey"
-};
-const styles = {
-  button: {
-    margin: 15
-  }
-};
 
 export default Login;
