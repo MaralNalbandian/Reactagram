@@ -1,9 +1,6 @@
-import React, { Component } from "react";
-import Login from "./Login";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import React from "react";
+import validateUserIdToken from './utils/validateToken'
 
-import { getFromStorage, setInStorage } from "../utils/storage";
 export class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +10,8 @@ export class Register extends React.Component {
       signUpError: "",
       signUpName: "",
       signUpEmail: "",
-      signUpPassword: ""
+      signUpPassword: "",
+      token: ""
     };
     this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(this);
     this.onTextboxChangeSignUpName = this.onTextboxChangeSignUpName.bind(this);
@@ -22,36 +20,28 @@ export class Register extends React.Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
-  componentDidMount() {
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj; //same as
-      // const token = obj.token;
-      if (token) {
-        //Verify token
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
+  async componentDidMount() {
+    if (await validateUserIdToken()) {
+      const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
+      this.setState({
+        token,
+        isLoading: false
+      });
+      //If token is not valid/does not exist, redirect to the sign up page
     } else {
       this.setState({
         isLoading: false
       });
+    }
+  }
+
+  logout() {
+    localStorage.clear();
+    try {
+      this.setState({token: ""})
+    }
+    catch (error) {
+      console.error(error);
     }
   }
 
@@ -80,7 +70,7 @@ export class Register extends React.Component {
     });
 
     //Post request to backend
-    fetch("http://localhost:80/api/user/register", {
+    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/register", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -107,7 +97,7 @@ export class Register extends React.Component {
       });
   }
 
-  onLogin(){
+  onLogin() {
     window.location.assign("/login")
   }
 
@@ -135,7 +125,7 @@ export class Register extends React.Component {
       );
     }
 
-    if (signUpError === "Signed up"){
+    if (signUpError === "Signed up") {
       return (
         <React.Fragment>
           <p>{signUpError}</p>
@@ -144,8 +134,7 @@ export class Register extends React.Component {
       )
     }
 
-    if (!token) {
-      console.log(signUpError)
+    if (token === "") {
       return (
         <React.Fragment>
           <div>
@@ -182,8 +171,8 @@ export class Register extends React.Component {
 
     return (
       <React.Fragment>
-          <p>Account</p>
-          <button onClick={this.logout}>Logout</button>
+        <p>Account</p>
+        <button onClick={this.logout}>Logout</button>
       </React.Fragment>
     );
   }

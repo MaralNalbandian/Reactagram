@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, Button, Row, Col, ListGroup, Container } from 'react-bootstrap';
 
 class Leaderboard extends React.Component {
     constructor() {
@@ -9,7 +8,7 @@ class Leaderboard extends React.Component {
     }
 
     componentWillMount(){
-        fetch("http://localhost:80/api/user/leaderboard")
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/leaderboard")
         .then((response) => response.json())
         .then((responseJson) => {
             this.setState({ 
@@ -19,7 +18,6 @@ class Leaderboard extends React.Component {
     }
 
     render() {
-        console.log(this.state.users)
         if (!this.state.users){
             return (
                 <p>Loading...</p>

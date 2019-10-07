@@ -1,6 +1,8 @@
 import React from "react";
 
 import ReactS3 from "react-s3";
+import validateUserIdToken from './utils/validateToken'
+
 const config = {
   bucketName: 'brendon-aip-2019',
   region: 'ap-southeast-2',
@@ -25,20 +27,7 @@ class AddPost extends React.Component {
 
     ReactS3.uploadFile(this.state.file, config)
       .then((data) => {
-        //Replace ALL ' ' with '+': https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
-        var location = data.location.replace(/ /g,"+")
-        this.setState({imageLink: location})
-
-        if (this.state.imageLink !== "" && JSON.parse(localStorage.getItem("the_main_app")).userIdtoken){
-          const post = {
-            userId: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
-            imageLink: this.state.imageLink
-          };
-          this.props.addPost(post);
-        }
-        else {
-          console.error('User not logged in ')
-        }
+        this.addPost(data)
       })
       .catch((error) => console.error(error))
 
@@ -46,6 +35,23 @@ class AddPost extends React.Component {
       event.currentTarget.reset();
       this.setState({imageLink: ""})
   };
+
+  async addPost(data){
+    //Replace ALL ' ' with '+': https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
+    var location = data.location.replace(/ /g,"+")
+    this.setState({imageLink: location})
+
+    if (this.state.imageLink !== "" && await validateUserIdToken()){
+      const post = {
+        userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
+        imageLink: this.state.imageLink
+      };
+      this.props.addPost(post);
+    }
+    else {
+      console.error('User not logged in ')
+    }
+  }
 
   upload = e => {
     //https://stackoverflow.com/questions/21720390/how-to-change-name-of-file-in-javascript-from-input-file
@@ -56,9 +62,13 @@ class AddPost extends React.Component {
     this.setState({file: newFile})
   }
 
+  async componentWillMount() {
+    this.setState({validUser: await validateUserIdToken()})
+  }
+
   render() {
     //Renders the add post component if the user is logged in
-    if (JSON.parse(localStorage.getItem("the_main_app"))){
+    if (this.state.validUser){
       return (
         <div className="add-post">
           <form className="add-post-form" onSubmit={this.createPost}>

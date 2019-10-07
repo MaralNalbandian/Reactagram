@@ -1,6 +1,5 @@
 import React from "react";
-import axios from "axios";
-import { getFromStorage, setInStorage } from "../utils/storage";
+import validateUserIdToken from './utils/validateToken'
 
 export class Login extends React.Component {
   constructor(props) {
@@ -10,7 +9,8 @@ export class Login extends React.Component {
       isLoading: true,
       signInError: "",
       signInEmail: "",
-      signInPassword: ""
+      signInPassword: "",
+      token: ""
     };
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
@@ -23,28 +23,14 @@ export class Login extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
-  componentDidMount() {
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj; //same as
-      // const token = obj.token;
-      if (token) {
-        //Verify token
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      };
+  async componentDidMount() {
+    if (await validateUserIdToken()){
+      const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
+      this.setState({
+        token,
+        isLoading: false
+      });
+    //If token is not valid/does not exist, redirect to the sign up page
     } else {
       this.setState({
         isLoading: false
@@ -76,7 +62,7 @@ export class Login extends React.Component {
     });
 
     //Post request to backend
-    fetch("http://localhost:80/api/user/login", {
+    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -87,17 +73,17 @@ export class Login extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          setInStorage("the_main_app", {
+          localStorage.setItem("the_main_app", JSON.stringify({
             token: json.token,
-            userIdtoken: json.userIdtoken
-          });
+            userIdToken: json.userIdToken
+          }));
           this.setState({
             signInError: json.message,
             isLoading: false,
             signInEmail: "",
             signInPassword: "",
             token: json.token,
-            userIdtoken: json.userIdtoken
+            userIdToken: json.userIdToken
           });
         } else
           this.setState({
@@ -109,65 +95,19 @@ export class Login extends React.Component {
 
   logout() {
     localStorage.clear();
-    this.setState({
-      isLoading: true
-    });
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj; //same as  // const token = obj.token;
-
-      if (token) {
-        //Verify token
-        fetch("http://localhost:80/api/user/logout?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token: "",
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
-    }
+    this.setState({token: ""})
   }
 
   emailRef = React.createRef();
   passRef = React.createRef();
-
-  state = {};
-
-  checkUser = event => {
-    event.preventDefault();
-
-    axios("http://localhost:80/api/user/login", {
-      method: "post",
-      data: {
-        email: this.emailRef.current.value,
-        password: this.passRef.current.value
-      }
-    })
-  };
 
   render() {
     const {
       isLoading,
       token,
       signInError,
-      signUpError,
       signInEmail,
       signInPassword,
-      signUpName,
-      signUpEmail,
-      signUpPassword
     } = this.state;
 
     if (isLoading) {
@@ -178,7 +118,7 @@ export class Login extends React.Component {
       );
     }
 
-    if (!token) {
+    if (token === "") {
       return (
         <React.Fragment>
           <div>
@@ -221,14 +161,5 @@ export class Login extends React.Component {
     );
   }
 }
-
-const navStyle = {
-  color: "grey"
-};
-const styles = {
-  button: {
-    margin: 15
-  }
-};
 
 export default Login;

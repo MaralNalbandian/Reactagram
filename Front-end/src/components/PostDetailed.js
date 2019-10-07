@@ -1,5 +1,4 @@
 import React from 'react';
-import Post from './Post';
 import AddPost from './addPost';
 import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
 import validateUserIdToken from './utils/validateToken'
@@ -9,9 +8,8 @@ import axios from 'axios';
 
 class PostDetailed extends React.Component {
     getPost() {
-        return axios.get(`http://localhost:80/api/post/get/${this.props.match.params.postId}`)
+        return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
-                console.log(response)
                 this.setState({ post: response.data })
             }).then(() => this.paginate())
             .catch((error) => {
@@ -31,26 +29,26 @@ class PostDetailed extends React.Component {
                 angry: 0,
             },
             replyObjects: [],
-            pages: 2,
+            pages: [],
         }
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDeleteWithPlaceholder = this.handleDeleteWithPlaceholder.bind(this);
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         this.getPost()
             .then(() => this.getReplyObjects());
 
         //if user is logged in :
 
-        if (localStorage.getItem("the_main_app") != undefined) {
+        if (await validateUserIdToken()) {
             this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
-            this.setState({ userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken })
+            this.setState({ userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken })
         }
 
         else {
             this.setState({ token: undefined })
-            this.setState({ userIdtoken: undefined })
+            this.setState({ userIdToken: undefined })
 
         }
 
@@ -61,7 +59,7 @@ class PostDetailed extends React.Component {
         var response = this.state.post;
         var count = 1;
         var pages = [];
-        while (count <= (response.replies.length / 9) + 1) {
+        while (count <= (response.replies.length / 3) + 1) {
             pages.push(count)
             count = count + 1
         }
@@ -162,12 +160,12 @@ class PostDetailed extends React.Component {
                 let operationComplete = false;
 
                 //if logged in..
-                if (this.state.userIdtoken != undefined) {
+                if (this.state.userIdToken != undefined) {
                     //if user is logged in
 
                     //check if user has reacted to this post already.
                     for (var i = 0; i < this.state.post.reacts.length; i++) {
-                        if (this.state.post.reacts[i].userId == this.state.userIdtoken) {
+                        if (this.state.post.reacts[i].userId == this.state.userIdToken) {
 
                             //now check if the user's reaction is the same
                             //in this case REMOVE their reaction
@@ -179,7 +177,7 @@ class PostDetailed extends React.Component {
 
 
 
-                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdtoken);
+                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdToken);
                                 //need to post this to db after
 
 
@@ -200,7 +198,7 @@ class PostDetailed extends React.Component {
                     if (operationComplete != true) {
                         //user is making a new reaction
                         var tempReact = {
-                            userId: this.state.userIdtoken,
+                            userId: this.state.userIdToken,
                             reaction: this.state.reaction
                         }
 
@@ -212,7 +210,7 @@ class PostDetailed extends React.Component {
 
                     //this runs no matter what since we're just manipulating state except if not logged in
                     //POST state to database
-                    fetch('http://localhost:80/api/post/react', {
+                    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -220,7 +218,7 @@ class PostDetailed extends React.Component {
                         body: JSON.stringify(this.state.post)
                     })
                         .then(() => this.setReactionCountStates())
-                        .catch((error) => console.log(error))
+                        .catch((error) => console.error(error))
                 }
 
                 else {
@@ -239,7 +237,7 @@ class PostDetailed extends React.Component {
         var dateNow = Date.now();
         // 1. Add our new post using the API
         try {
-            axios("http://localhost:80/api/post/add", {
+            axios(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/post/add", {
                 method: "post",
                 data: {
                     postId: `post${dateNow}`,
@@ -254,6 +252,7 @@ class PostDetailed extends React.Component {
         }
         // .then(
         // () => 
+        this.incrementUploads(post.userId);
         this.updateReplies(dateNow);
         // .then(
         // 3. Retrieve all the posts using the API
@@ -262,13 +261,25 @@ class PostDetailed extends React.Component {
         // );
     };
 
+    incrementUploads(userId) {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/user/incrementUpload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId": userId
+            })
+        })
+    }
+
     updateReplies(dateId) {
 
         //push postId to replies array
 
         this.state.post.replies.push(`post${dateId}`);
 
-        fetch('http://localhost:80/api/post/react', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -279,26 +290,17 @@ class PostDetailed extends React.Component {
                 this.setState((this.state), () => this.getReplyObjects());
 
             })
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
     };
 
 
     handleEdit = post => {
-
-        console.log("handleEdit");
-
-        //1. Just update react endpoitn to change the image link too
-        console.log(post);
-
-        //2. on submit in addPost this gets called..
-
-
-        //3. UPDATE this.state.post.imageLink with the link
+        //1. UPDATE this.state.post.imageLink with the link
         this.state.post.imageLink = post.imageLink;
 
-        //4. replicate the fetch Post  to /post/react with this.state.post as the body
-        fetch('http://localhost:80/api/post/react', {
+        //2. replicate the fetch Post  to /post/react with this.state.post as the body
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -306,13 +308,13 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => this.setReactionCountStates())
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
     }
 
     handleDelete() {
 
 
-        fetch('http://localhost:80/api/post/delete', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/delete', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -320,7 +322,7 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => window.alert("Post Succesfully Deleted"))
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
         this.setState(this.state); //refresh state 
 
@@ -336,7 +338,7 @@ class PostDetailed extends React.Component {
         this.state.post.imageLink = "https://brendon-aip-2019.s3-ap-southeast-2.amazonaws.com/deleted.jpg";
 
         //4. replicate the fetch Post  to /post/react with this.state.post as the body
-        fetch('http://localhost:80/api/post/react', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -344,20 +346,16 @@ class PostDetailed extends React.Component {
             body: JSON.stringify(this.state.post)
         })
             .then(() => this.setReactionCountStates())
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
-    }
-
-    changePost() {
-        console.log("changePost");
     }
 
     renderButtons() {
         //if logged in..
-        if (this.state.userIdtoken != undefined) {
+        if (this.state.userIdToken != undefined) {
 
             //if this is this user's post
-            if (this.state.userIdtoken == this.state.post.userId) {
+            if (this.state.userIdToken == this.state.post.userId) {
 
                 //1. Check if post has no reacts and no replies
                 if (this.state.post.replies.length == 0 && this.state.post.reacts.length == 0) {
@@ -436,11 +434,11 @@ class PostDetailed extends React.Component {
 
             //loop a fetch request
             for (var i = 0; i < this.state.post.replies.length; i++) {
-                //var getLink = 'http://localhost:80/api/post/get/$' + this.state.post.replies
-                axios.get(`http://localhost:80/api/post/get/${this.state.post.replies[i]}`)
+                axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.state.post.replies[i]}`)
                     .then((response) => {
                         //this.setState({ post: response.data })
                         this.state.replyObjects.push(response.data)
+                        this.state.replyObjects.sort()
                         this.setState(this.state) //refresh state
                         this.getPost();
                     })
@@ -455,41 +453,35 @@ class PostDetailed extends React.Component {
 
     sortByPopular() {
         //TODO: check if any replies otherwise  do nothing
-
-        console.log("popular")
-        console.log("before", this.state.replyObjects)
-
         this.state.replyObjects.sort((b, a) => parseFloat(a.reacts.length) - parseFloat(b.reacts.length));
-
         this.setState(this.state)
-        console.log("after", this.state.replyObjects)
     }
 
     sortByNew() {
         //TODO: check if any replies otherwise  do nothing
-
-        console.log("new")
-        console.log("before", this.state.replyObjects)
         this.state.replyObjects.sort((b, a) => Date.parse(a.date) - Date.parse(b.date));
         this.setState(this.state)
-        console.log("after", this.state.replyObjects)
     }
 
     render() {
         //get total amounts of reactions
         //this.getReactionCounts();
         const id = this.props.match.params.postId;
-
+        
         //get replies into an array of objects in state called "replyObjects"
 
         if (this.state.post) {
+            console.log(this.state.replyObjects)
+            if (this.props.match.params.page == 1){
+                var startNum = 0;
+            } else {
+                var startNum = ((Number(this.props.match.params.page)-1)*3)-1;
+            }
             // { this.getReactionCounts("like") }
-            { this.getUsername() }
             return (
 
 
                 <Container>
-                    {console.log(this.state.post)}
                     {this.renderButtons()}
                     {/* {this.getReplyObjects()} */}
 
@@ -507,8 +499,8 @@ class PostDetailed extends React.Component {
 
                                     }}
                                         key={id}>
-                                        <Card.Title>Post by {this.state.post.userId}</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">At {this.state.post.date}</Card.Subtitle>
+                                        {/* <Card.Title>Post by {this.state.post.userId}</Card.Title> */}
+                                        {/* <Card.Subtitle className="mb-2 text-muted">At {this.state.post.date}</Card.Subtitle> */}
                                         <Card.Img variant="bottom" src={this.state.post.imageLink} />
 
                                         <Card.Body>
@@ -587,7 +579,7 @@ class PostDetailed extends React.Component {
                             <Row id="replies" style={{ justifyContent: 'center', alignItems: 'center', padding: 8 }}>
                                 <Col xs={8} >
 
-                                    {this.state.replyObjects.slice(0, 9).map(
+                                    {this.state.replyObjects.slice(startNum, 3).map(
                                         reply =>
                                             <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}
                                                 key={reply.postId}>
@@ -598,8 +590,8 @@ class PostDetailed extends React.Component {
                                                     <Card.Img variant="top" src={reply.imageLink}
                                                         href="jeff" />
                                                     <Card.Body>
-                                                        <Card.Title>Reply by {reply.userId}</Card.Title>
-                                                        <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle>
+                                                        {/* <Card.Title>Reply by {reply.userId}</Card.Title>
+                                                        <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle> */}
                                                         {/* have to go to the actual post to reply to it. Reply is not directly avaialble from the comments. */}
                                                         <Card.Link href={"/view/" + reply.postId}>View this Post</Card.Link>
                                                     </Card.Body>
@@ -611,11 +603,11 @@ class PostDetailed extends React.Component {
                             </Row>
 
                         </Container>
-                        <Button onClick={()=>console.log(this.props)}></Button>
                         <Pages
                             pages={this.state.pages}
                             currentPage={this.props.match.params.page}
                             lastPage={this.state.pages[this.state.pages.length - 1]}
+                            postId={this.props.match.params.postId}
                         />
                     </div>
                 </Container>

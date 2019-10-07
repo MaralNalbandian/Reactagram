@@ -1,36 +1,34 @@
 import React from 'react';
-import { Card, Button, Text } from 'react-bootstrap';
+import validateUserIdToken from './utils/validateToken'
 
 import Reactions from './Reactions'
 
 class Post extends React.Component {
-    constructor(){
-        super();
-        if (JSON.parse(localStorage.getItem("the_main_app"))){
-            this.state = {
-                reactCountsCanUseState: false,
-                userIdtoken: JSON.parse(localStorage.getItem("the_main_app")).userIdtoken,
-                token: JSON.parse(localStorage.getItem("the_main_app")).token
-            }
-        } else {
-            this.state = {
-                reactCountsCanUseState: false
-            }
-        }
-    }
-
     goToDetailed = event => {
         event.preventDefault();
         this.props.history.push(`/view/${this.props.index}/1`)
     }
 
-    like = event => {
-        event.preventDefault();
-        
+    getUsername(){
+        fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/user/username/${this.props.post.userId}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({username: responseJson})
+        })
     }
 
-    componentWillMount() {
-        this.setState({post: this.props.post})
+    async componentWillMount() {
+        //TODO: Currently takes a second or two until the user can react to a post
+        this.setState({ post: this.props.post })
+        this.getUsername()
+        if (await validateUserIdToken()) {
+            this.setState({
+                reactCountsCanUseState: false,
+                userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken
+            })
+        } else {
+            this.setState({ reactCountsCanUseState: false })
+        }
     }
 
     render() {
@@ -40,11 +38,13 @@ class Post extends React.Component {
                     <div onClick={this.goToDetailed} className="grid-photo-wrapper">
                         <img className="grid-photo" src={this.props.post.imageLink} alt="Post"></img>
                     </div>
+                    <br></br>
                     <div className="grid-user-wrapper">
-                        <div className="grid-user">{this.props.post.userId}</div>
+                        <div className="grid-user">{this.state.username}</div>
                     </div>
+                    <br></br>
                     <div className="home-reactions">
-                        <Reactions state={this.state}/>
+                        <Reactions state={this.state} />
                     </div>
                 </div>
             </div>
