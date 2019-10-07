@@ -4,7 +4,7 @@ export default async function validateUserIdToken(){
         const { userIdToken } = obj;
         if (userIdToken) {
             //Verify token
-            const res = await fetch("http://localhost:80/api/user/verify?userIdToken=" + userIdToken)
+            const res = await fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/verify?userIdToken=" + userIdToken)
             const resJson = await res.json()
             if (resJson.result === "Success") {
                 return true

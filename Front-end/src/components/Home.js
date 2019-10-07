@@ -13,7 +13,7 @@ class Home extends React.Component {
 
     addPost = post => {
         // 1. Add our new post using the API
-        fetch('http://localhost:80/api/post/add', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ class Home extends React.Component {
     };
 
     incrementUploads(userId) {
-        fetch('http://localhost:80/api/user/incrementUpload', {
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/user/incrementUpload', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ class Home extends React.Component {
     }
 
     getPosts() {
-        fetch("http://localhost:80/api/post/count")
+        fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/post/count")
             .then((response) => response.json())
             .then((responseJson) => {
                 //TODO: Make more efficient
@@ -61,7 +61,7 @@ class Home extends React.Component {
                 console.error(error);
             });
 
-        fetch(`http://localhost:80/api/post/page/${this.props.match.params.page}`)
+        fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/page/${this.props.match.params.page}`)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({

@@ -10,7 +10,7 @@ class Post extends React.Component {
     }
 
     getUsername(){
-        fetch(`http://localhost:80/api/user/username/${this.props.post.userId}`)
+        fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/user/username/${this.props.post.userId}`)
         .then((response) => response.json())
         .then((responseJson) => {
             this.setState({username: responseJson})

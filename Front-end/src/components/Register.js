@@ -65,7 +65,7 @@ export class Register extends React.Component {
     });
 
     //Post request to backend
-    fetch("http://localhost:80/api/user/register", {
+    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/register", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
