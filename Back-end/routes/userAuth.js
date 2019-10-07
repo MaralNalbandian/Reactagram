@@ -41,6 +41,15 @@ router.post("/register", async (req, res, next) => {
       message: "Error: Password cannot be blank"
     });
   }
+  //https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var result = emailRegex.test(String(email).toLowerCase());
+  if (result == false){
+    return res.send({
+      success: false,
+      message: "Error: Please enter a valid email"
+    });
+  }
 
   email = email.toLowerCase();
 
