@@ -2,6 +2,7 @@ import React from 'react';
 import AddPost from './addPost';
 import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
 import validateUserIdToken from './utils/validateToken'
+import Pages from './Pages';
 
 import axios from 'axios';
 
@@ -10,11 +11,12 @@ class PostDetailed extends React.Component {
         return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
             .then((response) => {
                 this.setState({ post: response.data })
-            })
+            }).then(() => this.paginate())
             .catch((error) => {
-                console.error(error);
+                console.error(error)
             });
     }
+
 
     constructor(props) {
         super(props)
@@ -27,6 +29,7 @@ class PostDetailed extends React.Component {
                 angry: 0,
             },
             replyObjects: [],
+            pages: [],
         }
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDeleteWithPlaceholder = this.handleDeleteWithPlaceholder.bind(this);
@@ -50,6 +53,19 @@ class PostDetailed extends React.Component {
         }
 
         this.setState({ reactCountsCanUseState: false })
+    }
+
+    paginate() {
+        var response = this.state.post;
+        var count = 1;
+        var pages = [];
+        while (count <= (response.replies.length / 3) + 1) {
+            pages.push(count)
+            count = count + 1
+        }
+        this.setState({
+            pages: pages
+        })
     }
 
     getReactionCounts(type) {
@@ -408,7 +424,6 @@ class PostDetailed extends React.Component {
 
 
         //make a fetch call for each postId in this.post.replies
-        //debugger;
         //set state now
 
         //check if this.state.post.replies exists
@@ -423,6 +438,7 @@ class PostDetailed extends React.Component {
                     .then((response) => {
                         //this.setState({ post: response.data })
                         this.state.replyObjects.push(response.data)
+                        this.state.replyObjects.sort()
                         this.setState(this.state) //refresh state
                         this.getPost();
                     })
@@ -433,10 +449,6 @@ class PostDetailed extends React.Component {
         }
 
 
-    }
-
-    getUsername() {
-        console.log(this.state)
     }
 
     sortByPopular() {
@@ -459,8 +471,13 @@ class PostDetailed extends React.Component {
         //get replies into an array of objects in state called "replyObjects"
 
         if (this.state.post) {
+            console.log(this.state.replyObjects)
+            if (this.props.match.params.page == 1){
+                var startNum = 0;
+            } else {
+                var startNum = ((Number(this.props.match.params.page)-1)*3)-1;
+            }
             // { this.getReactionCounts("like") }
-            {this.getUsername()}
             return (
 
 
@@ -562,7 +579,7 @@ class PostDetailed extends React.Component {
                             <Row id="replies" style={{ justifyContent: 'center', alignItems: 'center', padding: 8 }}>
                                 <Col xs={8} >
 
-                                    {this.state.replyObjects.map(
+                                    {this.state.replyObjects.slice(startNum, 3).map(
                                         reply =>
                                             <Row style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 8 }}
                                                 key={reply.postId}>
@@ -584,7 +601,14 @@ class PostDetailed extends React.Component {
 
                                 </Col>
                             </Row>
+
                         </Container>
+                        <Pages
+                            pages={this.state.pages}
+                            currentPage={this.props.match.params.page}
+                            lastPage={this.state.pages[this.state.pages.length - 1]}
+                            postId={this.props.match.params.postId}
+                        />
                     </div>
                 </Container>
             )

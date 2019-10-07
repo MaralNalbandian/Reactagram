@@ -19,7 +19,7 @@ const Router = () => (
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/:page" component={Home}/>
-                <Route exact path="/view/:postId" component={PostDetailed}/>
+                <Route exact path="/view/:postId/:page" component={PostDetailed}/>
                 <Redirect from="/" to="/1"/>
                 <Route component={NotFound}/>
             </Switch>
