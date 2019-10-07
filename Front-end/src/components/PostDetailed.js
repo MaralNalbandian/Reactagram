@@ -2,11 +2,8 @@ import React from 'react';
 import Post from './Post';
 import AddPost from './addPost';
 import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
-<<<<<<< Updated upstream
-=======
 import validateUserIdToken from './utils/validateToken'
 import Pages from './Pages';
->>>>>>> Stashed changes
 
 import axios from 'axios';
 
@@ -487,10 +484,7 @@ class PostDetailed extends React.Component {
 
         if (this.state.post) {
             // { this.getReactionCounts("like") }
-<<<<<<< Updated upstream
-=======
             { this.getUsername() }
->>>>>>> Stashed changes
             return (
 
 
