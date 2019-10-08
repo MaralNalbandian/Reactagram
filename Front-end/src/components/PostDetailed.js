@@ -606,7 +606,7 @@ class PostDetailed extends React.Component {
                                                         {/* <Card.Title>Reply by {reply.userId}</Card.Title>
                                                         <Card.Subtitle className="mb-2 text-muted">At {reply.date}</Card.Subtitle> */}
                                                         {/* have to go to the actual post to reply to it. Reply is not directly avaialble from the comments. */}
-                                                        <Card.Link href={"/view/" + reply.postId}>View this Post</Card.Link>
+                                                        <Card.Link href={"/view/" + reply.postId + '/1'}>View this Post</Card.Link>
                                                     </Card.Body>
                                                 </Card>
                                             </Row>
