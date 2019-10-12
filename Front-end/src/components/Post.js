@@ -6,7 +6,7 @@ import Reactions from './Reactions'
 class Post extends React.Component {
     goToDetailed = event => {
         event.preventDefault();
-        this.props.history.push(`/view/${this.props.index}`)
+        this.props.history.push(`/view/${this.props.index}/1`)
     }
 
     getUsername(){
@@ -41,7 +41,6 @@ class Post extends React.Component {
                     <div onClick={this.goToDetailed} className="grid-photo-wrapper">
                         <img className="grid-photo" src={this.props.post.imageLink} alt="Post"></img>
                     </div>
-                    <br></br>
                     <div className="grid-user-wrapper">
                         <div className="grid-user">{this.state.username}</div>
                     </div>
