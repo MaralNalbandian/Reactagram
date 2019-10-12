@@ -50,7 +50,7 @@ router.get('/get/:id', async (req, res) => {
 
 // GET /api/post/all
 // Get all posts
-router.get('/all', async (req, res) => {
+router.get('/all', async (res) => {
     try {
         const posts = await Post.find({})
 
@@ -69,7 +69,9 @@ router.get('/all', async (req, res) => {
 // Get posts on a certain page
 router.get('/page/:page', async (req,res) => {
     try {
+        //This is the first post to be shown on the page
         const startRange = (req.params.page - 1) * 9;
+        //Posts are sorted by number of reacts and then finds the 9 posts that correspond to the page the user is on
         const posts = await Post.find({}).sort({numOfReacts : -1}).skip(startRange).limit(9)
 
         if(posts) {
@@ -83,8 +85,8 @@ router.get('/page/:page', async (req,res) => {
     }
 });
 
-// GET /api/post/all
-// Get all posts
+// GET /api/post/count
+// Get a count of how many posts are in the system - this is used to calculate how many pages will need to be displayed
 router.get('/count', async (req,res) => {
     try {
         const amount = await Post.find({}).countDocuments()
@@ -108,15 +110,10 @@ router.post('/react', async (req, res) => {
 
         if (post) { //if post exists based on id
             try {
-
                 post.reacts = req.body.reacts;
                 post.numOfReacts = req.body.numOfReacts;
-                post.replies = req.body.replies;
-                post.imageLink = req.body.imageLink;
-                
-                await post.save();
 
-                res.json('Reacted!')
+                await post.save();
             } catch (error) {
                 res.status(500).json(error)
             }
@@ -141,12 +138,9 @@ router.post('/reply', async (req, res) => {
 
         if (post) { //if post exists based on id
             try {
-
                 post.replies = req.body.replies;
 
                 await post.save();
-
-                res.json('Replied!')
             } catch (error) {
                 res.status(500).json(error)
             }
@@ -171,12 +165,9 @@ router.delete('/delete', async (req, res) => {
 
         if (post) { //if post exists based on id
             try {
-
                 post.remove();
                 
                 await post.save();
-
-                res.json('Reacted!')
             } catch (error) {
                 res.status(500).json(error)
             }

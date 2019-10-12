@@ -23,29 +23,34 @@ class AddPost extends React.Component {
   usernameRef = React.createRef();
 
   createPost = event => {
+    //1. Remove the error message
     this.setState({errorMessage: ""})
-    // 1.  stop the form from submitting
+    //2.  Stop the form from submitting
     event.preventDefault();
-
+    //3. Upload the file to S3 using the config - utilises the npm package 'react-s3' from https://www.npmjs.com/package/react-s3
     ReactS3.uploadFile(this.state.file, config)
       .then((data) => {
         this.addPost(data)
       })
       .catch((error) => console.error(error))
 
-      // refresh the form
-      event.currentTarget.reset();
-      this.setState({imageLink: ""})
+    //4. Refresh the form and remove the imageLink from state so if an error occurs in the next post, a post isn't created with the previous imageLink
+    event.currentTarget.reset();
+    this.setState({imageLink: ""})
   };
 
   async addPost(data){
-    //Replace ALL ' ' with '+': https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
+    //Replace all ' ' with '+' - this is because the imageLink created by S3 replaces spaces with pluses
+    //This code by user "Nick Craver" on Stack Overflow
+    //https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
     var location = data.location.replace(/ /g,"+")
     this.setState({imageLink: location})
 
     if (this.state.imageLink !== "" && await validateUserIdToken()){
+      //Determines the type of file ie. jpeg, png, etc.
       var fileType = this.state.file.name.split(".")[1].toLowerCase() 
-      console.log(fileType)
+
+      //Only allows posts to be made if they are png, jpeg, jpg or gif
       if (fileType=== 'png' || fileType === 'jpeg' ||fileType === 'jpg' || fileType === 'gif'){
         const post = {
           userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
@@ -54,7 +59,7 @@ class AddPost extends React.Component {
         this.props.addPost(post);
       } else {
         console.log('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
-        this.setState({errorMessage: "Error"})
+        this.setState({errorMessage: "Filetype invalid. Please use JPEG, JPG, PNG or GIF files"})
       }
     }
     else {
