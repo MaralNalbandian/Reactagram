@@ -58,8 +58,8 @@ class AddPost extends React.Component {
         };
         this.props.addPost(post);
       } else {
-        console.log('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
-        this.setState({errorMessage: "Filetype invalid. Please use JPEG, JPG, PNG or GIF files"})
+        console.error('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
+        this.setState({errorMessage: "Error"})
       }
     }
     else {
@@ -67,9 +67,10 @@ class AddPost extends React.Component {
     }
   }
 
-  upload = e => {
+  setFile = e => {
+    //Creates unique filename for upload to s3 by manipulating the existing file name
+    //This code by 'Alexander Taborda' on Stack Overflow
     //https://stackoverflow.com/questions/21720390/how-to-change-name-of-file-in-javascript-from-input-file
-    //Creates unique filename for upload to s3
     var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/*'); 
     var newFile = new File([blob], `image${Date.now()}.${e.target.files[0].name.split(".")[1]}`, {type: 'image/*'});
 
@@ -81,7 +82,7 @@ class AddPost extends React.Component {
   }
 
   render() {
-    //Renders the add post component if the user is logged in
+    //Renders the add post component if the user is logged in and has a valid token
     if (this.state.validUser){
       return (
         <div className="add-post">
@@ -89,7 +90,7 @@ class AddPost extends React.Component {
             <div className='input'>
               <input 
                 type="file"
-                onChange={this.upload}
+                onChange={this.setFile}
                 accept="image/*"
                 required
               />

@@ -1,19 +1,9 @@
 import React from 'react';
 
-import {
-    Navbar,
-    NavbarBrand,
-    Nav,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem } from 'reactstrap';
+import {Navbar, NavbarBrand, Nav, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class Menu extends React.Component {  
-    constructor() {
-        super()
-        this.state ={}
-    }
+    state = {}
 
     render() {
         return (

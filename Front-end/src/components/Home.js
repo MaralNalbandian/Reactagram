@@ -5,14 +5,11 @@ import AddPost from './addPost';
 import Pages from './Pages';
 
 class Home extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-        }
-    }
+    state = {}
 
+    //Create a new post
     addPost = post => {
-        // 1. Add our new post using the API
+        //1. Add our new post using the API
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/add', {
             method: 'POST',
             headers: {
@@ -23,13 +20,15 @@ class Home extends React.Component {
                 "userId": post.userId,
                 "imageLink": post.imageLink
             })
-        // 2. Retrieve all the posts using the API
         }).then( () => {
+            // 2. Increment the upload count for the user who made the upload
             this.incrementUploads(post.userId);
+            // 3. Retrieve all the posts using the API
             this.getPosts();
-        })
+        }).catch( error => console.error(error))
     };
 
+    //Increment the upload count for the user who made the upload
     incrementUploads(userId) {
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/user/incrementUpload', {
             method: 'POST',
@@ -39,14 +38,16 @@ class Home extends React.Component {
             body: JSON.stringify({
                 "userId": userId
             })
-        })
+        }).catch( error => console.error(error))
     }
 
+    //Determine how many pages of posts there are and then get the posts for the current page the user is on
     getPosts() {
+        //Get the number of posts in the system to determine how many pages there are
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/post/count")
             .then((response) => response.json())
             .then((responseJson) => {
-                //TODO: Make more efficient
+                //Creates an array of page numbers to be used by the "pages" component
                 var count = 1;
                 var pages = [];
                 while (count <= (responseJson / 9) + 1) {
@@ -61,6 +62,7 @@ class Home extends React.Component {
                 console.error(error);
             });
 
+        //Get all the posts on the current page
         fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/page/${this.props.match.params.page}`)
             .then((response) => response.json())
             .then((responseJson) => {
@@ -84,8 +86,9 @@ class Home extends React.Component {
                     {/* Loads posts once they are fetched from the API */}
                     {this.state.posts && this.state.pages &&
                         <React.Fragment>
+                            {/* Posts grid */}
                             <div className="photo-grid">
-                                {Object.keys(this.state.posts).slice(0, 9).map(key => (
+                                {Object.keys(this.state.posts).map(key => (
                                     <Post
                                         key={key}
                                         index={this.state.posts[key].postId}
@@ -94,6 +97,7 @@ class Home extends React.Component {
                                     />
                                 ))}
                             </div>
+                            {/* Pagination */}
                             <Pages
                                 pages={this.state.pages}
                                 currentPage={this.props.match.params.page}
@@ -101,6 +105,7 @@ class Home extends React.Component {
                             />
                         </React.Fragment>
                     }
+                    {/* Adding a post */}
                     <h2>Add Post</h2>
                     <AddPost addPost={this.addPost} />
                 </div>
