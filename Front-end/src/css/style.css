@@ -39,7 +39,7 @@
   left: 25%;
 }
 
-.login-box {
+.input-box {
   width: 260px;
   height: 40px;
   background: #f1f1f1b3;
@@ -47,7 +47,7 @@
   margin: 10px auto;
 }
 
-.login-box input {
+.input-box input {
   background: none;
   border: none;
   outline: none;

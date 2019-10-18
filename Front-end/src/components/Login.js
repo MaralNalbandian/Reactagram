@@ -186,7 +186,7 @@ export class Login extends React.Component {
             {signInError ? <p>{signInError}</p> : null}
             <h1>Sign In</h1>
 
-            <div class="login-box">
+            <div class="input-box">
               <input
                 type="email"
                 placeholder="Email"
@@ -196,7 +196,7 @@ export class Login extends React.Component {
               />
             </div>
 
-            <div class="login-box">
+            <div class="input-box">
               <input
                 type="password"
                 placeholder="Password"

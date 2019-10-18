@@ -189,7 +189,9 @@ export class Register extends React.Component {
       return (
         <React.Fragment>
           <p>{signUpError}</p>
-          <button onClick={this.onLogin}>Login</button>
+          <button class="button" onClick={this.onLogin}>
+            Login
+          </button>
         </React.Fragment>
       );
     }
@@ -198,32 +200,38 @@ export class Register extends React.Component {
       return (
         <React.Fragment>
           <div>
-            <div>
-              {signUpError ? <p>{signUpError}</p> : null}
-              <p>Sign Up</p>
+            {signUpError ? <p>{signUpError}</p> : null}
+            <h1>Sign Up</h1>
+
+            <div class="input-box">
               <input
                 type="text"
                 placeholder="Name"
                 value={signUpName}
                 onChange={this.onTextboxChangeSignUpName}
               />
-              <br />
+            </div>
+            <div class="input-box">
               <input
                 type="email"
                 placeholder="Email"
                 value={signUpEmail}
                 onChange={this.onTextboxChangeSignUpEmail}
               />
-              <br />
+            </div>
+
+            <div class="input-box">
               <input
                 type="password"
                 placeholder="Password"
                 value={signUpPassword}
                 onChange={this.onTextboxChangeSignUpPassword}
               />
-              <br />
-              <button onClick={this.onSignUp}>Sign Up</button>
             </div>
+
+            <button class="button" onClick={this.onSignUp}>
+              Sign Up
+            </button>
           </div>
         </React.Fragment>
       );
