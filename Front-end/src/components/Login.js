@@ -182,7 +182,7 @@ export class Login extends React.Component {
     if (token === "") {
       return (
         <React.Fragment>
-          <div class="container">
+          <div>
             {signInError ? <p>{signInError}</p> : null}
             <h1>Sign In</h1>
 
