@@ -14,6 +14,13 @@ router.use(bodyParser.urlencoded({ extended: false }));
 //See https://youtu.be/s1swJLYxLAA
 
 //REGISTER
+
+//This code is based on a solution by "Tyler McGinnis" on TylerMcginnis.com
+//See https://tylermcginnis.com/validate-email-address-javascript/
+// function emailIsValid(email) {
+//   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+// }
+
 router.post("/register", async (req, res, next) => {
   const { body } = req;
   const { name, password } = body;
@@ -22,21 +29,40 @@ router.post("/register", async (req, res, next) => {
   if (!name) {
     return res.send({
       success: false,
-      message: "Error: Name cannot be blank"
+      message: "Name cannot be blank"
+    });
+  }
+  if (name.length < 3) {
+    return res.send({
+      success: false,
+      message: "Name cannot be blank"
     });
   }
 
   if (!email) {
     return res.send({
       success: false,
-      message: "Error: Email cannot be blank"
+      message: "Email cannot be blank"
     });
   }
 
-  if (!password || password < 6) {
+  if (/\S+@\S+\.\S+/.test(email) == false) {
     return res.send({
       success: false,
-      message: "Error: Password cannot be blank"
+      message: "Please enter a valid email"
+    });
+  }
+
+  if (!password) {
+    return res.send({
+      success: false,
+      message: "Password cannot be blank"
+    });
+  }
+  if (password.length < 6) {
+    return res.send({
+      success: false,
+      message: "Password must be more than 6 characters"
     });
   }
 
@@ -60,7 +86,7 @@ router.post("/register", async (req, res, next) => {
       } else if (previousUsers.length > 0) {
         return res.send({
           success: false,
-          message: "Error: Account already exists"
+          message: "Account already exists"
         });
       }
 
@@ -102,13 +128,13 @@ router.post("/login", (req, res, next) => {
   if (!email) {
     return res.send({
       success: false,
-      message: "Error: Email cannot be blank"
+      message: "Email cannot be blank"
     });
   }
   if (!password) {
     return res.send({
       success: false,
-      message: "Error: Password cannot be blank"
+      message: "Password cannot be blank"
     });
   }
 
@@ -128,7 +154,7 @@ router.post("/login", (req, res, next) => {
       if (users.length != 1) {
         return res.send({
           success: false,
-          message: "Error: Invalid"
+          message: "Invalid"
         });
       }
 
@@ -136,7 +162,7 @@ router.post("/login", (req, res, next) => {
       if (!user.validPassword(password)) {
         return res.send({
           success: false,
-          message: "Error: Invalid"
+          message: "Invalid"
         });
       }
 

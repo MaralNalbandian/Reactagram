@@ -1,10 +1,7 @@
 import React from "react";
-import axios from "axios";
 import { getFromStorage, setInStorage } from "../utils/storage";
-import Menu from "./Menu";
 import Home from "./Home";
-import reactDOM from "react-dom";
-import { domainToASCII } from "url";
+
 export class Login extends React.Component {
   //This code is based on a solution by "Keith, the Coder" on Youtube
   //See https://youtu.be/s1swJLYxLAA
@@ -18,9 +15,7 @@ export class Login extends React.Component {
       signInError: "",
       signInEmail: "",
       signInPassword: "",
-      signUpName: "",
-      signUpEmail: "",
-      signUpPassword: ""
+      signUpName: ""
     };
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
@@ -28,24 +23,17 @@ export class Login extends React.Component {
     this.onTextboxChangeSignInPassword = this.onTextboxChangeSignInPassword.bind(
       this
     );
-    this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(
-      this
-    );
-    this.onTextboxChangeSignUpName = this.onTextboxChangeSignUpName.bind(this);
-    this.onTextboxChangeSignUpPassword = this.onTextboxChangeSignUpPassword.bind(
-      this
-    );
 
     this.onSignIn = this.onSignIn.bind(this);
-    this.onSignUp = this.onSignUp.bind(this);
     this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
+    /* Identify user
+     */
     const obj = getFromStorage("the_main_app");
     if (obj && obj.token) {
-      const { token } = obj; //same as
-      // const token = obj.token;
+      const { token } = obj;
       if (token) {
         //Verify token
         fetch("http://localhost:80/api/user/verify?token=" + token)
@@ -78,57 +66,6 @@ export class Login extends React.Component {
     this.setState({
       signInPassword: event.target.value
     });
-  }
-  onTextboxChangeSignUpEmail(event) {
-    this.setState({
-      signUpEmail: event.target.value
-    });
-  }
-  onTextboxChangeSignUpPassword(event) {
-    this.setState({
-      signUpPassword: event.target.value
-    });
-  }
-  onTextboxChangeSignUpName(event) {
-    this.setState({
-      signUpName: event.target.value
-    });
-  }
-
-  onSignUp() {
-    //Grab state
-    const { signUpName, signUpEmail, signUpPassword } = this.state;
-
-    this.setState({
-      isLoading: true
-    });
-
-    //Post request to backend
-    fetch("http://localhost:80/api/user/register", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        name: signUpName,
-        email: signUpEmail,
-        password: signUpPassword
-      })
-    })
-      .then(res => res.json())
-      .then(json => {
-        if (json.success) {
-          this.setState({
-            signUpError: json.message,
-            isLoading: false,
-            signUpEmail: "",
-            signUpName: "",
-            signUpPassword: ""
-          });
-        } else
-          this.setState({
-            signUpError: json.message,
-            isLoading: false
-          });
-      });
   }
 
   onSignIn() {
@@ -177,7 +114,7 @@ export class Login extends React.Component {
     });
     const obj = getFromStorage("the_main_app");
     if (obj && obj.token) {
-      const { token } = obj; //same as  // const token = obj.token;
+      const { token } = obj;
 
       if (token) {
         //Verify token
@@ -203,34 +140,18 @@ export class Login extends React.Component {
     }
   }
 
-  // checkUser = event => {
-  //   event.preventDefault();
-
-  //   axios("http://localhost:80/api/user/login", {
-  //     method: "post",
-  //     data: {
-  //       email: this.emailRef.current.value,
-  //       password: this.passRef.current.value
-  //     }
-  //   }).then(response => console.log(response.data));
-  // };
-
   render() {
     const {
       isLoading,
       token,
       signInError,
-      signUpError,
       signInEmail,
-      signInPassword,
-      signUpName,
-      signUpEmail,
-      signUpPassword
+      signInPassword
     } = this.state;
 
     if (isLoading) {
       return (
-        <div>
+        <div class="loading">
           <p>Loading...</p>
         </div>
       );
@@ -238,61 +159,37 @@ export class Login extends React.Component {
 
     if (!token) {
       return (
-        <div>
-          <div>
-            {signInError ? <p>{signInError}</p> : null}
-            <p>Sign In</p>
-            <label>Email:</label>
-            <br />
+        <div class="container">
+          <div class="warning">{signInError ? <p>{signInError}</p> : null}</div>
+          <h1>Login</h1>
+
+          <div class="login-box">
             <input
               type="email"
               placeholder="Email"
               value={signInEmail}
               onChange={this.onTextboxChangeSignInEmail}
             />
+          </div>
 
-            <br />
-            <label>Password:</label>
-            <br />
+          <div class="login-box">
             <input
               type="password"
               placeholder="Password"
               value={signInPassword}
               onChange={this.onTextboxChangeSignInPassword}
             />
-            <br />
-            <button onClick={this.onSignIn}>Sign In</button>
           </div>
-          <br />
-          <br />
-          <br />
-          <br />
-          {/* <div>
-              {signUpError ? <p>{signUpError}</p> : null}
-              <p>Sign Up</p>
-              <input
-                type="text"
-                placeholder="Name"
-                value={signUpName}
-                onChange={this.onTextboxChangeSignUpName}
-              />
-              <br />
-              <input
-                type="email"
-                placeholder="Email"
-                value={signUpEmail}
-                onChange={this.onTextboxChangeSignUpEmail}
-              />
-              <br />
-              <input
-                type="password"
-                placeholder="Password"
-                value={signUpPassword}
-                onChange={this.onTextboxChangeSignUpPassword}
-              />
-              <br />
-              <button onClick={this.onSignUp}>Sign Up</button>
-            </div> */}
+          <div class="login-box">
+            <button class="button" onClick={this.onSignIn}>
+              Sign In
+            </button>
+          </div>
+          <div class="login-links">
+            <a class="b1" href="/register">
+              CREATE AN ACCOUNT
+            </a>
+          </div>
         </div>
       );
     }
@@ -300,8 +197,9 @@ export class Login extends React.Component {
     return (
       <div>
         <Home />
-        <p>You're logged in!</p>
-        <button onClick={this.logout}>Logout</button>
+        <button class="logout-btn" onClick={this.logout}>
+          Logout
+        </button>
       </div>
     );
   }
