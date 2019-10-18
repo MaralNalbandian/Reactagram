@@ -8,23 +8,6 @@ import NotFound from "./NotFound";
 import Login from "./Login";
 import Register from "./Register";
 import Menu from "./Menu";
-<<<<<<< HEAD
-import Register from "./Register";
-
-const Router = () => (
-  <>
-    <Menu />
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/view/:postId" component={PostDetailed} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
-        <Route component={NotFound} />
-      </Switch>
-    </BrowserRouter>
-  </>
-=======
 import Leaderboard from "./Leaderboard";
 
 const Router = () => (
@@ -42,7 +25,6 @@ const Router = () => (
             </Switch>
         </BrowserRouter>
     </>
->>>>>>> develop
 );
 
 export default Router;

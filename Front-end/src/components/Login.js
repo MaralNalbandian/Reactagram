@@ -1,10 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import { getFromStorage, setInStorage } from "../utils/storage";
-import Home from "./Home";
-=======
 import validateUserIdToken from './utils/validateToken'
->>>>>>> develop
 
 export class Login extends React.Component {
   //This code is based on a solution by "Keith, the Coder" on Youtube
@@ -19,13 +14,9 @@ export class Login extends React.Component {
       signInError: "",
       signInEmail: "",
       signInPassword: "",
-<<<<<<< HEAD
-      signUpName: ""
-=======
       token: "",
       emailTooLong: false,
       passwordTooLong: false,
->>>>>>> develop
     };
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
@@ -38,34 +29,6 @@ export class Login extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
-<<<<<<< HEAD
-  componentDidMount() {
-    //Verify token
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj;
-
-      if (token) {
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
-=======
   async componentDidMount() {
     if (await validateUserIdToken()){
       const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
@@ -78,7 +41,6 @@ export class Login extends React.Component {
       this.setState({
         isLoading: false
       });
->>>>>>> develop
     }
   }
   onTextboxChangeSignInEmail(event) {
@@ -126,28 +88,17 @@ export class Login extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-<<<<<<< HEAD
-          setInStorage("the_main_app", {
-            token: json.token,
-            userIdtoken: json.userIdtoken
-          });
-=======
           localStorage.setItem("the_main_app", JSON.stringify({
             token: json.token,
             userIdToken: json.userIdToken
           }));
->>>>>>> develop
           this.setState({
             signInError: json.message,
             isLoading: false,
             signInEmail: "",
             signInPassword: "",
             token: json.token,
-<<<<<<< HEAD
-            userIdtoken: json.userIdtoken
-=======
             userIdToken: json.userIdToken
->>>>>>> develop
           });
         } else
           this.setState({
@@ -158,38 +109,6 @@ export class Login extends React.Component {
   }
 
   logout() {
-<<<<<<< HEAD
-    this.setState({
-      isLoading: true
-    });
-    //Verify token
-    const obj = getFromStorage("the_main_app");
-    if (obj && obj.token) {
-      const { token } = obj;
-      if (token) {
-        fetch("http://localhost:80/api/user/logout?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token: "",
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
-    }
-  }
-
-=======
     localStorage.clear();
     this.setState({token: ""})
   }
@@ -197,18 +116,13 @@ export class Login extends React.Component {
   emailRef = React.createRef();
   passRef = React.createRef();
 
->>>>>>> develop
   render() {
     const {
       isLoading,
       token,
       signInError,
       signInEmail,
-<<<<<<< HEAD
-      signInPassword
-=======
       signInPassword,
->>>>>>> develop
     } = this.state;
 
     if (isLoading) {
@@ -221,19 +135,6 @@ export class Login extends React.Component {
 
     if (token === "") {
       return (
-<<<<<<< HEAD
-        <div class="container">
-          <div class="warning">{signInError ? <p>{signInError}</p> : null}</div>
-          <h1>Login</h1>
-
-          <div class="login-box">
-            <input
-              type="email"
-              placeholder="Email"
-              value={signInEmail}
-              onChange={this.onTextboxChangeSignInEmail}
-            />
-=======
         <React.Fragment>
           <div>
             <div>
@@ -260,34 +161,30 @@ export class Login extends React.Component {
               <button onClick={this.onSignIn}>Sign In</button>
             </div>
             <button onClick={this.onSignUp}>Sign Up</button>
->>>>>>> develop
           </div>
 
-<<<<<<< HEAD
-          <div class="login-box">
-            <input
-              type="password"
-              placeholder="Password"
-              value={signInPassword}
-              onChange={this.onTextboxChangeSignInPassword}
-            />
-          </div>
-          <div class="login-box">
-            <button class="button" onClick={this.onSignIn}>
-              Sign In
-            </button>
-          </div>
-          <div class="login-links">
-            <a class="b1" href="/register">
-              CREATE AN ACCOUNT
-            </a>
-          </div>
+        <div class="login-box">
+          <input
+            type="password"
+            placeholder="Password"
+            value={signInPassword}
+            onChange={this.onTextboxChangeSignInPassword}
+          />
         </div>
+        <div class="login-box">
+          <button class="button" onClick={this.onSignIn}>
+            Sign In
+          </button>
+        </div>
+        <div class="login-links">
+          <a class="b1" href="/register">
+            CREATE AN ACCOUNT
+          </a>
+        </div>
+      </React.Fragment>
       );
     }
 
-=======
->>>>>>> develop
     return (
       <div>
         <Home />
