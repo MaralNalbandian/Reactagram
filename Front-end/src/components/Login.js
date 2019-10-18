@@ -29,13 +29,12 @@ export class Login extends React.Component {
   }
 
   componentDidMount() {
-    /* Identify user
-     */
+    //Verify token
     const obj = getFromStorage("the_main_app");
     if (obj && obj.token) {
       const { token } = obj;
+
       if (token) {
-        //Verify token
         fetch("http://localhost:80/api/user/verify?token=" + token)
           .then(res => res.json())
           .then(json => {
@@ -112,12 +111,11 @@ export class Login extends React.Component {
     this.setState({
       isLoading: true
     });
+    //Verify token
     const obj = getFromStorage("the_main_app");
     if (obj && obj.token) {
       const { token } = obj;
-
       if (token) {
-        //Verify token
         fetch("http://localhost:80/api/user/logout?token=" + token)
           .then(res => res.json())
           .then(json => {

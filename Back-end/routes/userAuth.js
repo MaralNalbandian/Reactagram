@@ -1,31 +1,22 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const UserSession = require("../models/UserSession");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-// const { registerValidation, loginValidation } = require("../validation");
-const config = require("config");
 const bodyParser = require("body-parser");
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
-//This code is based on a solution by "Keith, the Coder" on Youtube
-//See https://youtu.be/s1swJLYxLAA
+/*This code is based on a solution by "Keith, the Coder" on Youtube
+See https://youtu.be/s1swJLYxLAA
+*/
 
 //REGISTER
-
-//This code is based on a solution by "Tyler McGinnis" on TylerMcginnis.com
-//See https://tylermcginnis.com/validate-email-address-javascript/
-// function emailIsValid(email) {
-//   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-// }
-
 router.post("/register", async (req, res, next) => {
   const { body } = req;
   const { name, password } = body;
   let { email } = body;
 
+  //Validate user details before creating user
   if (!name) {
     return res.send({
       success: false,
@@ -68,9 +59,10 @@ router.post("/register", async (req, res, next) => {
 
   email = email.toLowerCase();
 
-  //Steps:
-  //1. Verify email doesn't exist
-  //2. Save
+  /*Steps:
+  1. Verify email doesn't exist
+  2. Save
+  */
 
   User.find(
     {
@@ -90,7 +82,7 @@ router.post("/register", async (req, res, next) => {
         });
       }
 
-      //Save the user
+      //Save the user in database
       const newUser = new User();
 
       newUser.name = name;
@@ -99,7 +91,6 @@ router.post("/register", async (req, res, next) => {
 
       newUser.save((err, user) => {
         if (err) {
-          console.log("hash problem");
           return res.send({
             success: false,
             message: "Error: Server error"
@@ -117,14 +108,12 @@ router.post("/register", async (req, res, next) => {
 module.exports = router;
 
 //LOGIN
-// router.post("/login", async (req, res) => {
 router.post("/login", (req, res, next) => {
-  //VALIDATE THE DATA BEFORE WE CREATE A USER
-
   const { body } = req;
   const { password } = body;
   let { email } = body;
 
+  //Validate user details before signing user in
   if (!email) {
     return res.send({
       success: false,
@@ -166,7 +155,7 @@ router.post("/login", (req, res, next) => {
         });
       }
 
-      //Otherwise correct user
+      //Sign in user with the correct details
       const userSession = new UserSession();
       userSession.userId = user._id;
       userSession.save((err, doc) => {
@@ -179,15 +168,10 @@ router.post("/login", (req, res, next) => {
         return res.send({
           success: true,
           message: "Valid sign in",
-          // token: userSession.userId,
           userIdtoken: userSession.userId,
           token: doc._id
         });
       });
-
-      //Create and assign a token
-      // const token = jwt.sign({ _id: user._id }, config.get("TOKEN_SECRET"));
-      //res.header("auth-token", token).send(token); //can make multiple requests by using the token to s specific logged in user (cannot post unless user logged in)
     }
   );
 });
@@ -196,8 +180,8 @@ router.get("/verify", async (req, res, next) => {
   //Get token
   const { query } = req;
   const { token } = query;
-  // Verify the token is one of a kind and it's  not deleted
 
+  // Verify the token is one of a kind and is not deleted
   UserSession.find(
     {
       _id: token,
@@ -229,8 +213,8 @@ router.get("/logout", async (req, res, next) => {
   //Get token
   const { query } = req;
   const { token } = query;
-  // Verify the token is one of a kind and it's  not deleted
 
+  // Verify the token and set as deleted
   UserSession.findOneAndUpdate(
     {
       _id: token,
