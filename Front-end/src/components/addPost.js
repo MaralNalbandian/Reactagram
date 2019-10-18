@@ -1,6 +1,8 @@
 import React from "react";
 
 import ReactS3 from "react-s3";
+import validateUserIdToken from './utils/validateToken'
+
 const config = {
   bucketName: 'brendon-aip-2019',
   region: 'ap-southeast-2',
@@ -11,58 +13,98 @@ const config = {
 class AddPost extends React.Component {
   constructor() {
     super()
-    this.state ={}
+
+    this.state ={
+      imageLink: "",
+      errorMessage: ""
+    }
   }
 
   usernameRef = React.createRef();
-  imageRef = React.createRef();
 
   createPost = event => {
+    this.setState({errorMessage: ""})
     // 1.  stop the form from submitting
     event.preventDefault();
 
-    if (this.state.imageLink !== "" && this.usernameRef.current.value !== ""){
-      const post = {
-        username: this.usernameRef.current.value,
-        imageLink: this.state.imageLink,
-        likes: 0
-      };
-      this.props.addPost(post);
-    }
-    else {
-      console.log('Error!')
-    }
-    // refresh the form
-    event.currentTarget.reset();
-    this.setState({imageLink: ""})
+    ReactS3.uploadFile(this.state.file, config)
+      .then((data) => {
+        this.addPost(data)
+      })
+      .catch((error) => console.error(error))
+
+      // refresh the form
+      event.currentTarget.reset();
+      this.setState({imageLink: ""})
   };
 
+  async addPost(data){
+    //Replace ALL ' ' with '+': https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
+    var location = data.location.replace(/ /g,"+")
+    this.setState({imageLink: location})
+
+    if (this.state.imageLink !== "" && await validateUserIdToken()){
+      var fileType = this.state.file.name.split(".")[1].toLowerCase() 
+      if (fileType=== 'png' || fileType === 'jpeg' ||fileType === 'jpg' || fileType === 'gif'){
+        const post = {
+          userId: JSON.parse(localStorage.getItem("the_main_app")).userIdToken,
+          imageLink: this.state.imageLink
+        };
+        this.props.addPost(post);
+      } else {
+        console.error('Filetype invalid. Please use JPEG, JPG, PNG or GIF files')
+        this.setState({errorMessage: "Error"})
+      }
+    }
+    else {
+      console.error('User not logged in ')
+    }
+  }
+
   upload = e => {
-    ReactS3.uploadFile(e.target.files[0], config)
-    .then((data) => {
-      this.setState({imageLink: data.location})
-    })
-    .catch((error) => console.log(error))
+    //https://stackoverflow.com/questions/21720390/how-to-change-name-of-file-in-javascript-from-input-file
+    //Creates unique filename for upload to s3
+    var blob = e.target.files[0].slice(0, e.target.files[0].size, 'image/*'); 
+    var newFile = new File([blob], `image${Date.now()}.${e.target.files[0].name.split(".")[1]}`, {type: 'image/*'});
+
+    this.setState({file: newFile})
+  }
+
+  async componentWillMount() {
+    this.setState({validUser: await validateUserIdToken()})
   }
 
   render() {
-    return (
-      <div className="add-post">
-        <form className="add-post-form" onSubmit={this.createPost}>
-          <h2>Add Post</h2>
-          <div className='input'>
-            <input name="username" ref={this.usernameRef} type="text" placeholder="Username" required/>
-            <input 
-              type="file"
-              onChange={this.upload}
-              accept="image/*"
-              required
-            />
-            <button type="submit">+ Add Post</button>
-          </div>
-        </form>
-      </div>
-    );
+    //Renders the add post component if the user is logged in
+    if (this.state.validUser){
+      return (
+        <div className="add-post">
+          <form className="add-post-form" onSubmit={this.createPost}>
+            <div className='input'>
+              <input 
+                type="file"
+                onChange={this.upload}
+                accept="image/*"
+                required
+              />
+              <button type="submit">+ Add Post</button>
+              { this.state.errorMessage === "Error" &&
+              <div className="Error">
+                <p>The file you selected is invalid.</p>
+                <p>Please use a .jpg, .png or .gif file</p>
+              </div>
+            }
+            </div>
+          </form>
+        </div>
+      );
+    } else {
+      return (
+        <div className="add-post">
+          <h2>Please login to make a post</h2>
+        </div>
+      )
+    }
   }
 }
 

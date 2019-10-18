@@ -1,126 +1,3 @@
-.container {
-  width: 300px;
-  height: 500px;
-  background: linear-gradient(to top, #505050 0%, #ffffff 100%);
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-  border-radius: 10px;
-}
-.container h1 {
-  font-size: 40px;
-  margin-top: 80px;
-  margin-bottom: 60px;
-  color: #505050;
-  font-style: oblique;
-}
-.loading p {
-  font-style: oblique;
-  font-size: 25px;
-  position: absolute;
-  left: 45%;
-}
-.warning p {
-  padding: 10px;
-  font-size: 18px;
-  border-radius: 2px;
-  border: 2px solid #ffb732;
-  color: black;
-  margin-bottom: 2px;
-  position: absolute;
-  font-style: normal;
-  width: 50%;
-  left: 25%;
-}
-
-.login-box {
-  width: 260px;
-  height: 40px;
-  background: #f1f1f1b3;
-  border-radius: 10px;
-  margin: 10px auto;
-}
-
-.login-box input {
-  background: none;
-  border: none;
-  outline: none;
-  text-align: center;
-  width: 90%;
-  line-height: 37px;
-  font-size: 14px;
-  color: #333;
-}
-
-.button {
-  width: 260px;
-  height: 40px;
-  background: grey;
-  border-radius: 10px;
-  margin: 14px auto;
-  display: block;
-  font-size: 16px;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #ffb732;
-}
-
-.b1 {
-  position: absolute;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 260px;
-  padding: 10px 0;
-  text-decoration: none;
-  text-align: center;
-  transition: 0.4s all;
-  color: #ffb732;
-}
-.login-links a:hover {
-  background: #00000040;
-  color: #ffb732;
-}
-
-.logout-btn {
-  width: 260px;
-  height: 40px;
-  background: grey;
-  border-radius: 2px;
-  margin: 10px auto;
-  display: block;
-  font-size: 16px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  position: relative;
-}
-
-nav {
-  font-style: italic;
-}
-ul li {
-  list-style-type: none;
-  display: inline-block;
-  color: white;
-  padding: 5px 20px;
-  border: 1px solid transparent;
-  text-decoration: none;
-  margin-top: 5px;
-  transition: 0.6s;
-}
-
-ul li:hover {
-  background-color: #ffb732;
-  color: grey;
-}
 
 h1 {
   font-family: "Open Sans", sans-serif;
@@ -145,6 +22,10 @@ h2 {
 }
 
 .grid-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   flex-basis: calc(33.333% - 4rem);
   flex-grow: 1;
   flex-shrink: 0;
@@ -154,7 +35,6 @@ h2 {
   background: white;
   box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.03);
   position: relative;
-  cursor: pointer;
 }
 
 .grid-photo-wrapper {
@@ -162,9 +42,10 @@ h2 {
 }
 
 .grid-photo {
-  width: calc(100% + 4rem);
+  width: calc(100%);
   max-width: 250px;
   max-height: 250px;
+  cursor: pointer;
 }
 
 .grid-user-wrapper {
@@ -174,13 +55,16 @@ h2 {
 .grid-user {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
-  color: rgb(0, 0, 153);
   font-size: 1.5rem;
   width: calc(100% + 4rem);
   margin-left: 1rem;
   margin-bottom: -1rem;
   margin-top: 1rem;
   max-width: none;
+}
+
+.add-post {
+    margin-bottom: 4vh;
 }
 
 .add-post-form {
@@ -194,28 +78,6 @@ h2 {
 .input {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 20vh;
-}
-/* .add-post-form{
-    flex-basis: calc(33.333% - 4rem);
-    flex-grow: 1;
-    flex-shrink: 0;
-    margin: 0 2rem 2rem 2rem;
-    padding: 2rem;
-    border: 1px solid lightgray;
-    background: white;
-    box-shadow: 0 0 0 5px rgba(0,0,0,0.03);
-    position: relative;
-    cursor: pointer;
-} */
-
-.likeButton {
-  font-family: "Open Sans", sans-serif;
-  font-weight: bold;
-  color: rgb(0, 0, 153);
-  font-size: 1.5rem;
-  margin-left: 20rem;
-  max-width: none;
 }
 
 #userImage {
@@ -224,6 +86,70 @@ h2 {
 }
 
 #Leaderboard {
-  width: 50px;
-  height: 50px;
+    width:50px;
+    height:50px;
+}
+
+.Pages {
+    width: 180px;
+    margin: 0 auto;
+}
+
+.pull-right {
+    margin-right: 30px;
+}
+
+.reaction-counts {
+    margin-left: 15px;
+}
+
+.leaderboard {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.leaderboard-element {
+  margin: 0 2rem 2rem 2rem;
+  padding: 2rem;
+  background: white;
+  position: relative;
+}
+
+.leaderboard-photo-wrapper {
+  position: relative;
+}
+
+.leaderboard-photo {
+  width: calc(100%);
+  max-width: 250px;
+  max-height: 250px;
+}
+
+.leaderboard-user-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-user {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.leaderboard-upload-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-upload {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.home-reactions {
+  align-items: center
 }

@@ -56,6 +56,15 @@ router.post("/register", async (req, res, next) => {
       message: "Password must be more than 6 characters"
     });
   }
+  //https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var result = emailRegex.test(String(email).toLowerCase());
+  if (result == false){
+    return res.send({
+      success: false,
+      message: "Error: Please enter a valid email"
+    });
+  }
 
   email = email.toLowerCase();
 
@@ -70,7 +79,6 @@ router.post("/register", async (req, res, next) => {
     },
     (err, previousUsers) => {
       if (err) {
-        console.log("prev problem");
         return res.send({
           success: false,
           message: "Error: Server error"
@@ -104,8 +112,6 @@ router.post("/register", async (req, res, next) => {
     }
   );
 });
-
-module.exports = router;
 
 //LOGIN
 router.post("/login", (req, res, next) => {
@@ -168,8 +174,10 @@ router.post("/login", (req, res, next) => {
         return res.send({
           success: true,
           message: "Valid sign in",
-          userIdtoken: userSession.userId,
+          // token: userSession.userId,
+          userIdToken: userSession.userId,
           token: doc._id
+          
         });
       });
     }
@@ -179,34 +187,15 @@ router.post("/login", (req, res, next) => {
 router.get("/verify", async (req, res, next) => {
   //Get token
   const { query } = req;
-  const { token } = query;
+  const { userIdToken } = query;
+  // Verify the token is one of a kind and it's  not deleted
 
-  // Verify the token is one of a kind and is not deleted
-  UserSession.find(
-    {
-      _id: token,
-      isDeleted: false
-    },
-    (err, sessions) => {
-      if (err) {
-        return res.send({
-          success: false,
-          message: "Error: Server error"
-        });
-      }
-      if (sessions.length != 1) {
-        return res.send({
-          success: false,
-          message: "Error: Invalid"
-        });
-      } else {
-        return res.send({
-          success: true,
-          message: "Good"
-        });
-      }
-    }
-  );
+  var userCount = await User.find({_id: userIdToken}).count()
+  if (userCount > 0){
+    res.json({result: "Success"});
+  } else {
+    res.json({result: "Fail"})
+  }
 });
 
 router.get("/logout", async (req, res, next) => {
@@ -239,3 +228,63 @@ router.get("/logout", async (req, res, next) => {
     }
   );
 });
+
+// POST /api/user/incrementUpload
+// Increment the upload counter
+router.post('/incrementUpload', async (req, res) => {
+  try {
+      const user = await User.findOne({ _id: req.body.userId })
+
+      if (user) { //if post exists based on id
+          try {
+              user.uploads = user.uploads + 1
+              await user.save();
+          } catch (error) {
+              res.status(500).json(error)
+          }
+      }
+
+      else {
+          res.status(404).json('No post found');
+      }
+
+  } catch (err) {
+      console.error(err);
+      res.status(500).json('Server error')
+  }
+});
+
+// GET /api/user/leaderboard
+// Get the top 3 uploaders for the leaderboard
+router.get('/leaderboard', async (req, res) => {
+  try {
+      const users = await User.find({}).sort({uploads: -1}).limit(3)
+
+      if (users) {
+          return res.json(users)
+      } else {
+          res.status(404).json('Error');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json('Server error');
+  }
+});
+
+// GET /api/user/username/:id
+// Get username by id
+router.get('/username/:id', async (req,res) => {
+  try {
+      const user = await User.find({_id: req.params.id});
+      if(user) {
+          return res.json(user[0].name)
+      } else {
+          res.status(404).json('No user found');
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json('Server error');
+  }
+});
+
+module.exports = router;

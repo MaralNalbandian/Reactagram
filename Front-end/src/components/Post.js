@@ -1,27 +1,53 @@
 import React from 'react';
+import validateUserIdToken from './utils/validateToken'
+
+import Reactions from './Reactions'
 
 class Post extends React.Component {
     goToDetailed = event => {
         event.preventDefault();
-        this.props.history.push(`/view/${this.props.index}`)
+        this.props.history.push(`/view/${this.props.index}/1`)
     }
 
-    like = event => {
-        event.preventDefault();
-        
+    getUsername(){
+        fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/user/username/${this.props.post.userId}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            if (responseJson.length > 20){
+                responseJson = responseJson.substring(0,20) + '...'
+            }
+            this.setState({username: responseJson})
+        })
+    }
+
+    async componentWillMount() {
+        //TODO: Currently takes a second or two until the user can react to a post
+        this.setState({ post: this.props.post })
+        this.getUsername()
+        if (await validateUserIdToken()) {
+            this.setState({
+                reactCountsCanUseState: false,
+                userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken
+            })
+        } else {
+            this.setState({ reactCountsCanUseState: false })
+        }
     }
 
     render() {
         return (
-            <div onClick={this.goToDetailed} className="post">
+            <div className="post">
                 <div className="grid-element">
-                    <div className="grid-photo-wrapper">
-                        <img className="grid-photo" src={this.props.details.imageLink} alt="Post"></img>
+                    <div onClick={this.goToDetailed} className="grid-photo-wrapper">
+                        <img className="grid-photo" src={this.props.post.imageLink} alt="Post"></img>
                     </div>
                     <div className="grid-user-wrapper">
-                        <div className="grid-user">{this.props.details.username}</div>
+                        <div className="grid-user">{this.state.username}</div>
                     </div>
-                    <button className="likeButton" >Like</button>
+                    <br></br>
+                    <div className="home-reactions">
+                        <Reactions state={this.state} />
+                    </div>
                 </div>
             </div>
         )
