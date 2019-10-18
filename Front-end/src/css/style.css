@@ -145,6 +145,10 @@ h2 {
 }
 
 .grid-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   flex-basis: calc(33.333% - 4rem);
   flex-grow: 1;
   flex-shrink: 0;
@@ -154,7 +158,6 @@ h2 {
   background: white;
   box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.03);
   position: relative;
-  cursor: pointer;
 }
 
 .grid-photo-wrapper {
@@ -162,9 +165,10 @@ h2 {
 }
 
 .grid-photo {
-  width: calc(100% + 4rem);
+  width: calc(100%);
   max-width: 250px;
   max-height: 250px;
+  cursor: pointer;
 }
 
 .grid-user-wrapper {
@@ -174,13 +178,16 @@ h2 {
 .grid-user {
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
-  color: rgb(0, 0, 153);
   font-size: 1.5rem;
   width: calc(100% + 4rem);
   margin-left: 1rem;
   margin-bottom: -1rem;
   margin-top: 1rem;
   max-width: none;
+}
+
+.add-post {
+    margin-bottom: 4vh;
 }
 
 .add-post-form {
@@ -194,28 +201,6 @@ h2 {
 .input {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 20vh;
-}
-/* .add-post-form{
-    flex-basis: calc(33.333% - 4rem);
-    flex-grow: 1;
-    flex-shrink: 0;
-    margin: 0 2rem 2rem 2rem;
-    padding: 2rem;
-    border: 1px solid lightgray;
-    background: white;
-    box-shadow: 0 0 0 5px rgba(0,0,0,0.03);
-    position: relative;
-    cursor: pointer;
-} */
-
-.likeButton {
-  font-family: "Open Sans", sans-serif;
-  font-weight: bold;
-  color: rgb(0, 0, 153);
-  font-size: 1.5rem;
-  margin-left: 20rem;
-  max-width: none;
 }
 
 #userImage {
@@ -224,6 +209,70 @@ h2 {
 }
 
 #Leaderboard {
-  width: 50px;
-  height: 50px;
+    width:50px;
+    height:50px;
+}
+
+.Pages {
+    width: 180px;
+    margin: 0 auto;
+}
+
+.pull-right {
+    margin-right: 30px;
+}
+
+.reaction-counts {
+    margin-left: 15px;
+}
+
+.leaderboard {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.leaderboard-element {
+  margin: 0 2rem 2rem 2rem;
+  padding: 2rem;
+  background: white;
+  position: relative;
+}
+
+.leaderboard-photo-wrapper {
+  position: relative;
+}
+
+.leaderboard-photo {
+  width: calc(100%);
+  max-width: 250px;
+  max-height: 250px;
+}
+
+.leaderboard-user-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-user {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.leaderboard-upload-wrapper {
+  position: relative;
+  text-align: center
+}
+
+.leaderboard-upload {
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.home-reactions {
+  align-items: center
 }

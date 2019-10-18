@@ -1,5 +1,7 @@
-import React, { Component } from "react";
-import { getFromStorage, setInStorage } from "../utils/storage";
+import React from "react";
+import validateUserIdToken from "./utils/validateToken";
+import { getFromStorage } from "../utils/storage";
+
 export class Register extends React.Component {
   //This code is based on a solution by "Keith, the Coder" on Youtube
   //See https://youtu.be/s1swJLYxLAA
@@ -12,10 +14,9 @@ export class Register extends React.Component {
       signUpError: "",
       signUpName: "",
       signUpEmail: "",
-      signUpPassword: ""
+      signUpPassword: "",
+      token: ""
     };
-
-    //Bind functions to compenents
     this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(
       this
     );
@@ -25,35 +26,30 @@ export class Register extends React.Component {
     );
 
     this.onSignUp = this.onSignUp.bind(this);
-    this.logout = this.logout.bind(this);
   }
 
-  //For setting loading to false
-  componentDidMount() {
-    const obj = getFromStorage("the_main_app"); //Check storage for the token
-    if (obj && obj.token) {
-      const { token } = obj;
-      //Verify token
-      if (token) {
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
+  async componentDidMount() {
+    if (await validateUserIdToken()) {
+      const token = JSON.parse(localStorage.getItem("the_main_app"))
+        .userIdToken;
+      this.setState({
+        token,
+        isLoading: false
+      });
+      //If token is not valid/does not exist, redirect to the sign up page
+    } else {
+      this.setState({
+        isLoading: false
+      });
+    }
+  }
+
+  logout() {
+    localStorage.clear();
+    try {
+      this.setState({ token: "" });
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -62,16 +58,37 @@ export class Register extends React.Component {
     this.setState({
       signUpEmail: event.target.value
     });
+    if (event.target.value.length === 250) {
+      this.setState({
+        signUpError: "Error: Email must be 250 characters or less"
+      });
+    } else {
+      this.setState({ signUpError: "" });
+    }
   }
   onTextboxChangeSignUpPassword(event) {
     this.setState({
       signUpPassword: event.target.value
     });
+    if (event.target.value.length === 250) {
+      this.setState({
+        signUpError: "Error: Password must be 250 characters or less"
+      });
+    } else {
+      this.setState({ signUpError: "" });
+    }
   }
   onTextboxChangeSignUpName(event) {
     this.setState({
       signUpName: event.target.value
     });
+    if (event.target.value.length === 250) {
+      this.setState({
+        signUpError: "Error: Name must be 250 characters or less"
+      });
+    } else {
+      this.setState({ signUpError: "" });
+    }
   }
 
   /*
@@ -88,7 +105,7 @@ export class Register extends React.Component {
     });
 
     //Post request to backend
-    fetch("http://localhost:80/api/user/register", {
+    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/register", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -146,6 +163,10 @@ export class Register extends React.Component {
     }
   }
 
+  onLogin() {
+    window.location.assign("/login");
+  }
+
   render() {
     const {
       isLoading,
@@ -164,57 +185,56 @@ export class Register extends React.Component {
       );
     }
 
-    if (!token) {
-      //If there is no token, Sign up page is loaded
+    if (signUpError === "Signed up") {
       return (
-        <div class="container">
-          <div class="warning">{signUpError ? <p>{signUpError}</p> : null}</div>
-          <h1>Sign Up</h1>
-          <div class="login-box">
-            <input
-              type="text"
-              placeholder="Name"
-              value={signUpName}
-              onChange={this.onTextboxChangeSignUpName}
-            />
+        <React.Fragment>
+          <p>{signUpError}</p>
+          <button onClick={this.onLogin}>Login</button>
+        </React.Fragment>
+      );
+    }
+
+    if (token === "") {
+      return (
+        <React.Fragment>
+          <div>
+            <div>
+              {signUpError ? <p>{signUpError}</p> : null}
+              <p>Sign Up</p>
+              <input
+                type="text"
+                placeholder="Name"
+                value={signUpName}
+                onChange={this.onTextboxChangeSignUpName}
+              />
+              <br />
+              <input
+                type="email"
+                placeholder="Email"
+                value={signUpEmail}
+                onChange={this.onTextboxChangeSignUpEmail}
+              />
+              <br />
+              <input
+                type="password"
+                placeholder="Password"
+                value={signUpPassword}
+                onChange={this.onTextboxChangeSignUpPassword}
+              />
+              <br />
+              <button onClick={this.onSignUp}>Sign Up</button>
+            </div>
           </div>
-          <div class="login-box">
-            <input
-              type="email"
-              placeholder="Email"
-              value={signUpEmail}
-              onChange={this.onTextboxChangeSignUpEmail}
-            />
-          </div>
-          <div class="login-box">
-            <input
-              type="password"
-              placeholder="Password"
-              value={signUpPassword}
-              onChange={this.onTextboxChangeSignUpPassword}
-            />
-          </div>
-          <div class="login-box">
-            <button class="button" onClick={this.onSignUp}>
-              Sign Up
-            </button>
-          </div>
-          <div class="login-links">
-            <a class="b1" href="/login">
-              HAVE AN ACCOUNT?
-            </a>
-          </div>
-        </div>
+        </React.Fragment>
       );
     }
 
     //If user is already logged in
     return (
-      <div>
-        <button class="logout-btn" onClick={this.logout}>
-          Logout
-        </button>
-      </div>
+      <React.Fragment>
+        <p>Account - go to login screen to sign out</p>
+        <button onClick={this.onLogin}>Login</button>
+      </React.Fragment>
     );
   }
 }

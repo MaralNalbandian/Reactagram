@@ -1,5 +1,6 @@
 import React from "react";
-import { getFromStorage, setInStorage } from "../utils/storage";
+import validateUserIdToken from "./utils/validateToken";
+import { getFromStorage } from "../utils/storage";
 import Home from "./Home";
 
 export class Login extends React.Component {
@@ -15,7 +16,9 @@ export class Login extends React.Component {
       signInError: "",
       signInEmail: "",
       signInPassword: "",
-      signUpName: ""
+      token: "",
+      emailTooLong: false,
+      passwordTooLong: false
     };
 
     //Bind functions to compenents
@@ -30,32 +33,19 @@ export class Login extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
-  //Retrieve/check for token
-  componentDidMount() {
-    const obj = getFromStorage("the_main_app"); //Check storage for the token
-    if (obj && obj.token) {
-      const { token } = obj;
-
-      if (token) {
-        fetch("http://localhost:80/api/user/verify?token=" + token)
-          .then(res => res.json())
-          .then(json => {
-            if (json.success) {
-              this.setState({
-                token,
-                isLoading: false
-              });
-            } else {
-              this.setState({
-                isLoading: false
-              });
-            }
-          });
-      } else {
-        this.setState({
-          isLoading: false
-        });
-      }
+  async componentDidMount() {
+    if (await validateUserIdToken()) {
+      const token = JSON.parse(localStorage.getItem("the_main_app"))
+        .userIdToken;
+      this.setState({
+        token,
+        isLoading: false
+      });
+      //If token is not valid/does not exist, redirect to the sign up page
+    } else {
+      this.setState({
+        isLoading: false
+      });
     }
   }
 
@@ -64,12 +54,30 @@ export class Login extends React.Component {
     this.setState({
       signInEmail: event.target.value
     });
+    if (event.target.value.length === 250) {
+      this.setState({
+        signInError: "Error: Email must be 250 characters or less"
+      });
+    } else {
+      this.setState({ signInError: "" });
+    }
   }
 
   onTextboxChangeSignInPassword(event) {
     this.setState({
       signInPassword: event.target.value
     });
+    if (event.target.value.length === 250) {
+      this.setState({
+        signInError: "Error: Password must be 250 characters or less"
+      });
+    } else {
+      this.setState({ signInError: "" });
+    }
+  }
+
+  onSignUp() {
+    window.location.assign("/register");
   }
 
   /*
@@ -86,7 +94,7 @@ export class Login extends React.Component {
     });
 
     //Post request to backend
-    fetch("http://localhost:80/api/user/login", {
+    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -97,17 +105,20 @@ export class Login extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          setInStorage("the_main_app", {
-            token: json.token,
-            userIdtoken: json.userIdtoken
-          });
+          localStorage.setItem(
+            "the_main_app",
+            JSON.stringify({
+              token: json.token,
+              userIdToken: json.userIdToken
+            })
+          );
           this.setState({
             signInError: json.message,
             isLoading: false,
             signInEmail: "",
             signInPassword: "",
             token: json.token,
-            userIdtoken: json.userIdtoken
+            userIdToken: json.userIdToken
           });
         } else
           this.setState({
@@ -147,6 +158,8 @@ export class Login extends React.Component {
         });
       }
     }
+    localStorage.clear();
+    this.setState({ token: "" });
   }
 
   render() {
@@ -165,42 +178,45 @@ export class Login extends React.Component {
         </div>
       );
     }
-
-    if (!token) {
-      //If there is no token, Login page is loaded
+    //If there is no token, Login page is loaded
+    if (token === "") {
       return (
-        <div class="container">
-          <div class="warning">{signInError ? <p>{signInError}</p> : null}</div>
-          <h1>Login</h1>
+        <React.Fragment>
+          <div class="container">
+            {signInError ? <p>{signInError}</p> : null}
+            <h1>Sign In</h1>
 
-          <div class="login-box">
-            <input
-              type="email"
-              placeholder="Email"
-              value={signInEmail}
-              onChange={this.onTextboxChangeSignInEmail}
-            />
-          </div>
+            <div class="login-box">
+              <input
+                type="email"
+                placeholder="Email"
+                value={signInEmail}
+                maxLength="250"
+                onChange={this.onTextboxChangeSignInEmail}
+              />
+            </div>
 
-          <div class="login-box">
-            <input
-              type="password"
-              placeholder="Password"
-              value={signInPassword}
-              onChange={this.onTextboxChangeSignInPassword}
-            />
-          </div>
-          <div class="login-box">
+            <div class="login-box">
+              <input
+                type="password"
+                placeholder="Password"
+                value={signInPassword}
+                maxLength="250"
+                onChange={this.onTextboxChangeSignInPassword}
+              />
+            </div>
+
             <button class="button" onClick={this.onSignIn}>
               Sign In
             </button>
+
+            <div class="login-links">
+              <a class="b1" href="/register">
+                CREATE AN ACCOUNT
+              </a>
+            </div>
           </div>
-          <div class="login-links">
-            <a class="b1" href="/register">
-              CREATE AN ACCOUNT
-            </a>
-          </div>
-        </div>
+        </React.Fragment>
       );
     }
 
