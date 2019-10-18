@@ -35,7 +35,7 @@ router.post("/register", async (req, res, next) => {
   if (name.length < 3) {
     return res.send({
       success: false,
-      message: "Name cannot be blank"
+      message: "Please enter a valid name"
     });
   }
 
@@ -59,7 +59,7 @@ router.post("/register", async (req, res, next) => {
       message: "Password cannot be blank"
     });
   }
-  if (password.length < 6) {
+  if (password.length <= 6) {
     return res.send({
       success: false,
       message: "Password must be more than 6 characters"
