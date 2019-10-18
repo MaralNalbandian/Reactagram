@@ -47,13 +47,6 @@ router.post("/register", async (req, res, next) => {
     });
   }
 
-  //Check if the email the user enters is valid
-  if (/\S+@\S+\.\S+/.test(email) == false) {
-    return res.send({
-      success: false,
-      message: "Please enter a valid email"
-    });
-  }
   //Check if user has entered password text
   if (!password) {
     return res.send({
@@ -68,6 +61,8 @@ router.post("/register", async (req, res, next) => {
       message: "Password must be more than 6 characters"
     });
   }
+
+  //Check if the email the user enters is valid
   //https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   var result = emailRegex.test(String(email).toLowerCase());
@@ -220,31 +215,31 @@ router.get("/verify", async (req, res, next) => {
   // Verify the token is one of a kind and it's  not deleted
 
   //Verify the token is one of a kind and is not deleted
-  UserSession.find(
-    {
-      _id: token,
-      isDeleted: false
-    },
-    (err, sessions) => {
-      if (err) {
-        return res.send({
-          success: false,
-          message: "Error: Server error"
-        });
-      }
-      if (sessions.length != 1) {
-        return res.send({
-          success: false,
-          message: "Error: Invalid"
-        });
-      } else {
-        return res.send({
-          success: true,
-          message: "Good"
-        });
-      }
-    }
-  );
+  // UserSession.find(
+  //   {
+  //     _id: token,
+  //     isDeleted: false
+  //   },
+  //   (err, sessions) => {
+  //     if (err) {
+  //       return res.send({
+  //         success: false,
+  //         message: "Error: Server error"
+  //       });
+  //     }
+  //     if (sessions.length != 1) {
+  //       return res.send({
+  //         success: false,
+  //         message: "Error: Invalid"
+  //       });
+  //     } else {
+  //       return res.send({
+  //         success: true,
+  //         message: "Good"
+  //       });
+  //     }
+  //   }
+  // );
   var userCount = await User.find({ _id: userIdToken }).count();
   if (userCount > 0) {
     res.json({ result: "Success" });

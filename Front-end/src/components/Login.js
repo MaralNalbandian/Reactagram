@@ -223,7 +223,7 @@ export class Login extends React.Component {
     //If user signs in with correct credentials display the home page
     return (
       <div>
-        <Home />
+        {/* <Home /> */}
         <button class="logout-btn" onClick={this.logout}>
           Logout
         </button>
