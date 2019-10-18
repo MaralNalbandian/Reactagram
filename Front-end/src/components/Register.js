@@ -232,6 +232,12 @@ export class Register extends React.Component {
             <button class="button" onClick={this.onSignUp}>
               Sign Up
             </button>
+
+            <div class="login-links">
+              <a class="b1" href="/login">
+                HAVE AN ACCOUNT?
+              </a>
+            </div>
           </div>
         </React.Fragment>
       );
