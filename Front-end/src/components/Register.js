@@ -15,6 +15,7 @@ export class Register extends React.Component {
       signUpPassword: ""
     };
 
+    //Bind functions to compenents
     this.onTextboxChangeSignUpEmail = this.onTextboxChangeSignUpEmail.bind(
       this
     );
@@ -27,11 +28,12 @@ export class Register extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
+  //For setting loading to false
   componentDidMount() {
-    //Verify token
-    const obj = getFromStorage("the_main_app");
+    const obj = getFromStorage("the_main_app"); //Check storage for the token
     if (obj && obj.token) {
       const { token } = obj;
+      //Verify token
       if (token) {
         fetch("http://localhost:80/api/user/verify?token=" + token)
           .then(res => res.json())
@@ -55,6 +57,7 @@ export class Register extends React.Component {
     }
   }
 
+  //Update state/textbox values
   onTextboxChangeSignUpEmail(event) {
     this.setState({
       signUpEmail: event.target.value
@@ -71,6 +74,11 @@ export class Register extends React.Component {
     });
   }
 
+  /*
+   *This function grabs the values stored in state and creates an API request to endpoint
+   *User is informed of the response
+   *
+   */
   onSignUp() {
     //Grab state
     const { signUpName, signUpEmail, signUpPassword } = this.state;
@@ -111,10 +119,10 @@ export class Register extends React.Component {
     this.setState({
       isLoading: true
     });
-    //Verify token
-    const obj = getFromStorage("the_main_app");
+    const obj = getFromStorage("the_main_app"); //Check storage for the token
     if (obj && obj.token) {
       const { token } = obj;
+      //Verify token
       if (token) {
         fetch("http://localhost:80/api/user/logout?token=" + token)
           .then(res => res.json())
@@ -157,6 +165,7 @@ export class Register extends React.Component {
     }
 
     if (!token) {
+      //If there is no token, Sign up page is loaded
       return (
         <div class="container">
           <div class="warning">{signUpError ? <p>{signUpError}</p> : null}</div>
@@ -199,6 +208,7 @@ export class Register extends React.Component {
       );
     }
 
+    //If user is already logged in
     return (
       <div>
         <button class="logout-btn" onClick={this.logout}>

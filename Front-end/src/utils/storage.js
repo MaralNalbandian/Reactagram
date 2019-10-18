@@ -1,3 +1,4 @@
+//This function returns a key (token) to check if user is logged in
 export function getFromStorage(key) {
   if (!key) {
     return null;
@@ -13,6 +14,7 @@ export function getFromStorage(key) {
   }
 }
 
+//Store key (token) in localStorage
 export function setInStorage(key, obj) {
   if (!key) {
     console.error("Error: Key is missing");

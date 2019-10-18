@@ -10,19 +10,28 @@ router.use(bodyParser.urlencoded({ extended: false }));
 See https://youtu.be/s1swJLYxLAA
 */
 
-//REGISTER
+/*Validate user details before creating user account via API (register)
+ *@params: name: Input in required name textfield
+ *@params: email: Input in required email textfield
+ *@params: password: Input in required password textfield
+ *
+ *@return: message
+ */
 router.post("/register", async (req, res, next) => {
+  //Get name, email & password from request body
   const { body } = req;
   const { name, password } = body;
   let { email } = body;
 
-  //Validate user details before creating user
+  //Check if user has entered name text
   if (!name) {
     return res.send({
       success: false,
       message: "Name cannot be blank"
     });
   }
+
+  //Check if the name user enters is more more than 2 characters
   if (name.length < 3) {
     return res.send({
       success: false,
@@ -30,6 +39,7 @@ router.post("/register", async (req, res, next) => {
     });
   }
 
+  //Check if user has entered email text
   if (!email) {
     return res.send({
       success: false,
@@ -37,19 +47,21 @@ router.post("/register", async (req, res, next) => {
     });
   }
 
+  //Check if the email the user enters is valid
   if (/\S+@\S+\.\S+/.test(email) == false) {
     return res.send({
       success: false,
       message: "Please enter a valid email"
     });
   }
-
+  //Check if user has entered password text
   if (!password) {
     return res.send({
       success: false,
       message: "Password cannot be blank"
     });
   }
+  //Check if length of the password entered is more than 6 characters
   if (password.length <= 6) {
     return res.send({
       success: false,
@@ -59,10 +71,11 @@ router.post("/register", async (req, res, next) => {
 
   email = email.toLowerCase();
 
-  /*Steps:
-  1. Verify email doesn't exist
-  2. Save
-  */
+  /*
+   *Verify email associated with user doesn't exist in database
+   *
+   *@return: message
+   */
 
   User.find(
     {
@@ -70,11 +83,12 @@ router.post("/register", async (req, res, next) => {
     },
     (err, previousUsers) => {
       if (err) {
-        console.log("prev problem");
         return res.send({
           success: false,
           message: "Error: Server error"
         });
+
+        //Check if user already exists
       } else if (previousUsers.length > 0) {
         return res.send({
           success: false,
@@ -82,7 +96,7 @@ router.post("/register", async (req, res, next) => {
         });
       }
 
-      //Save the user in database
+      //Create new User and save
       const newUser = new User();
 
       newUser.name = name;
@@ -107,19 +121,29 @@ router.post("/register", async (req, res, next) => {
 
 module.exports = router;
 
-//LOGIN
+/*Verify user details before signing in user (login)
+ *@params: email: Input in required email textfield
+ *@params: password: Input in required password textfield
+ *
+ *@return: message
+ *@return: userIdtoken: assigned to specific user to specify the user that is logged in
+ *@return: token: random token assigned to verify if user logged in/out
+ */
 router.post("/login", (req, res, next) => {
+  //Get email & password from request body
   const { body } = req;
   const { password } = body;
   let { email } = body;
 
-  //Validate user details before signing user in
+  //Check if user has entered email text
   if (!email) {
     return res.send({
       success: false,
       message: "Email cannot be blank"
     });
   }
+
+  //Check if user has entered password text
   if (!password) {
     return res.send({
       success: false,
@@ -129,6 +153,7 @@ router.post("/login", (req, res, next) => {
 
   email = email.toLowerCase();
 
+  //Find user and verify password
   User.find(
     {
       email: email
@@ -140,6 +165,7 @@ router.post("/login", (req, res, next) => {
           message: "Error: Server error"
         });
       }
+      //Check if there's more than one of the user - which should be impossible
       if (users.length != 1) {
         return res.send({
           success: false,
@@ -147,6 +173,7 @@ router.post("/login", (req, res, next) => {
         });
       }
 
+      //Check if user password is correct
       const user = users[0];
       if (!user.validPassword(password)) {
         return res.send({
@@ -155,9 +182,9 @@ router.post("/login", (req, res, next) => {
         });
       }
 
-      //Sign in user with the correct details
-      const userSession = new UserSession();
-      userSession.userId = user._id;
+      //Verify user details and assign token
+      const userSession = new UserSession(); //Create user session
+      userSession.userId = user._id; //User session identified by Id
       userSession.save((err, doc) => {
         if (err) {
           return res.send({
@@ -169,7 +196,7 @@ router.post("/login", (req, res, next) => {
           success: true,
           message: "Valid sign in",
           userIdtoken: userSession.userId,
-          token: doc._id
+          token: doc._id //Document id in user session to identify the current session token
         });
       });
     }
@@ -177,11 +204,11 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/verify", async (req, res, next) => {
-  //Get token
+  //Get the token
   const { query } = req;
   const { token } = query;
 
-  // Verify the token is one of a kind and is not deleted
+  //Verify the token is one of a kind and is not deleted
   UserSession.find(
     {
       _id: token,
@@ -214,7 +241,7 @@ router.get("/logout", async (req, res, next) => {
   const { query } = req;
   const { token } = query;
 
-  // Verify the token and set as deleted
+  //Verify the token and set as deleted
   UserSession.findOneAndUpdate(
     {
       _id: token,

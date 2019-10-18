@@ -1,6 +1,7 @@
+//User data structure
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-
+//User attributes stored in database
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -33,11 +34,12 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-
+//Store user password in hashed form
 userSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
+//Check if hashed password matches with correct user
 userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };

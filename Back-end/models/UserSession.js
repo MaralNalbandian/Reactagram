@@ -1,5 +1,6 @@
+//User Session data structure
 const mongoose = require("mongoose");
-
+//User Session attributes stored in database
 const userSessionSchema = new mongoose.Schema({
   userId: {
     type: String,

@@ -17,6 +17,8 @@ export class Login extends React.Component {
       signInPassword: "",
       signUpName: ""
     };
+
+    //Bind functions to compenents
     this.onTextboxChangeSignInEmail = this.onTextboxChangeSignInEmail.bind(
       this
     );
@@ -28,9 +30,9 @@ export class Login extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
+  //Retrieve/check for token
   componentDidMount() {
-    //Verify token
-    const obj = getFromStorage("the_main_app");
+    const obj = getFromStorage("the_main_app"); //Check storage for the token
     if (obj && obj.token) {
       const { token } = obj;
 
@@ -56,17 +58,25 @@ export class Login extends React.Component {
       }
     }
   }
+
+  //Update state/textbox values
   onTextboxChangeSignInEmail(event) {
     this.setState({
       signInEmail: event.target.value
     });
   }
+
   onTextboxChangeSignInPassword(event) {
     this.setState({
       signInPassword: event.target.value
     });
   }
 
+  /*
+   *This function grabs the values stored in state and creates an API request to endpoint
+   *User is informed of the response
+   *
+   */
   onSignIn() {
     //Grab state
     const { signInEmail, signInPassword } = this.state;
@@ -107,14 +117,15 @@ export class Login extends React.Component {
       });
   }
 
+  //Clear token from local storage and tell backend to "delete" the specific user session
   logout() {
     this.setState({
       isLoading: true
     });
-    //Verify token
-    const obj = getFromStorage("the_main_app");
+    const obj = getFromStorage("the_main_app"); //Check storage for the token
     if (obj && obj.token) {
       const { token } = obj;
+      //Verify token
       if (token) {
         fetch("http://localhost:80/api/user/logout?token=" + token)
           .then(res => res.json())
@@ -156,6 +167,7 @@ export class Login extends React.Component {
     }
 
     if (!token) {
+      //If there is no token, Login page is loaded
       return (
         <div class="container">
           <div class="warning">{signInError ? <p>{signInError}</p> : null}</div>
@@ -192,6 +204,7 @@ export class Login extends React.Component {
       );
     }
 
+    //If user signs in with correct credentials display the home page
     return (
       <div>
         <Home />
