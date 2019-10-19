@@ -1,3 +1,8 @@
+// validateToken function - The validateToken function is used to verify if the token stored in local 
+// storage is valid. This is called before a user tries to complete an action that you must be logged in for.
+// Author(s) - Brendon
+// Date - 18/10/19
+
 export default async function validateUserIdToken(){
     const obj = JSON.parse(localStorage.getItem("the_main_app"));
     if (obj && obj.userIdToken) {

@@ -1,10 +1,15 @@
+// Leaderboard component - The leaderboard component renders some graphics to show the three users 
+// that have performed the most uploads in the system
+// Author(s) - Brendon
+// Date - 18/10/19
+
 import React from 'react';
 
 class Leaderboard extends React.Component {
     state = {}
 
+    //Fetch the users who are on the leaderboard before the components render and store these users in state
     componentWillMount(){
-        //Fetch the users who are on the leaderboard
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + "/api/user/leaderboard")
         .then((response) => response.json())
         .then((responseJson) => {
