@@ -16,7 +16,17 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
-//REGISTER
+/*This code is based on a solution by "Keith, the Coder" on Youtube
+See https://youtu.be/s1swJLYxLAA
+*/
+
+/*Validate user details before creating user account via API (register)
+ *@params: name: Input in required name textfield
+ *@params: email: Input in required email textfield
+ *@params: password: Input in required password textfield
+ *
+ *@return: message
+ */
 router.post("/register", async (req, res, next) => {
   //Validate the data before creating user
   const { body } = req;
@@ -105,7 +115,14 @@ router.post("/register", async (req, res, next) => {
   );
 });
 
-//LOGIN
+/*Verify user details before signing in user (login)
+ *@params: email: Input in required email textfield
+ *@params: password: Input in required password textfield
+ *
+ *@return: message
+ *@return: userIdtoken: assigned to specific user to specify the user that is logged in
+ *@return: token: random token assigned to verify if user logged in/out
+ */
 router.post("/login", (req, res, next) => {
   //Validate the data before allowing user to request to login
 
@@ -180,6 +197,8 @@ router.post("/login", (req, res, next) => {
   );
 });
 
+// Get /api/user/verify
+// Verify correct user
 router.get("/verify", async (req, res, next) => {
   //Get token
   const { query } = req;
@@ -194,6 +213,8 @@ router.get("/verify", async (req, res, next) => {
   }
 });
 
+// Get /api/user/logout
+// Logout user and delete token
 router.get("/logout", async (req, res, next) => {
   //Get token
   const { query } = req;

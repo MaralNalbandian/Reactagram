@@ -1,10 +1,10 @@
 // PostDetailed Component
-// Description: The page that users are viewing when they wish to view the replies and post and more detail.
+// Description: The page that users are viewing when they wish to view the replies and post in more detail.
 // Author(s) - Jarrod
 // Date - 18/10/19
 import React from 'react';
 import AddPost from './addPost';
-import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Card, Button, Row, Col, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
 import validateUserIdToken from './utils/validateToken'
 import Reactions from './Reactions';
 import Pages from './Pages';
@@ -12,25 +12,6 @@ import Pages from './Pages';
 import axios from 'axios';
 
 class PostDetailed extends React.Component {
-
-    // Author(s) - Jarrod
-    // Date - 18/09/19
-    // Function - getPost
-    // Description - Get this specific post only from the API
-    // Parameters - N/A
-    // Return - N/A
-    // Example of usage - this.getPost()
-    getPost() {
-        return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
-            .then((response) => {
-                this.setState({ post: response.data })
-            }).then(() => this.paginate())
-            .catch((error) => {
-                console.error(error)
-            });
-    }
-
-
     //Setting the initial reaction counts; when they are loaded they're loaded directly from the server into state
     //any changes are manipulated inside state first, then state is posted to endpoint.
     constructor(props) {
@@ -50,12 +31,29 @@ class PostDetailed extends React.Component {
         this.handleDeleteWithPlaceholder = this.handleDeleteWithPlaceholder.bind(this);
     }
 
-    //Await the valid go ahead from the userAuth functionalities
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - getPost
+    // Description - Get the specific post based on id from the API and save the post to state
+    // Parameters - N/A
+    // Return - N/A
+    // Example of usage - this.getPost()
+    getPost() {
+        return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
+            .then((response) => {
+                this.setState({ post: response.data })
+            }).then(() => this.paginate())
+            .catch((error) => {
+                console.error(error)
+            });
+    }
+
+    //Get the data for the detailed post then set the user token in storage if it exists before the component renders
     async componentWillMount() {
         this.getPost()
             .then(() => this.getReplyObjects());
 
-        //if user is logged in :
+        //If user is logged in :
         if (await validateUserIdToken()) {
             this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
             this.setState({ userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken })
@@ -73,7 +71,8 @@ class PostDetailed extends React.Component {
     // Author(s) - Brendon
     // Date - 18/09/19
     // Function - paginate
-    // Description - Limit the amount of replies to reduce bandwidth usage and paginate rest of results.
+    // Description - Determine the number of pages required based on the number of replies. THis limits 
+    // the amount of replies to reduce bandwidth usage and paginate rest of results.
     // Parameters - N/A
     // Return - N/A
     // Example of usage - this.paginate()
@@ -93,7 +92,7 @@ class PostDetailed extends React.Component {
     // Author(s) - Jarrod
     // Date - 18/09/19
     // Function - addPost
-    // Description - Add the reply to the posts collection, then add also add the posts' id to this post's reply array.
+    // Description - Add the reply to the posts collection, then also add the posts' id to this post's reply array.
     // Parameters - post: this post object in state
     // Return - N/A
     // Example of usage - this.addPost()
@@ -108,21 +107,21 @@ class PostDetailed extends React.Component {
                     userId: post.userId,
                     imageLink: post.imageLink
                 }
-                //2. Also Update the replies of this post
             });
         }
         catch (error) {
         }
 
-        //Now refresh state so the reply appears once completed.
+        // 2. Increment the number of uploads the user has completed
         this.incrementUploads(post.userId);
+        // 3. Update the replies on screen
         this.updateReplies(dateNow);
     };
 
     // Author(s) - Brendon
     // Date - 18/09/19
     // Function - incrementUploads
-    // Description - Increment the uplaods variable by 1 for this user - used for leaderboard functionality.
+    // Description - Increment the uploads variable by 1 for this user - used for leaderboard functionality.
     // Parameters - userId: gathered from localStorage - unique user id to increment uploads variable of
     // Return - N/A
     // Example of usage - this.incrementUploads(this.state.userIdToken)
@@ -219,14 +218,10 @@ class PostDetailed extends React.Component {
     // Return - N/A
     // Example of usage - this.handleDeleteWithPlaceholder()
     handleDeleteWithPlaceholder() {
-        //1. Just update react endpoint to change the image link too
-
-        //2. on submit in addPost this gets called..
-
-        //3. UPDATE this.state.post.imageLink with the link
+        //1. UPDATE this.state.post.imageLink with the link
         this.state.post.imageLink = "https://brendon-aip-2019.s3-ap-southeast-2.amazonaws.com/deleted.jpg";
 
-        //4. replicate the fetch Post  to /post/react with this.state.post as the body
+        //2. replicate the fetch Post  to /post/react with this.state.post as the body
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
