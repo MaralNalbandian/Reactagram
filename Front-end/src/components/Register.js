@@ -1,3 +1,6 @@
+// Register Component - Allow a new user to sign up to use the system
+// Author(s) - Maral
+// Date - 18/10/19
 import React from "react";
 import validateUserIdToken from './utils/validateToken'
 
@@ -35,47 +38,81 @@ export class Register extends React.Component {
     }
   }
 
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - logout
+  // Description - Clears the localStorage where the user token is stored. refreshes state to show user is logged out
+  // Parameters - N/A
+  // Return - N/A
+  // Example of usage - this.logout()
   logout() {
     localStorage.clear();
     try {
-      this.setState({token: ""})
+      this.setState({ token: "" })
     }
     catch (error) {
       console.error(error);
     }
   }
 
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onTextboxChangeSignUpEmail
+  // Description - Handle when text is updated in the email text field
+  // Parameters - event: information about what and how this is changing. e.g. event.target.value
+  // Return - N/A
   onTextboxChangeSignUpEmail(event) {
     this.setState({
       signUpEmail: event.target.value
     });
-    if (event.target.value.length === 250){
-      this.setState({signUpError: "Error: Email must be 250 characters or less"})
+    if (event.target.value.length === 250) {
+      this.setState({ signUpError: "Error: Email must be 250 characters or less" })
     } else {
-      this.setState({signUpError: ""})
+      this.setState({ signUpError: "" })
     }
   }
+
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onTextboxChangeSignUpPassword
+  // Description - Same as above: for password field.
+  // Parameters - event: information about what and how this is changing.
+  // Return - N/A
   onTextboxChangeSignUpPassword(event) {
     this.setState({
       signUpPassword: event.target.value
     });
-    if (event.target.value.length === 250){
-      this.setState({signUpError: "Error: Password must be 250 characters or less"})
+    if (event.target.value.length === 250) {
+      this.setState({ signUpError: "Error: Password must be 250 characters or less" })
     } else {
-      this.setState({signUpError: ""})
+      this.setState({ signUpError: "" })
     }
   }
+
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onTextboxChangeSignUpName
+  // Description - Same as above: for username field.
+  // Parameters - event: information about what and how this is changing.
+  // Return - N/A
   onTextboxChangeSignUpName(event) {
     this.setState({
       signUpName: event.target.value
     });
-    if (event.target.value.length === 250){
-      this.setState({signUpError: "Error: Name must be 250 characters or less"})
+    if (event.target.value.length === 250) {
+      this.setState({ signUpError: "Error: Name must be 250 characters or less" })
     } else {
-      this.setState({signUpError: ""})
+      this.setState({ signUpError: "" })
     }
   }
 
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onSignUp
+  // Description - Handle when a user attempts to sign up - if successful, create a new user in the Users Collection.
+  // Parameters - N/A
+  // Return - N/A
+   // Example of usage - this.onSignUp()
   onSignUp() {
     //Grab state
     const { signUpName, signUpEmail, signUpPassword } = this.state;

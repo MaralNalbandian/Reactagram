@@ -1,4 +1,4 @@
-// Home component - The home component is the landing page of the application. It displays all the posts
+// Home component - The home component is the landing page of the application. It displays all the posts.
 // within the system, starting with the most popular (most reactions). The user will see 9 posts per page.
 // The home component also includes the AddPost component that allows the user to add a post to the system.
 // Author(s) - Brendon

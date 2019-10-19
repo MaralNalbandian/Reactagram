@@ -1,3 +1,8 @@
+// Post Component
+// Contains all endpoints related to posts to communicate them to the backend.
+// Whenever a user adds, reacts, replies, etc. A request is made to validate this request 
+// Author(s) - Jarrod & Brendon
+// Date - 18/10/19
 const express = require('express');
 const router = express.Router();
 

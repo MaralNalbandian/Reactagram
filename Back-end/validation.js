@@ -1,4 +1,5 @@
-//VALIDATION
+//VALIDATION - Additional data validation requirements to restrict unwanted input to our system
+  //e.g. string length for email and password for register.
 const Joi = require("@hapi/joi");
 
 //Register Validation

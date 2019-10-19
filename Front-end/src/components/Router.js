@@ -1,3 +1,8 @@
+// Router - Connect the pages and navigation of the site using BrowserRouter and Switch.
+// Also used for pagination using :page as seen below in the <Route> Components.
+// Handle intialisation of pagination by redirecting to /1 to begin with.
+// Author(s) - Brendon
+// Date - 18/10/19
 import React from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 

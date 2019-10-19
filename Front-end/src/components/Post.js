@@ -29,16 +29,16 @@ class Post extends React.Component {
     // Parameters - N/A
     // Return - N/A
     // Example of usage - this.getUsername()
-    getUsername(){
+    getUsername() {
         fetch(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/user/username/${this.props.post.userId}`)
-        .then((response) => response.json())
-        .then((responseJson) => {
-            //Shortens the username if it is longer than 20 characters to it will fit in the post box
-            if (responseJson.length > 20){
-                responseJson = responseJson.substring(0,20) + '...'
-            }
-            this.setState({username: responseJson})
-        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                //Shortens the username if it is longer than 20 characters to it will fit in the post box
+                if (responseJson.length > 20) {
+                    responseJson = responseJson.substring(0, 20) + '...'
+                }
+                this.setState({ username: responseJson })
+            })
     }
 
     //Set the post in state, get the username to be displayed and check if the user is logged in before rendering

@@ -1,3 +1,9 @@
+// Reactions component - The reactions component is the 5 emojis and their associated functionality
+// Whenever a user clicks on the emoji a logic flow takes place, based on what their history of reactions
+// on this post is ; such as if they've reacted before or are now reacting differently.
+// Author(s) - Jarrod
+// Date - 18/10/19
+
 import React from 'react';
 
 import {Button, Row} from 'react-bootstrap';
@@ -13,6 +19,14 @@ class Reactions extends React.Component {
         }
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - setReactionCountStates
+    // Description - Loops through each reaction in the array of objects "reacts" for this post
+    //              ... checks what it is, adds each respective one to the correct state ReactionCount.X 
+    // Parameters - N/A
+    // Return - N/A
+    // Example of usage - this.setReactionCountStates()
     setReactionCountStates() {
         var sum = 0;
 
@@ -66,6 +80,15 @@ class Reactions extends React.Component {
 
     }
     
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - getReactionCounts
+    // Description - Called on load of each post at the loading phase initially - loads from the 
+    //                ... database what the initial counts of each reaction is. 
+    //              ... checks what it is, adds each respective one to the correct state ReactionCount.X 
+    // Parameters - type: e.g. happy/sad/angry/like/laugh - the type of reaction that the component is requestion information on.
+    // Return - N/A
+    // Example of usage - this.getReactionCounts("happy")
     getReactionCounts(type) {
         var sum = 0;
         for (var i = 0; i < this.props.state.post.reacts.length; i++) {
@@ -76,6 +99,13 @@ class Reactions extends React.Component {
         return sum;
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - handleReact
+    // Description - Increment/change/remove the reaction depending on what the user's history of reactions to this post is.
+    // Parameters - reactType - e.g. happy/sad/angry/like/laugh
+    // Return - N/A
+    // Example of usage - this.handleReact("happy")
     handleReact(reactType) {
 
         this.setState({
@@ -126,6 +156,8 @@ class Reactions extends React.Component {
                         this.props.state.post.numOfReacts = this.props.state.post.numOfReacts + 1;
                     }
 
+                    this.setState({reactCountsCanUseState: true})
+                  
                     //this runs no matter what since we're just manipulating state except if not logged in
                     //POST state to database
                     fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
