@@ -1,4 +1,7 @@
 //User Session data structure
+//Author(s) - Maral
+//Date - 19/10/19
+
 const mongoose = require("mongoose");
 //User Session attributes stored in database
 const userSessionSchema = new mongoose.Schema({

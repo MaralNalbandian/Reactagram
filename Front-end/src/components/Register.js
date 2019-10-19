@@ -1,3 +1,10 @@
+//Register component - The register component is the registration page of the application
+//where the user can register and create and account.
+//Displays input fields for name, email and password as well as a sign up button
+//once required fields are complete
+//Author(s) - Maral
+//Date - 19/10/19
+
 import React from "react";
 import validateUserIdToken from "./utils/validateToken";
 import { getFromStorage } from "../utils/storage";
@@ -28,6 +35,10 @@ export class Register extends React.Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - Once user succesfully registered grab token and set loading to false
+  // Return - N/A
   async componentDidMount() {
     if (await validateUserIdToken()) {
       const token = JSON.parse(localStorage.getItem("the_main_app"))
@@ -44,6 +55,12 @@ export class Register extends React.Component {
     }
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The logout function logs the user out by clearing token
+  //from local storage and telling backend to "delete" the specific user session
+  //User is logged out
+  // Return - N/A
   logout() {
     localStorage.clear();
     try {
@@ -91,11 +108,11 @@ export class Register extends React.Component {
     }
   }
 
-  /*
-   *This function grabs the values stored in state and creates an API request to endpoint
-   *User is informed of the response
-   *
-   */
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The sign up function grabs the values stored in state and creates an API request to register
+  // User is registered and is able to login
+  // Return - N/A
   onSignUp() {
     //Grab state
     const { signUpName, signUpEmail, signUpPassword } = this.state;
@@ -132,6 +149,12 @@ export class Register extends React.Component {
       });
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The logout function logs the user out by clearing token
+  //from local storage and telling backend to "delete" the specific user session
+  //User is logged out
+  // Return - N/A
   logout() {
     this.setState({
       isLoading: true
@@ -200,6 +223,7 @@ export class Register extends React.Component {
       return (
         <React.Fragment>
           <div>
+            {/* Loads the sign up page if user is not already registered  */}
             {signUpError ? <p>{signUpError}</p> : null}
             <h1>Sign Up</h1>
 
@@ -246,6 +270,7 @@ export class Register extends React.Component {
     //If user is already logged in
     return (
       <React.Fragment>
+        {/* Loads a page with a logout button if user already logged in */}
         <p>Account - go to login screen to sign out</p>
         <button onClick={this.onLogin}>Login</button>
       </React.Fragment>

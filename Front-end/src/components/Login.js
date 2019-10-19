@@ -1,7 +1,13 @@
+//Login component - The login component is the Login page of the application.
+//It allows the user to sign in to their account and post images.
+//Displays input fields for email and password which the user fills in and clicks
+//on the sign in button to then be redirected to the Home page (if correct user).
+//Author(s) - Maral
+//Date - 19/10/19
+
 import React from "react";
 import validateUserIdToken from "./utils/validateToken";
 import { getFromStorage } from "../utils/storage";
-import Home from "./Home";
 
 export class Login extends React.Component {
   //This code is based on a solution by "Keith, the Coder" on Youtube
@@ -33,6 +39,10 @@ export class Login extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - Find user by token and set loading to false
+  // Return - N/A
   async componentDidMount() {
     if (await validateUserIdToken()) {
       const token = JSON.parse(localStorage.getItem("the_main_app"))
@@ -80,11 +90,11 @@ export class Login extends React.Component {
     window.location.assign("/register");
   }
 
-  /*
-   *This function grabs the values stored in state and creates an API request to endpoint
-   *User is informed of the response
-   *
-   */
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The sign in function grabs the values stored in state and creates an API request to login
+  // User is logged in and is able to make posts
+  // Return - N/A
   onSignIn() {
     //Grab state
     const { signInEmail, signInPassword } = this.state;
@@ -128,7 +138,12 @@ export class Login extends React.Component {
       });
   }
 
-  //Clear token from local storage and tell backend to "delete" the specific user session
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The logout function logs the user out by clearing token
+  //from local storage and telling backend to "delete" the specific user session
+  //User is logged out
+  // Return - N/A
   logout() {
     this.setState({
       isLoading: true
@@ -178,11 +193,13 @@ export class Login extends React.Component {
         </div>
       );
     }
+
     //If there is no token, Login page is loaded
     if (token === "") {
       return (
         <React.Fragment>
           <div>
+            {/* Loads the sign in page if user is not already signed in  */}
             {signInError ? <p>{signInError}</p> : null}
             <h1>Sign In</h1>
 
@@ -223,7 +240,8 @@ export class Login extends React.Component {
     //If user signs in with correct credentials display the home page
     return (
       <div>
-        {/* <Home /> */}
+        {/* Loads a page with a logout button if user already signed in */}
+        <Home />
         <button class="logout-btn" onClick={this.logout}>
           Logout
         </button>

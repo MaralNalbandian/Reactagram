@@ -1,3 +1,6 @@
+//Author(s) - Maral
+//Date - 19/10/19
+
 const router = require("express").Router();
 const User = require("../models/User");
 const UserSession = require("../models/UserSession");
@@ -208,38 +211,14 @@ router.post("/login", (req, res, next) => {
   );
 });
 
+// Get /api/user/verify
+// Verify correct user
 router.get("/verify", async (req, res, next) => {
   //Get the token
   const { query } = req;
   const { userIdToken } = query;
-  // Verify the token is one of a kind and it's  not deleted
 
-  //Verify the token is one of a kind and is not deleted
-  // UserSession.find(
-  //   {
-  //     _id: token,
-  //     isDeleted: false
-  //   },
-  //   (err, sessions) => {
-  //     if (err) {
-  //       return res.send({
-  //         success: false,
-  //         message: "Error: Server error"
-  //       });
-  //     }
-  //     if (sessions.length != 1) {
-  //       return res.send({
-  //         success: false,
-  //         message: "Error: Invalid"
-  //       });
-  //     } else {
-  //       return res.send({
-  //         success: true,
-  //         message: "Good"
-  //       });
-  //     }
-  //   }
-  // );
+  // Verify the token is one of a kind and it's  not deleted
   var userCount = await User.find({ _id: userIdToken }).count();
   if (userCount > 0) {
     res.json({ result: "Success" });
@@ -248,6 +227,8 @@ router.get("/verify", async (req, res, next) => {
   }
 });
 
+// Get /api/user/logout
+// Logout user and delete token
 router.get("/logout", async (req, res, next) => {
   //Get token
   const { query } = req;

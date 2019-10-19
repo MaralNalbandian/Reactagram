@@ -1,28 +1,19 @@
 //User data structure
+//Author(s) - Maral
+//Date - 19/10/19
+
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 //User attributes stored in database
 const userSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true,
-    max: 10,
-    min: 3,
-    default: ""
+    type: String
   },
   email: {
-    type: String,
-    required: true,
-    max: 50,
-    min: 4,
-    default: ""
+    type: String
   },
   password: {
-    type: String,
-    required: true,
-    max: 20,
-    min: 6,
-    default: ""
+    type: String
   },
   date: {
     type: Date,
@@ -37,6 +28,9 @@ const userSchema = new mongoose.Schema({
     default: 0
   }
 });
+
+//This code is based on a solution by "Keith, the Coder" on Youtube
+//See https://youtu.be/s1swJLYxLAA
 
 //Store user password in hashed form
 userSchema.methods.generateHash = function(password) {
