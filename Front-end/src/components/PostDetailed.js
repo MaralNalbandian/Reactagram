@@ -1,23 +1,19 @@
+// PostDetailed Component
+// Description: The page that users are viewing when they wish to view the replies and post in more detail.
+// Author(s) - Jarrod
+// Date - 18/10/19
 import React from 'react';
 import AddPost from './addPost';
-import { Card, Button, Row, Col, ListGroup, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Card, Button, Row, Col, Container, ButtonToolbar, Dropdown, DropdownButton } from 'react-bootstrap';
 import validateUserIdToken from './utils/validateToken'
+import Reactions from './Reactions';
 import Pages from './Pages';
 
 import axios from 'axios';
 
 class PostDetailed extends React.Component {
-    getPost() {
-        return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
-            .then((response) => {
-                this.setState({ post: response.data })
-            }).then(() => this.paginate())
-            .catch((error) => {
-                console.error(error)
-            });
-    }
-
-
+    //Setting the initial reaction counts; when they are loaded they're loaded directly from the server into state
+    //any changes are manipulated inside state first, then state is posted to endpoint.
     constructor(props) {
         super(props)
         this.state = {
@@ -35,12 +31,29 @@ class PostDetailed extends React.Component {
         this.handleDeleteWithPlaceholder = this.handleDeleteWithPlaceholder.bind(this);
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - getPost
+    // Description - Get the specific post based on id from the API and save the post to state
+    // Parameters - N/A
+    // Return - N/A
+    // Example of usage - this.getPost()
+    getPost() {
+        return axios.get(`${process.env.REACT_APP_BACKEND_WEB_ADDRESS}/api/post/get/${this.props.match.params.postId}`)
+            .then((response) => {
+                this.setState({ post: response.data })
+            }).then(() => this.paginate())
+            .catch((error) => {
+                console.error(error)
+            });
+    }
+
+    //Get the data for the detailed post then set the user token in storage if it exists before the component renders
     async componentWillMount() {
         this.getPost()
             .then(() => this.getReplyObjects());
 
-        //if user is logged in :
-
+        //If user is logged in :
         if (await validateUserIdToken()) {
             this.setState({ token: JSON.parse(localStorage.getItem("the_main_app")).token })
             this.setState({ userIdToken: JSON.parse(localStorage.getItem("the_main_app")).userIdToken })
@@ -55,6 +68,14 @@ class PostDetailed extends React.Component {
         this.setState({ reactCountsCanUseState: false })
     }
 
+    // Author(s) - Brendon
+    // Date - 18/09/19
+    // Function - paginate
+    // Description - Determine the number of pages required based on the number of replies. THis limits 
+    // the amount of replies to reduce bandwidth usage and paginate rest of results.
+    // Parameters - N/A
+    // Return - N/A
+    // Example of usage - this.paginate()
     paginate() {
         var response = this.state.post;
         var count = 1;
@@ -68,171 +89,13 @@ class PostDetailed extends React.Component {
         })
     }
 
-    getReactionCounts(type) {
-        var sum = 0;
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-
-            if (this.state.post.reacts[i].reaction == type) {
-
-                sum = sum + 1;
-            }
-        }
-        return sum;
-
-    }
-
-    setReactionCountStates() {
-        var sum = 0;
-
-        //check like
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-
-            if (this.state.post.reacts[i].reaction == "like") {
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.like = sum;
-        this.setState(this.state)
-
-
-        //check love
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-
-            if (this.state.post.reacts[i].reaction == "love") {
-
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.love = sum;
-        this.setState(this.state)
-
-
-        //check laugh
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-
-            if (this.state.post.reacts[i].reaction == "laugh") {
-
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.laugh = sum;
-        this.setState(this.state)
-
-
-        //check sad
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-
-            if (this.state.post.reacts[i].reaction == "sad") {
-
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.sad = sum;
-        this.setState(this.state)
-
-
-        //check angry
-        for (var i = 0; i < this.state.post.reacts.length; i++) {
-
-            if (this.state.post.reacts[i].reaction == "angry") {
-
-                sum = sum + 1;
-            }
-        }
-
-        this.state.reactionCounts.angry = sum;
-        this.setState(this.state);
-
-
-    }
-
-    handleReact(reactType) {
-
-        this.setState({
-            reaction: reactType
-        },
-
-            function updateReacts() {
-                let operationComplete = false;
-
-                //if logged in..
-                if (this.state.userIdToken != undefined) {
-                    //if user is logged in
-
-                    //check if user has reacted to this post already.
-                    for (var i = 0; i < this.state.post.reacts.length; i++) {
-                        if (this.state.post.reacts[i].userId == this.state.userIdToken) {
-
-                            //now check if the user's reaction is the same
-                            //in this case REMOVE their reaction
-
-                            if (this.state.reaction == this.state.post.reacts[i].reaction) {
-
-
-                                //REMOVE this object from the array
-
-
-
-                                var newArray = this.state.post.reacts.filter(object => object.userId != this.state.userIdToken);
-                                //need to post this to db after
-
-
-                                this.state.post.reacts = newArray;
-                                this.state.post.numOfReacts = this.state.post.numOfReacts - 1;
-                                operationComplete = true;
-                            }
-                            else {
-                                //if their reaction is different
-                                this.state.post.reacts[i].reaction = this.state.reaction;
-                                operationComplete = true;
-                            }
-
-                        }
-                    }
-                    //now we've finished looping, if an operation has not been performed
-                    //this means they don't have a reaction already, so..
-                    if (operationComplete != true) {
-                        //user is making a new reaction
-                        var tempReact = {
-                            userId: this.state.userIdToken,
-                            reaction: this.state.reaction
-                        }
-
-                        //push it into the post object in state
-                        this.state.post.reacts.push(tempReact)
-                        this.state.post.numOfReacts = this.state.post.numOfReacts + 1;
-
-                    }
-
-                    //this runs no matter what since we're just manipulating state except if not logged in
-                    //POST state to database
-                    fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(this.state.post)
-                    })
-                        .then(() => this.setReactionCountStates())
-                        .catch((error) => console.error(error))
-                }
-
-                else {
-
-                    //if user is not logged in yet pop up a  toast
-                    window.alert("You need to be logged in to react to posts!");
-
-                }
-
-            }
-
-        )
-    }
-
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - addPost
+    // Description - Add the reply to the posts collection, then also add the posts' id to this post's reply array.
+    // Parameters - post: this post object in state
+    // Return - N/A
+    // Example of usage - this.addPost()
     addPost = post => {
         var dateNow = Date.now();
         // 1. Add our new post using the API
@@ -244,23 +107,24 @@ class PostDetailed extends React.Component {
                     userId: post.userId,
                     imageLink: post.imageLink
                 }
-                //2. Also Update the replies of this post
             });
         }
         catch (error) {
-
         }
-        // .then(
-        // () => 
+
+        // 2. Increment the number of uploads the user has completed
         this.incrementUploads(post.userId);
+        // 3. Update the replies on screen
         this.updateReplies(dateNow);
-        // .then(
-        // 3. Retrieve all the posts using the API
-        // () => this.getPosts()
-        // )
-        // );
     };
 
+    // Author(s) - Brendon
+    // Date - 18/09/19
+    // Function - incrementUploads
+    // Description - Increment the uploads variable by 1 for this user - used for leaderboard functionality.
+    // Parameters - userId: gathered from localStorage - unique user id to increment uploads variable of
+    // Return - N/A
+    // Example of usage - this.incrementUploads(this.state.userIdToken)
     incrementUploads(userId) {
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/user/incrementUpload', {
             method: 'POST',
@@ -273,6 +137,13 @@ class PostDetailed extends React.Component {
         })
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - updateReplies
+    // Description - Create a new post object for this reply, also add it to the replies array of this object.
+    // Parameters - dateId: the Date.Now so that it can stay consistent for both the replies array and the new post object.
+    // Return - N/A
+    // Example of usage - this.updateReplies(this.state.Date.Now())
     updateReplies(dateId) {
 
         //push postId to replies array
@@ -294,7 +165,13 @@ class PostDetailed extends React.Component {
 
     };
 
-
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - handleEdit
+    // Description - If this option is available (no reactions / replies yet), user can uploaid a new image to change it.
+    // Parameters - post: this post object in state
+    // Return - N/A
+    // Example of usage - this.handleEdit()
     handleEdit = post => {
         //1. UPDATE this.state.post.imageLink with the link
         this.state.post.imageLink = post.imageLink;
@@ -311,9 +188,14 @@ class PostDetailed extends React.Component {
             .catch((error) => console.error(error))
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - handleDelete
+    // Description - If this option is available, user can press delete to HARD delete it from the database
+    // Parameters - NA (just uses state)
+    // Return - N/A
+    // Example of usage - this.handleDelete()
     handleDelete() {
-
-
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/delete', {
             method: 'DELETE',
             headers: {
@@ -328,16 +210,18 @@ class PostDetailed extends React.Component {
 
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - handleDeleteWithPlaceholder
+    // Description - If this option is available, user can press delete to change the image url to a preset placeholder image.
+    // Parameters - NA (just uses state)
+    // Return - N/A
+    // Example of usage - this.handleDeleteWithPlaceholder()
     handleDeleteWithPlaceholder() {
-        //1. Just update react endpoitn to change the image link too
-
-        //2. on submit in addPost this gets called..
-
-
-        //3. UPDATE this.state.post.imageLink with the link
+        //1. UPDATE this.state.post.imageLink with the link
         this.state.post.imageLink = "https://brendon-aip-2019.s3-ap-southeast-2.amazonaws.com/deleted.jpg";
 
-        //4. replicate the fetch Post  to /post/react with this.state.post as the body
+        //2. replicate the fetch Post  to /post/react with this.state.post as the body
         fetch(process.env.REACT_APP_BACKEND_WEB_ADDRESS + '/api/post/react', {
             method: 'POST',
             headers: {
@@ -350,6 +234,13 @@ class PostDetailed extends React.Component {
 
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - renderButtons
+    // Description - Handles which buttons are shown to the user who made this post - e.g. delete, edit, placeholder.
+    // Parameters - NA (just uses state)
+    // Return - N/A
+    // Example of usage - this.renderButtons()
     renderButtons() {
         //if logged in..
         if (this.state.userIdToken != undefined) {
@@ -420,8 +311,14 @@ class PostDetailed extends React.Component {
 
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - getReplyObjects
+    // Description - Transform the postId's in the replies array into an array of objects to grab their information.
+    // Parameters - NA (just uses state)
+    // Return - N/A
+    // Example of usage - this.getReplyObjects()
     getReplyObjects() {
-
 
         //make a fetch call for each postId in this.post.replies
         //set state now
@@ -438,7 +335,7 @@ class PostDetailed extends React.Component {
                     .then((response) => {
                         //this.setState({ post: response.data })
                         this.state.replyObjects.push(response.data)
-                        this.state.replyObjects.sort(function(a, b) {
+                        this.state.replyObjects.sort(function (a, b) {
                             var nameA = a.postId.toUpperCase(); // ignore upper and lowercase
                             var nameB = b.postId.toUpperCase(); // ignore upper and lowercase
                             if (nameA < nameB) {
@@ -447,7 +344,7 @@ class PostDetailed extends React.Component {
                             if (nameA > nameB) {
                                 return 1;
                             }
-                            
+
                             // names must be equal
                             return 0;
                         });
@@ -463,12 +360,26 @@ class PostDetailed extends React.Component {
 
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - sortByPopular
+    // Description - Sort an array with simple algorithm based on that posts' reactions.
+    // Parameters - NA (just uses state)
+    // Return - N/A
+    // Example of usage - this.sortByPopular()
     sortByPopular() {
         //TODO: check if any replies otherwise  do nothing
         this.state.replyObjects.sort((b, a) => parseFloat(a.reacts.length) - parseFloat(b.reacts.length));
         this.setState(this.state)
     }
 
+    // Author(s) - Jarrod
+    // Date - 18/09/19
+    // Function - sortByNew
+    // Description - Sort an array with simple algorithm based on that posts' date.
+    // Parameters - NA (just uses state)
+    // Return - N/A
+    // Example of usage - this.sortByNew()
     sortByNew() {
         //TODO: check if any replies otherwise  do nothing
         this.state.replyObjects.sort((b, a) => Date.parse(a.date) - Date.parse(b.date));
@@ -479,15 +390,15 @@ class PostDetailed extends React.Component {
         //get total amounts of reactions
         //this.getReactionCounts();
         const id = this.props.match.params.postId;
-        
+
         //get replies into an array of objects in state called "replyObjects"
 
         if (this.state.post) {
-            if (this.props.match.params.page == 1){
+            if (this.props.match.params.page == 1) {
                 var startNum = 0;
                 var endNum = 3
             } else {
-                var startNum = ((Number(this.props.match.params.page)-1)*3);
+                var startNum = ((Number(this.props.match.params.page) - 1) * 3);
                 var endNum = startNum + 3;
             }
             // { this.getReactionCounts("like") }
@@ -517,43 +428,7 @@ class PostDetailed extends React.Component {
                                         <Card.Img variant="bottom" src={this.state.post.imageLink} />
 
                                         <Card.Body>
-                                            <Row>
-                                                <Col>
-                                                    <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("like")}>👍</Button>
-                                                    <h5 className="pull-right">
-                                                        {this.state.reactCountsCanUseState ? this.state.reactionCounts.like : this.getReactionCounts("like")}
-                                                    </h5>
-                                                </Col>
-
-                                                <Col>
-                                                    <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("love")}>😍</Button>
-                                                    <h5 className="pull-right">
-                                                        {this.state.reactCountsCanUseState ? this.state.reactionCounts.love : this.getReactionCounts("love")}
-                                                    </h5>
-                                                </Col>
-
-                                                <Col>
-                                                    <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("laugh")}>😂</Button>
-                                                    <h5 className="pull-right">
-                                                        {this.state.reactCountsCanUseState ? this.state.reactionCounts.laugh : this.getReactionCounts("laugh")}
-                                                    </h5>
-                                                </Col>
-
-                                                <Col>
-                                                    <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("sad")}>😢</Button>
-                                                    <h5 className="pull-right">
-                                                        {this.state.reactCountsCanUseState ? this.state.reactionCounts.sad : this.getReactionCounts("sad")}
-                                                    </h5>
-                                                </Col>
-
-                                                <Col>
-                                                    <Button style={{ fontSize: 20 }} variant="light" onClick={() => this.handleReact("angry")}>😡</Button>
-                                                    <h5 className="pull-right">
-                                                        {this.state.reactCountsCanUseState ? this.state.reactionCounts.angry : this.getReactionCounts("angry")}
-                                                    </h5>
-                                                </Col>
-
-                                            </Row>
+                                            <Reactions state={this.state} />
                                         </Card.Body>
 
                                         <Card.Body>

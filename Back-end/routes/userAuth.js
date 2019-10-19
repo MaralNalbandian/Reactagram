@@ -1,27 +1,39 @@
+// User Authentication Functionality
+// Description: Implements all login and sign in functionality
+// E.g. Register new user, Login existing user if valid, log user out and unvalidate usersession etc.
+// Contains verify function used before all requests to validate user is still legitimate.
+// Author(s) - Maral
+// Date - 18/10/19
+
 const router = require("express").Router();
 const User = require("../models/User");
 const UserSession = require("../models/UserSession");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// const { registerValidation, loginValidation } = require("../validation");
 const config = require("config");
 const bodyParser = require("body-parser");
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
 
-// router.get("/register", async (req, res) => {
-//   res.render("register");
-// });
+/*This code is based on a solution by "Keith, the Coder" on Youtube
+See https://youtu.be/s1swJLYxLAA
+*/
 
-//REGISTER
+/*Validate user details before creating user account via API (register)
+ *@params: name: Input in required name textfield
+ *@params: email: Input in required email textfield
+ *@params: password: Input in required password textfield
+ *
+ *@return: message
+ */
 router.post("/register", async (req, res, next) => {
-  //VALIDATE THE DATA BEFORE WE CREATE A USER
-
+  //Validate the data before creating user
   const { body } = req;
   const { name, password } = body;
   let { email } = body;
 
+  //Check if name is valid - cannot be blank.
   if (!name) {
 
     return res.send({
@@ -29,19 +41,25 @@ router.post("/register", async (req, res, next) => {
       message: "Error: Name cannot be blank"
     });
   }
+
+  //Check if email is valid - cannot be blank.
   if (!email) {
     return res.send({
       success: false,
       message: "Error: Email cannot be blank"
     });
   }
+
+  //Check if password is valid - cannot be blank.
   if (!password) {
     return res.send({
       success: false,
       message: "Error: Password cannot be blank"
     });
   }
+
   //https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  //Check if email is valid email address Format using above thread
   var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   var result = emailRegex.test(String(email).toLowerCase());
   if (result == false){
@@ -55,8 +73,7 @@ router.post("/register", async (req, res, next) => {
 
   //Steps:
   //1. Verify email doesn't exist
-  //2. Save
-
+  //2. Save the user in the database
   User.find(
     {
       email: email
@@ -79,6 +96,7 @@ router.post("/register", async (req, res, next) => {
 
       newUser.name = name;
       newUser.email = email;
+      //Hash the password to send it securely over the network
       newUser.password = newUser.generateHash(password);
 
       newUser.save((err, user) => {
@@ -95,54 +113,31 @@ router.post("/register", async (req, res, next) => {
       });
     }
   );
-  // const { error } = Joi.validate(req.body, schema);
-  // const { error } = registerValidation(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
-
-  //Check if user already in database
-  // const emailExists = await User.findOne({ email: req.body.email });
-  // if (emailExists) return res.status(400).send("Email already exists");
-
-  //Hash passwords
-  // const salt = await bcrypt.genSalt(10); //complexity of string that gets generated is 10
-  // const hashPassword = await bcrypt.hash(req.body.password, salt); //Hash password with salt
-
-  //Create a new user
-  // const user = new User({
-  //   name: req.body.name,
-  //   email: req.body.email,
-  //   password: hashPassword
-  // });
-
-  // try {
-  //   //Save the user
-  //   const savedUser = user.save();
-  //   //Send a response
-  //   res.send({ user: user._id }); //Sends back user with just an id
-  //   res.json("Registered!");
-  //   res.render("/login");
-  // } catch (err) {
-  //   // res.redirect("/register");
-
-  //   res.status(400).send(err);
-  // }
 });
 
-//LOGIN
-// router.post("/login", async (req, res) => {
+/*Verify user details before signing in user (login)
+ *@params: email: Input in required email textfield
+ *@params: password: Input in required password textfield
+ *
+ *@return: message
+ *@return: userIdtoken: assigned to specific user to specify the user that is logged in
+ *@return: token: random token assigned to verify if user logged in/out
+ */
 router.post("/login", (req, res, next) => {
-  //VALIDATE THE DATA BEFORE WE CREATE A USER
+  //Validate the data before allowing user to request to login
 
   const { body } = req;
   const { password } = body;
   let { email } = body;
 
+  //Check empty email text field
   if (!email) {
     return res.send({
       success: false,
       message: "Error: Email cannot be blank"
     });
   }
+  //Check empty password text field
   if (!password) {
     return res.send({
       success: false,
@@ -198,24 +193,12 @@ router.post("/login", (req, res, next) => {
         });
       });
 
-      // const { error } = loginValidation(req.body);
-      // if (error) return res.status(400).send(error.details[0].message);
-
-      //Check if user in database (if email exists)
-      // const user = await User.findOne({ email: req.body.email });
-      // if (!user) return res.status(400).send("Email or password invalid");
-
-      //Password is correct
-      // const validPass = await bcrypt.compare(req.body.password, user.password);
-      // if (!validPass) return res.status(400).send("Invalid password");
-
-      //Create and assign a token
-      // const token = jwt.sign({ _id: user._id }, config.get("TOKEN_SECRET"));
-      //res.header("auth-token", token).send(token); //can make multiple requests by using the token to s specific logged in user (cannot post unless user logged in)
     }
   );
 });
 
+// Get /api/user/verify
+// Verify correct user
 router.get("/verify", async (req, res, next) => {
   //Get token
   const { query } = req;
@@ -230,6 +213,8 @@ router.get("/verify", async (req, res, next) => {
   }
 });
 
+// Get /api/user/logout
+// Logout user and delete token
 router.get("/logout", async (req, res, next) => {
   //Get token
   const { query } = req;

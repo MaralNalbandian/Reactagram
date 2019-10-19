@@ -1,3 +1,9 @@
+//Register component - The register component is the registration page of the application
+//where the user can register and create and account.
+//Displays input fields for name, email and password as well as a sign up button
+//once required fields are complete
+//Author(s) - Maral and Brendon
+//Date - 19/10/19
 import React from "react";
 import validateUserIdToken from './utils/validateToken'
 
@@ -20,6 +26,10 @@ export class Register extends React.Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - Once user succesfully registered grab token and set loading to false
+  // Return - N/A
   async componentDidMount() {
     if (await validateUserIdToken()) {
       const token = JSON.parse(localStorage.getItem("the_main_app")).userIdToken;
@@ -35,47 +45,78 @@ export class Register extends React.Component {
     }
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The logout function logs the user out by clearing token
+  //from local storage and telling backend to "delete" the specific user session
+  //User is logged out
+  // Return - N/A
   logout() {
     localStorage.clear();
     try {
-      this.setState({token: ""})
+      this.setState({ token: "" })
     }
     catch (error) {
       console.error(error);
     }
   }
 
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onTextboxChangeSignUpEmail
+  // Description - Handle when text is updated in the email text field
+  // Parameters - event: information about what and how this is changing. e.g. event.target.value
+  // Return - N/A
   onTextboxChangeSignUpEmail(event) {
     this.setState({
       signUpEmail: event.target.value
     });
-    if (event.target.value.length === 250){
-      this.setState({signUpError: "Error: Email must be 250 characters or less"})
+    if (event.target.value.length === 250) {
+      this.setState({ signUpError: "Error: Email must be 250 characters or less" })
     } else {
-      this.setState({signUpError: ""})
+      this.setState({ signUpError: "" })
     }
   }
+
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onTextboxChangeSignUpPassword
+  // Description - Same as above: for password field.
+  // Parameters - event: information about what and how this is changing.
+  // Return - N/A
   onTextboxChangeSignUpPassword(event) {
     this.setState({
       signUpPassword: event.target.value
     });
-    if (event.target.value.length === 250){
-      this.setState({signUpError: "Error: Password must be 250 characters or less"})
+    if (event.target.value.length === 250) {
+      this.setState({ signUpError: "Error: Password must be 250 characters or less" })
     } else {
-      this.setState({signUpError: ""})
+      this.setState({ signUpError: "" })
     }
   }
+
+  // Author(s) - Maral
+  // Date - 18/09/19
+  // Function - onTextboxChangeSignUpName
+  // Description - Same as above: for username field.
+  // Parameters - event: information about what and how this is changing.
+  // Return - N/A
   onTextboxChangeSignUpName(event) {
     this.setState({
       signUpName: event.target.value
     });
-    if (event.target.value.length === 250){
-      this.setState({signUpError: "Error: Name must be 250 characters or less"})
+    if (event.target.value.length === 250) {
+      this.setState({ signUpError: "Error: Name must be 250 characters or less" })
     } else {
-      this.setState({signUpError: ""})
+      this.setState({ signUpError: "" })
     }
   }
 
+  // Author(s) - Maral
+  // Date - 19/09/19
+  // Description - The sign up function grabs the values stored in state and creates an API request to register
+  // User is registered and is able to login
+  // Return - N/A
   onSignUp() {
     //Grab state
     const { signUpName, signUpEmail, signUpPassword } = this.state;
@@ -112,6 +153,7 @@ export class Register extends React.Component {
       });
   }
 
+  // Redirect to the login screen when the login button is clicked
   onLogin() {
     window.location.assign("/login")
   }
@@ -184,11 +226,12 @@ export class Register extends React.Component {
       );
     }
 
+    //If user is already logged in
     return (
       <React.Fragment>
+        {/* Loads a page with a logout button if user already logged in */}
         <p>Account - go to login screen to sign out</p>
         <button onClick={this.onLogin}>Login</button>
-        {/* <button onClick={this.logout}>Logout</button> */}
       </React.Fragment>
     );
   }
